@@ -11,6 +11,9 @@ Aplikace je od základu koncipována jako **rozšiřitelná platforma**. Jejím 
 - **Nativní podpora Windows 11 ARM64**: Běží nativně na procesorech Qualcomm Snapdragon X Elite (ASUS Vivobook S15 apod.) bez emulace.
 - **Akcelerace NPU přes Qualcomm QNN**: Připraveno pro inferenci na Qualcomm Hexagon NPU prostřednictvím ONNX Runtime QNN Execution Provideru s automatickým plynulým přechodem (fallbackem) na vektorizovaný CPU (ARM64 NEON).
 - **100% lokální zpracování (Privacy-First)**: Žádné cloudové API, telemetrie ani odesílání dat. Všechny extrakce textu, indexování a vnoření (vektory) probíhají výhradně lokálně.
+- **Dynamická kategorizace a hybridní sémantická klasifikace**:
+  - Přísná pravidla s ochranou proti chybnému zařazení dokumentů (např. *Zpravodaj* / periodika do financí).
+  - Pokud si systém není jistý (`confidence < 0.58`), dynamicky vytvoří novou vhodnou kategorii na základě analýzy klíčových témat dokumentu.
 - **Bezpečnost souborů a plná reverzibilita (Undo)**:
   - Žádné přepisování existujících souborů (detekce kolizí s bezpečným číslováním `soubor (1).ext`).
   - Podpora jednotlivého i hromadného vrácení operací (Undo) z persistentní SQLite databáze.
@@ -49,7 +52,7 @@ NPUtil/
 │       ├── Theme/                     # Světlý / tmavý režim, nativní ovládací prvky
 │       └── Views/                     # Jednotlivé obrazovky modulu a diagnostiky
 ├── tests/
-│   └── NPUtil.Tests/                  # Sada 19 automatických testů (extrakce, klasifikace, integrita, undo)
+│   └── NPUtil.Tests/                  # Sada 21 automatických testů (extrakce, klasifikace, integrita, undo, dynamické kategorie)
 ├── publish/
 │   └── win-arm64/                     # Výsledné publikované ARM64 nativní binárky
 ├── build.ps1                          # Skript pro kompletní sestavení, otestování a publikaci
