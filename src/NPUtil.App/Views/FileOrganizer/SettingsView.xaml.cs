@@ -2,6 +2,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
+using NPUtil.Core.Localization;
 using NPUtil.Modules.FileOrganizer;
 using NPUtil.Modules.FileOrganizer.Models;
 
@@ -54,7 +55,7 @@ public partial class SettingsView : UserControl
     {
         var dialog = new OpenFolderDialog
         {
-            Title = "Select Downloads or Target Folder to Organize",
+            Title = LocalizationManager.Get("WatchedPathLabel"),
             InitialDirectory = TxtWatchedPath.Text
         };
 
@@ -83,6 +84,6 @@ public partial class SettingsView : UserControl
             _module.Engine.StartMonitoring(targetPath);
         }
 
-        TxtSaveFeedback.Text = "Settings saved successfully.";
+        TxtSaveFeedback.Text = LocalizationManager.Get("SettingsSaved");
     }
 }

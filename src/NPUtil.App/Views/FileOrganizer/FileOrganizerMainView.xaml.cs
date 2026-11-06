@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Controls;
+using NPUtil.Core.Localization;
 using NPUtil.Modules.FileOrganizer;
 
 namespace NPUtil.App.Views.FileOrganizer;
@@ -49,7 +50,8 @@ public partial class FileOrganizerMainView : System.Windows.Controls.UserControl
     {
         if (_module.Engine == null) return;
         var count = _module.Engine.GetReviewQueue().Count;
-        NavReviewItem.Content = count > 0 ? $"Fronta k revizi ({count})" : "Fronta k revizi";
+        var reviewText = LocalizationManager.Get("TabReview");
+        NavReviewItem.Content = count > 0 ? $"{reviewText} ({count})" : reviewText;
     }
 
     private void NavItem_Click(object sender, RoutedEventArgs e)

@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="950">
     <Grid Margin="32,24,32,32">
@@ -14,8 +15,8 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Kategorie a složky" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
-            <TextBlock Text="Upravujte hierarchii složek, sémantické popisy pro AI model a přiřazená klíčová slova."
+            <TextBlock Text="{loc:Loc ExplorerTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+            <TextBlock Text="{loc:Loc ExplorerSubtitle}"
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
         </StackPanel>
 
@@ -47,7 +48,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <ui:Button Grid.Row="1" x:Name="BtnNewCategory" Content="+ Přidat novou kategorii" 
+                    <ui:Button Grid.Row="1" x:Name="BtnNewCategory" Content="{loc:Loc AddCategory}" 
                                Appearance="Secondary" Click="BtnNewCategory_Click" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
                 </Grid>
             </ui:Card>
@@ -56,29 +57,29 @@
             <ui:Card Grid.Column="2" Padding="24">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel x:Name="PanelEditor">
-                        <TextBlock Text="Nastavení vybrané kategorie" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,14" />
+                        <TextBlock Text="{loc:Loc CategoryDetails}" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,14" />
 
-                        <TextBlock Text="Název kategorie" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <TextBlock Text="Category Name" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
                         <ui:TextBox x:Name="TxtCategoryName" Margin="0,0,0,12" />
 
-                        <TextBlock Text="Relativní cesta podsložky (např. Education\Languages\English)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <TextBlock Text="{loc:Loc CategoryPath}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
                         <ui:TextBox x:Name="TxtRelativePath" Margin="0,0,0,12" />
 
-                        <TextBlock Text="Sémantický kontext pro AI (Popis účelu a obsahu kategorie)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <TextBlock Text="{loc:Loc SemanticDescription}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
                         <ui:TextBox x:Name="TxtDescription" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,12" />
 
-                        <TextBlock Text="Klíčová slova (oddělená čárkou)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <TextBlock Text="{loc:Loc Keywords}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
                         <ui:TextBox x:Name="TxtKeywords" Margin="0,0,0,12" />
 
-                        <TextBlock Text="Přípony souborů (např. .pdf, .docx)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <TextBlock Text="{loc:Loc FileExtensions}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,14" />
                         <ui:TextBox x:Name="TxtExtensions" Margin="0,0,0,14" />
 
-                        <CheckBox x:Name="ChkExcluded" Content="Vyloučit tuto složku z automatického přesunu" Margin="0,0,0,20" />
+                        <CheckBox x:Name="ChkExcluded" Content="Exclude from automatic organization" Margin="0,0,0,16" />
 
                         <StackPanel Orientation="Horizontal">
-                            <ui:Button x:Name="BtnSaveChanges" Content="Uložit změny" Appearance="Primary" Click="BtnSaveChanges_Click" Margin="0,0,8,0" />
-                            <ui:Button x:Name="BtnOpenFolder" Content="Otevřít v Průzkumníku" Appearance="Secondary" Click="BtnOpenFolder_Click" Margin="0,0,8,0" />
-                            <ui:Button x:Name="BtnDeleteCategory" Content="Odstranit kategorii" Appearance="Danger" Click="BtnDeleteCategory_Click" />
+                            <ui:Button x:Name="BtnSaveChanges" Content="{loc:Loc BtnSaveCategory}" Appearance="Primary" Click="BtnSaveChanges_Click" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnOpenFolder" Content="{loc:Loc BtnOpenFolder}" Appearance="Secondary" Click="BtnOpenFolder_Click" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnDeleteCategory" Content="{loc:Loc BtnDeleteCategory}" Appearance="Danger" Click="BtnDeleteCategory_Click" />
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

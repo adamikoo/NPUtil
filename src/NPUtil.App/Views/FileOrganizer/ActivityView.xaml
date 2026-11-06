@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="950">
     <Grid Margin="32,24,32,32">
@@ -15,8 +16,8 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Historie operací a Undo" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
-            <TextBlock Text="Kompletní persistentní auditní stopa všech provedených přesunů s možností okamžitého vrácení."
+            <TextBlock Text="{loc:Loc ActivityTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+            <TextBlock Text="{loc:Loc ActivitySubtitle}"
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
         </StackPanel>
 
@@ -30,12 +31,12 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="History24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
-                    <TextBlock x:Name="TxtHistorySummary" Text="Celkem operací: 0" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtHistorySummary" Text="Total operations: 0" FontWeight="SemiBold" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <ui:Button x:Name="BtnUndoBatch" Content="Vrátit vybranou dávku (Undo Batch)" Appearance="Secondary" Click="BtnUndoBatch_Click" Margin="0,0,8,0" />
-                    <ui:Button x:Name="BtnRefresh" Content="Obnovit" Appearance="Secondary" Click="BtnRefresh_Click" />
+                    <ui:Button x:Name="BtnUndoBatch" Content="{loc:Loc BtnUndoBatch}" Appearance="Secondary" Click="BtnUndoBatch_Click" Margin="0,0,8,0" />
+                    <ui:Button x:Name="BtnRefresh" Content="{loc:Loc BtnRefresh}" Appearance="Secondary" Click="BtnRefresh_Click" />
                 </StackPanel>
             </Grid>
         </ui:Card>
@@ -44,23 +45,23 @@
         <Border Grid.Row="2" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4">
             <DataGrid x:Name="GridOperations" AutoGenerateColumns="False" SelectionChanged="GridOperations_SelectionChanged" BorderThickness="0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Čas" Binding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="145" />
-                    <DataGridTextColumn Header="Název souboru" Binding="{Binding FileName}" Width="200" />
-                    <DataGridTextColumn Header="Cílová kategorie" Binding="{Binding Category}" Width="200" />
-                    <DataGridTextColumn Header="Jistota" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
-                    <DataGridTextColumn Header="Dávka ID" Binding="{Binding BatchId}" Width="150" />
-                    <DataGridTemplateColumn Header="Stav" Width="100">
+                    <DataGridTextColumn Header="{loc:Loc ColTime}" Binding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="145" />
+                    <DataGridTextColumn Header="{loc:Loc ColFileName}" Binding="{Binding FileName}" Width="200" />
+                    <DataGridTextColumn Header="{loc:Loc ColDestination}" Binding="{Binding Category}" Width="200" />
+                    <DataGridTextColumn Header="{loc:Loc ColConfidence}" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
+                    <DataGridTextColumn Header="Batch ID" Binding="{Binding BatchId}" Width="150" />
+                    <DataGridTemplateColumn Header="Status" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock VerticalAlignment="Center">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
-                                            <Setter Property="Text" Value="Aktivní" />
+                                            <Setter Property="Text" Value="Active" />
                                             <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
                                             <Setter Property="FontWeight" Value="SemiBold" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsUndone}" Value="True">
-                                                    <Setter Property="Text" Value="Vráceno" />
+                                                    <Setter Property="Text" Value="{loc:Loc BtnRestored}" />
                                                     <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
                                                     <Setter Property="FontWeight" Value="Normal" />
                                                 </DataTrigger>
@@ -71,17 +72,17 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Akce" Width="110">
+                    <DataGridTemplateColumn Header="{loc:Loc ColAction}" Width="110">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <ui:Button Content="Vrátit přesun" Appearance="Secondary" Click="BtnUndoRow_Click" Padding="8,2" FontSize="11">
+                                <ui:Button Content="{loc:Loc BtnUndoMove}" Appearance="Secondary" Click="BtnUndoRow_Click" Padding="8,2" FontSize="11">
                                     <ui:Button.Style>
                                         <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
                                             <Setter Property="IsEnabled" Value="True" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsUndone}" Value="True">
                                                     <Setter Property="IsEnabled" Value="False" />
-                                                    <Setter Property="Content" Value="Obnoveno" />
+                                                    <Setter Property="Content" Value="{loc:Loc BtnRestored}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>

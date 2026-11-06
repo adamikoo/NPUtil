@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using NPUtil.Core.Localization;
 using NPUtil.Modules.FileOrganizer;
 using NPUtil.Modules.FileOrganizer.Models;
 
@@ -26,7 +27,7 @@ public partial class ActivityView : UserControl
         GridOperations.ItemsSource = list;
 
         var (total, active, undone) = _module.HistoryDb.GetCounts();
-        TxtHistorySummary.Text = $"Total operations: {total}  |  Active: {active}  |  Undone: {undone}";
+        TxtHistorySummary.Text = LocalizationManager.Instance.GetString("HistorySummaryFormat", total, active, undone);
         BtnUndoBatch.IsEnabled = _selectedRecord != null && !_selectedRecord.IsUndone;
     }
 
@@ -51,11 +52,15 @@ public partial class ActivityView : UserControl
             var res = await _module.Undo.UndoOperationAsync(record.Id);
             if (res.Success)
             {
-                MessageBox.Show($"File successfully restored to: {res.RestoredPath}", "Undo Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                var title = LocalizationManager.Get("UndoSuccessTitle");
+                var msg = LocalizationManager.Instance.GetString("UndoSuccessMsg", res.RestoredPath ?? string.Empty);
+                MessageBox.Show(msg, title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                MessageBox.Show($"Could not undo move: {res.ErrorMessage}", "Undo Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                var title = LocalizationManager.Get("UndoFailedTitle");
+                var msg = LocalizationManager.Instance.GetString("UndoFailedMsg", res.ErrorMessage ?? string.Empty);
+                MessageBox.Show(msg, title, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             RefreshHistory();
         }
@@ -65,12 +70,16 @@ public partial class ActivityView : UserControl
     {
         if (_selectedRecord == null || _module.Undo == null) return;
 
-        var confirm = MessageBox.Show($"Are you sure you want to undo all operations in batch '{_selectedRecord.BatchId}'?", "Confirm Batch Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        var confirmTitle = LocalizationManager.Get("BatchUndoConfirmTitle");
+        var confirmMsg = LocalizationManager.Instance.GetString("BatchUndoConfirmMsg", _selectedRecord.BatchId);
+        var confirm = MessageBox.Show(confirmMsg, confirmTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (confirm == MessageBoxResult.Yes)
         {
             var results = await _module.Undo.UndoBatchAsync(_selectedRecord.BatchId);
             var successCount = results.Count(r => r.Success);
-            MessageBox.Show($"Restored {successCount} out of {results.Count} files in batch.", "Batch Undo Finished", MessageBoxButton.OK, MessageBoxImage.Information);
+            var doneTitle = LocalizationManager.Get("BatchUndoDoneTitle");
+            var doneMsg = LocalizationManager.Instance.GetString("BatchUndoDoneMsg", successCount, results.Count);
+            MessageBox.Show(doneMsg, doneTitle, MessageBoxButton.OK, MessageBoxImage.Information);
             RefreshHistory();
         }
     }

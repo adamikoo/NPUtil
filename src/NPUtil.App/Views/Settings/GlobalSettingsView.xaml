@@ -4,38 +4,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="850">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="32,24,32,32" MaxWidth="760" HorizontalAlignment="Left">
             
-            <TextBlock Text="Nastavení NPUtil" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
-            <TextBlock Text="Globální předvolby vzhledu, integrace se systémem Windows a chování na pozadí."
+            <TextBlock Text="{loc:Loc GlobalSettingsTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+            <TextBlock Text="{loc:Loc GlobalSettingsSubtitle}"
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,24" />
 
             <!-- Appearance Section -->
-            <TextBlock Text="Vzhled a motiv" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
-            <ui:Card Margin="0,0,0,20" Padding="16">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Barevný motiv aplikace" FontWeight="SemiBold" FontSize="13" />
-                        <TextBlock Text="Aplikace automaticky respektuje nastavení světlého i tmavého režimu Windows 11." 
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
-                    </StackPanel>
-                    <ComboBox x:Name="CmbAppTheme" Grid.Column="1" Height="30" Width="220" SelectionChanged="CmbAppTheme_SelectionChanged">
-                        <ComboBoxItem Content="Podle systému Windows" />
-                        <ComboBoxItem Content="Světlý režim" />
-                        <ComboBoxItem Content="Tmavý režim" />
-                    </ComboBox>
-                </Grid>
-            </ui:Card>
-
-            <!-- Windows Integration Cards -->
-            <TextBlock Text="Integrace se systémem Windows" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <TextBlock Text="{loc:Loc AppearanceSection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            
+            <!-- Theme Card -->
             <ui:Card Margin="0,0,0,10" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -43,8 +25,48 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Spouštět se systémem Windows" FontWeight="SemiBold" FontSize="13" />
-                        <TextBlock Text="Automaticky spustit NPUtil na pozadí po přihlášení uživatele." 
+                        <TextBlock Text="{loc:Loc ThemeLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc ThemeDesc}" 
+                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <ComboBox x:Name="CmbAppTheme" Grid.Column="1" Height="30" Width="220" SelectionChanged="CmbAppTheme_SelectionChanged">
+                        <ComboBoxItem Content="{loc:Loc ThemeSystem}" />
+                        <ComboBoxItem Content="{loc:Loc ThemeLight}" />
+                        <ComboBoxItem Content="{loc:Loc ThemeDark}" />
+                    </ComboBox>
+                </Grid>
+            </ui:Card>
+
+            <!-- Language Card -->
+            <ui:Card Margin="0,0,0,20" Padding="16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{loc:Loc LanguageLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc LanguageDesc}" 
+                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <ComboBox x:Name="CmbLanguage" Grid.Column="1" Height="30" Width="220" SelectionChanged="CmbLanguage_SelectionChanged">
+                        <ComboBoxItem Content="{loc:Loc LangEn}" Tag="en" />
+                        <ComboBoxItem Content="{loc:Loc LangCs}" Tag="cs" />
+                    </ComboBox>
+                </Grid>
+            </ui:Card>
+
+            <!-- Windows Integration Cards -->
+            <TextBlock Text="{loc:Loc WindowsIntegrationSection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <ui:Card Margin="0,0,0,10" Padding="16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{loc:Loc StartWithWindowsLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc StartWithWindowsDesc}" 
                                    FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ui:ToggleSwitch x:Name="ChkStartWithWindows" Grid.Column="1" />
@@ -58,8 +80,8 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Zobrazovat ikonu v oznamovací oblasti (System Tray)" FontWeight="SemiBold" FontSize="13" />
-                        <TextBlock Text="Umožňuje rychlé spuštění skenování a zobrazení stavu vedle hodin." 
+                        <TextBlock Text="{loc:Loc TrayIconLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc TrayIconDesc}" 
                                    FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ui:ToggleSwitch x:Name="ChkMinimizeToTray" IsChecked="True" Grid.Column="1" />
@@ -73,14 +95,16 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Zavření okna minimalizuje do lišty" FontWeight="SemiBold" FontSize="13" />
-                        <TextBlock Text="Tlačítko X ponechá aplikaci běžet na pozadí v oznamovací oblasti." 
+                        <TextBlock Text="{loc:Loc CloseToTrayLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc CloseToTrayDesc}" 
                                    FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ui:ToggleSwitch x:Name="ChkCloseToTray" Grid.Column="1" />
                 </Grid>
             </ui:Card>
 
+            <!-- Resource Management -->
+            <TextBlock Text="{loc:Loc BatterySection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,24" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -88,8 +112,8 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Úsporný režim při napájení z baterie" FontWeight="SemiBold" FontSize="13" />
-                        <TextBlock Text="Omezí náročnou inferenci a skenování při chodu na baterii." 
+                        <TextBlock Text="{loc:Loc BatteryThrottleLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc BatteryThrottleDesc}" 
                                    FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ui:ToggleSwitch x:Name="ChkThrottleBattery" IsChecked="True" Grid.Column="1" />
@@ -98,7 +122,7 @@
 
             <!-- Save Action Button -->
             <StackPanel Orientation="Horizontal">
-                <ui:Button x:Name="BtnSaveGlobalSettings" Content="Uložit globální nastavení" Appearance="Primary"
+                <ui:Button x:Name="BtnSaveGlobalSettings" Content="{loc:Loc BtnSaveSettings}" Appearance="Primary"
                            Click="BtnSaveGlobalSettings_Click" Padding="20,6" Margin="0,0,12,0" />
                 <TextBlock x:Name="TxtGlobalFeedback" Text="" VerticalAlignment="Center" Foreground="{DynamicResource SystemFillColorSuccessBrush}" FontWeight="SemiBold" />
             </StackPanel>

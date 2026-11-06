@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="950">
     <Grid Margin="32,24,32,32">
@@ -16,8 +17,8 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Lokální a sémantické vyhledávání" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
-            <TextBlock Text="Prohledávejte indexované soubory podle názvu, kategorie, přípony i sémantického významu obsahu."
+            <TextBlock Text="{loc:Loc SearchTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+            <TextBlock Text="{loc:Loc SearchSubtitle}"
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
         </StackPanel>
 
@@ -35,9 +36,9 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <ui:TextBox x:Name="TxtSearchQuery" Grid.Column="0" KeyDown="TxtSearchQuery_KeyDown"
-                                PlaceholderText="Zadejte hledaný výraz nebo koncept (např. 'Cambridge English', 'faktura', 'daňový doklad')..."
+                                PlaceholderText="Search filename or semantic query..."
                                 Margin="0,0,10,0" Height="32" FontSize="13" />
-                    <ui:Button x:Name="BtnSearch" Grid.Column="1" Content="Hledat" Appearance="Primary"
+                    <ui:Button x:Name="BtnSearch" Grid.Column="1" Content="{loc:Loc BtnSearch}" Appearance="Primary"
                                Click="BtnSearch_Click" Width="90" Height="32" />
                 </Grid>
 
@@ -52,13 +53,13 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="Kategorie:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Column="0" Text="Category:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <ComboBox x:Name="CmbCategoryFilter" Grid.Column="1" Height="28" SelectionChanged="Filter_SelectionChanged" />
 
-                    <TextBlock Grid.Column="3" Text="Typ souboru:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Column="3" Text="File type:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <ComboBox x:Name="CmbExtensionFilter" Grid.Column="4" Height="28" SelectionChanged="Filter_SelectionChanged" />
 
-                    <TextBlock x:Name="TxtResultCount" Grid.Column="5" Text="0 nalezených výsledků" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="TxtResultCount" Grid.Column="5" Text="0 results found" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </Grid>
             </Grid>
         </ui:Card>
@@ -67,12 +68,12 @@
         <Border Grid.Row="2" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4">
             <DataGrid x:Name="GridSearchResults" AutoGenerateColumns="False" SelectionChanged="GridSearchResults_SelectionChanged" BorderThickness="0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Název souboru" Binding="{Binding FileName}" Width="220" />
-                    <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" Width="200" />
-                    <DataGridTextColumn Header="Typ" Binding="{Binding Extension}" Width="65" />
-                    <DataGridTextColumn Header="Změněno" Binding="{Binding ModifiedDate, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="125" />
-                    <DataGridTextColumn Header="Úryvek obsahu" Binding="{Binding Snippet}" Width="*" />
-                    <DataGridTextColumn Header="Relevance" Binding="{Binding RelevanceScore, StringFormat={}{0:F2}}" Width="80" />
+                    <DataGridTextColumn Header="{loc:Loc ColFileName}" Binding="{Binding FileName}" Width="220" />
+                    <DataGridTextColumn Header="{loc:Loc ColDestination}" Binding="{Binding Category}" Width="200" />
+                    <DataGridTextColumn Header="{loc:Loc ColType}" Binding="{Binding Extension}" Width="65" />
+                    <DataGridTextColumn Header="{loc:Loc ColTime}" Binding="{Binding ModifiedDate, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="125" />
+                    <DataGridTextColumn Header="{loc:Loc ColExtractedSnippet}" Binding="{Binding Snippet}" Width="*" />
+                    <DataGridTextColumn Header="{loc:Loc ColMatchScore}" Binding="{Binding RelevanceScore, StringFormat={}{0:F2}}" Width="80" />
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
@@ -85,13 +86,13 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="TxtSelectedFilePath" Grid.Column="0" Text="Vyberte výsledek vyhledávání pro zobrazení cesty."
+                <TextBlock x:Name="TxtSelectedFilePath" Grid.Column="0" Text="Select a search result to inspect details."
                            VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,0,16,0" />
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <ui:Button x:Name="BtnOpenFile" Content="Otevřít soubor" Appearance="Primary" Click="BtnOpenFile_Click" Margin="0,0,8,0" IsEnabled="False" />
-                    <ui:Button x:Name="BtnOpenFolder" Content="Zobrazit v Průzkumníku" Appearance="Secondary" Click="BtnOpenFolder_Click" Margin="0,0,8,0" IsEnabled="False" />
-                    <ui:Button x:Name="BtnCopyPath" Content="Kopírovat cestu" Appearance="Secondary" Click="BtnCopyPath_Click" IsEnabled="False" />
+                    <ui:Button x:Name="BtnOpenFile" Content="{loc:Loc BtnOpenFile}" Appearance="Primary" Click="BtnOpenFile_Click" Margin="0,0,8,0" IsEnabled="False" />
+                    <ui:Button x:Name="BtnOpenFolder" Content="{loc:Loc BtnOpenFolder}" Appearance="Secondary" Click="BtnOpenFolder_Click" Margin="0,0,8,0" IsEnabled="False" />
+                    <ui:Button x:Name="BtnCopyPath" Content="Copy Path" Appearance="Secondary" Click="BtnCopyPath_Click" IsEnabled="False" />
                 </StackPanel>
             </Grid>
         </ui:Card>

@@ -4,14 +4,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="850">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="32,24,32,32">
             
             <!-- Authentic Windows 11 Page Header -->
-            <TextBlock Text="File Organizer" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
-            <TextBlock Text="Průběžně monitoruje složku Stažené soubory a automaticky navrhuje sémantické zařazení do kategorií."
+            <TextBlock Text="{loc:Loc OverviewTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+            <TextBlock Text="{loc:Loc OverviewSubtitle}"
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,20" />
 
             <!-- Windows 11 InfoBar for Active Monitoring -->
@@ -19,17 +20,17 @@
                         IsOpen="True"
                         IsClosable="False"
                         Severity="Informational"
-                        Title="Sledování složky aktivní"
-                        Message="Sleduje se systémová složka: C:\Users\...\Downloads"
+                        Title="{loc:Loc MonitoringActiveTitle}"
+                        Message="C:\Users\...\Downloads"
                         Margin="0,0,0,12" />
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                <ui:Button x:Name="BtnToggleMonitoring" Content="Pozastavit" Click="BtnToggleMonitoring_Click" Margin="0,0,8,0" />
-                <ui:Button x:Name="BtnScanNow" Content="Spustit skenování" Appearance="Primary" Click="BtnScanNow_Click" />
+                <ui:Button x:Name="BtnToggleMonitoring" Content="{loc:Loc BtnPause}" Click="BtnToggleMonitoring_Click" Margin="0,0,8,0" />
+                <ui:Button x:Name="BtnScanNow" Content="{loc:Loc BtnScanNow}" Appearance="Primary" Click="BtnScanNow_Click" />
             </StackPanel>
 
             <!-- Metrics Summary Section (Windows 11 Settings Style Cards) -->
-            <TextBlock Text="Přehled stavu" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <TextBlock Text="{loc:Loc StatusOverview}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <Grid Margin="0,0,0,24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -40,35 +41,35 @@
 
                 <ui:Card Grid.Column="0" Margin="0,0,8,0" Padding="14,12">
                     <StackPanel>
-                        <TextBlock Text="INDEXOVANÉ SOUBORY" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{loc:Loc StatIndexed}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock x:Name="TxtIndexedCount" Text="0" FontSize="24" FontWeight="Bold" Margin="0,6,0,0" />
                     </StackPanel>
                 </ui:Card>
 
                 <ui:Card Grid.Column="1" Margin="0,0,8,0" Padding="14,12">
                     <StackPanel>
-                        <TextBlock Text="ORGANIZOVANÉ SOUBORY" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{loc:Loc StatOrganized}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock x:Name="TxtOrganizedCount" Text="0" FontSize="24" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
                     </StackPanel>
                 </ui:Card>
 
                 <ui:Card Grid.Column="2" Margin="0,0,8,0" Padding="14,12">
                     <StackPanel>
-                        <TextBlock Text="ČEKÁ NA SCHVÁLENÍ" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{loc:Loc StatPending}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock x:Name="TxtReviewCount" Text="0" FontSize="24" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource SystemFillColorCautionBrush}" />
                     </StackPanel>
                 </ui:Card>
 
                 <ui:Card Grid.Column="3" Padding="14,12">
                     <StackPanel>
-                        <TextBlock Text="VRÁCENÉ PŘESUNY (UNDO)" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{loc:Loc StatUndone}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock x:Name="TxtUndoneCount" Text="0" FontSize="24" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
                 </ui:Card>
             </Grid>
 
             <!-- AI Engine Card -->
-            <TextBlock Text="Hardwarová akcelerace a AI model" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <TextBlock Text="{loc:Loc AiAcceleration}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,24" Padding="16">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -83,33 +84,33 @@
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                             <ui:SymbolIcon Symbol="DeveloperBoard24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
-                            <TextBlock Text="Aktivní zprostředkovatel inference:" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Loc ActiveProvider}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
                         </StackPanel>
                         <TextBlock x:Name="TxtAiBackend" Text="Qualcomm Hexagon NPU (QNN HTP)" FontSize="13" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="26,0,0,4" />
                         <TextBlock x:Name="TxtModelStatus" Text="Model: Paraphrase Multilingual MiniLM L12 v2 (Quantized ONNX)" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="26,0,0,0" />
                     </StackPanel>
 
                     <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-                        <ui:Button x:Name="BtnDownloadModel" Content="Stáhnout neuronový model (~112 MB)" Appearance="Secondary" Click="BtnDownloadModel_Click" />
+                        <ui:Button x:Name="BtnDownloadModel" Content="{loc:Loc BtnDownloadModel}" Appearance="Secondary" Click="BtnDownloadModel_Click" />
                     </StackPanel>
 
                     <StackPanel x:Name="PanelDownloadProgress" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,14,0,0" Visibility="Collapsed">
                         <ProgressBar x:Name="ProgressDownload" Height="6" Minimum="0" Maximum="100" />
-                        <TextBlock x:Name="TxtDownloadProgress" Text="Stahování..." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0" />
+                        <TextBlock x:Name="TxtDownloadProgress" Text="Downloading..." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0" />
                     </StackPanel>
                 </Grid>
             </ui:Card>
 
             <!-- Recent Activity Table -->
-            <TextBlock Text="Poslední operace organizace" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <TextBlock Text="{loc:Loc RecentActivity}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4">
                 <DataGrid x:Name="GridRecentActivity" MinHeight="140" MaxHeight="240" AutoGenerateColumns="False" BorderThickness="0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Čas" Binding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" Width="90" />
-                        <DataGridTextColumn Header="Název souboru" Binding="{Binding FileName}" Width="200" />
-                        <DataGridTextColumn Header="Cílová kategorie" Binding="{Binding Category}" Width="220" />
-                        <DataGridTextColumn Header="Jistota" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
-                        <DataGridTextColumn Header="Důvod zařazení" Binding="{Binding Explanation}" Width="*" />
+                        <DataGridTextColumn Header="{loc:Loc ColTime}" Binding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" Width="90" />
+                        <DataGridTextColumn Header="{loc:Loc ColFileName}" Binding="{Binding FileName}" Width="200" />
+                        <DataGridTextColumn Header="{loc:Loc ColDestination}" Binding="{Binding Category}" Width="220" />
+                        <DataGridTextColumn Header="{loc:Loc ColConfidence}" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
+                        <DataGridTextColumn Header="{loc:Loc ColReason}" Binding="{Binding Explanation}" Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>

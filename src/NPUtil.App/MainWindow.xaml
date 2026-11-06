@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:loc="clr-namespace:NPUtil.App.Common"
         mc:Ignorable="d"
         Title="NPUtil"
-        Icon="Assets/nputil.ico"
+        Icon="Assets/logo.png"
         Height="760" Width="1160"
         MinHeight="600" MinWidth="850"
         WindowStartupLocation="CenterScreen"
@@ -22,28 +23,37 @@
         </Grid.RowDefinitions>
 
         <!-- Native Windows 11 TitleBar with Mica Integration -->
-        <ui:TitleBar Grid.Row="0" Title="NPUtil — Windows Utility Suite" Icon="Assets/nputil.ico" />
+        <ui:TitleBar Grid.Row="0" Title="{loc:Loc AppTitle}" Icon="Assets/logo.png" />
 
         <!-- Windows 11 Settings-Style Navigation Grid -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="260" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- Left Navigation View -->
             <ui:NavigationView Grid.Column="0" x:Name="RootNavigation"
                                PaneDisplayMode="Left"
+                               OpenPaneLength="250"
+                               CompactPaneLength="48"
                                IsPaneOpen="True"
                                IsBackButtonVisible="Collapsed"
                                SelectionChanged="RootNavigation_SelectionChanged">
+                <ui:NavigationView.Header>
+                    <StackPanel Orientation="Horizontal" Margin="10,8,0,8" VerticalAlignment="Center">
+                        <Image Source="Assets/logo.png" Width="24" Height="24" Margin="0,0,10,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                        <TextBlock Text="NPUtil" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    </StackPanel>
+                </ui:NavigationView.Header>
+
                 <ui:NavigationView.MenuItems>
-                    <ui:NavigationViewItem Content="File Organizer" Tag="FileOrganizer" Icon="{ui:SymbolIcon Folder24}" />
+                    <ui:NavigationViewItem Content="{loc:Loc NavFileOrganizer}" Tag="FileOrganizer" Icon="{ui:SymbolIcon Folder24}" Click="RootNavItem_Click" />
                 </ui:NavigationView.MenuItems>
 
                 <ui:NavigationView.FooterMenuItems>
-                    <ui:NavigationViewItem Content="System &amp; Diagnostics" Tag="Hardware" Icon="{ui:SymbolIcon DeveloperBoard24}" />
-                    <ui:NavigationViewItem Content="Settings" Tag="Settings" Icon="{ui:SymbolIcon Settings24}" />
+                    <ui:NavigationViewItem Content="{loc:Loc NavHardware}" Tag="Hardware" Icon="{ui:SymbolIcon DeveloperBoard24}" Click="RootNavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc NavSettings}" Tag="Settings" Icon="{ui:SymbolIcon Settings24}" Click="RootNavItem_Click" />
                 </ui:NavigationView.FooterMenuItems>
             </ui:NavigationView>
 

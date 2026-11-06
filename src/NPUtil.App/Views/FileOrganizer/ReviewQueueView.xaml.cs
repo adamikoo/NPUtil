@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using NPUtil.Core.Localization;
 using NPUtil.Modules.FileOrganizer;
 using NPUtil.Modules.FileOrganizer.Core;
 using NPUtil.Modules.FileOrganizer.Models;
@@ -19,6 +20,8 @@ public partial class ReviewQueueView : UserControl
         {
             _module.Engine.ReviewQueueChanged += (s, e) => Dispatcher.Invoke(RefreshQueue);
         }
+
+        LocalizationManager.Instance.PropertyChanged += (s, e) => Dispatcher.Invoke(RefreshQueue);
 
         Loaded += (s, e) =>
         {
@@ -41,7 +44,7 @@ public partial class ReviewQueueView : UserControl
 
         var items = _module.Engine.GetReviewQueue();
         GridReviewQueue.ItemsSource = items;
-        TxtPendingCount.Text = $"{items.Count} items awaiting review";
+        TxtPendingCount.Text = LocalizationManager.Instance.GetString("PendingCountFormat", items.Count);
         BtnApproveAll.IsEnabled = items.Count > 0;
     }
 
@@ -49,7 +52,8 @@ public partial class ReviewQueueView : UserControl
     {
         if (GridReviewQueue.SelectedItem is ReviewItem item)
         {
-            TxtSelectedExplanation.Text = $"{item.FileName}\n{item.Explanation}\nExtracted Keywords: [{string.Join(", ", item.Keywords)}]";
+            TxtSelectedExplanation.Text = $"{item.FileName}\n{item.Explanation}\n" +
+                LocalizationManager.Instance.GetString("ExtractedKeywords", string.Join(", ", item.Keywords));
             if (item.Alternatives.Count > 0)
             {
                 PanelAlternatives.Visibility = Visibility.Visible;
@@ -64,7 +68,7 @@ public partial class ReviewQueueView : UserControl
         }
         else
         {
-            TxtSelectedExplanation.Text = "Select an item above to inspect classification reasoning and alternative categories.";
+            TxtSelectedExplanation.Text = LocalizationManager.Get("DetailPlaceholder");
             PanelAlternatives.Visibility = Visibility.Collapsed;
         }
     }
@@ -115,7 +119,11 @@ public partial class ReviewQueueView : UserControl
         try
         {
             var count = await _module.Engine.ApproveAllPendingAsync();
-            MessageBox.Show($"Approved and organized {count} files.", "Batch Approval Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(
+                LocalizationManager.Instance.GetString("BatchApprovalMsg", count),
+                LocalizationManager.Get("BatchApprovalComplete"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
         finally
         {

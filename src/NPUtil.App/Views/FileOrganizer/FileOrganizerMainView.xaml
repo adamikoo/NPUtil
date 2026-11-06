@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="950">
     <Grid>
@@ -20,12 +21,12 @@
                                IsPaneToggleVisible="False"
                                SelectionChanged="TopNav_SelectionChanged">
                 <ui:NavigationView.MenuItems>
-                    <ui:NavigationViewItem Content="Přehled" Tag="Overview" Icon="{ui:SymbolIcon Home24}" Click="NavItem_Click" />
-                    <ui:NavigationViewItem x:Name="NavReviewItem" Content="Fronta k revizi" Tag="Review" Icon="{ui:SymbolIcon TaskListSquareAdd24}" Click="NavItem_Click" />
-                    <ui:NavigationViewItem Content="Kategorie a složky" Tag="Explorer" Icon="{ui:SymbolIcon Folder24}" Click="NavItem_Click" />
-                    <ui:NavigationViewItem Content="Vyhledávání" Tag="Search" Icon="{ui:SymbolIcon Search24}" Click="NavItem_Click" />
-                    <ui:NavigationViewItem Content="Historie a Undo" Tag="Activity" Icon="{ui:SymbolIcon History24}" Click="NavItem_Click" />
-                    <ui:NavigationViewItem Content="Předvolby modulu" Tag="Settings" Icon="{ui:SymbolIcon Settings24}" Click="NavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc TabOverview}" Tag="Overview" Icon="{ui:SymbolIcon Home24}" Click="NavItem_Click" />
+                    <ui:NavigationViewItem x:Name="NavReviewItem" Content="{loc:Loc TabReview}" Tag="Review" Icon="{ui:SymbolIcon TaskListSquareAdd24}" Click="NavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc TabExplorer}" Tag="Explorer" Icon="{ui:SymbolIcon Folder24}" Click="NavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc TabSearch}" Tag="Search" Icon="{ui:SymbolIcon Search24}" Click="NavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc TabActivity}" Tag="Activity" Icon="{ui:SymbolIcon History24}" Click="NavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc TabModuleSettings}" Tag="Settings" Icon="{ui:SymbolIcon Settings24}" Click="NavItem_Click" />
                 </ui:NavigationView.MenuItems>
             </ui:NavigationView>
         </Border>

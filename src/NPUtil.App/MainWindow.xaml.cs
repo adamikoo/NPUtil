@@ -5,6 +5,7 @@ using NPUtil.App.Views.FileOrganizer;
 using NPUtil.App.Views.Hardware;
 using NPUtil.App.Views.Settings;
 using NPUtil.Core.Hardware;
+using NPUtil.Core.Localization;
 using NPUtil.Core.Logging;
 using NPUtil.Core.Modules;
 using NPUtil.Core.Services;
@@ -32,6 +33,9 @@ public partial class MainWindow : FluentWindow
         InitializeComponent();
 
         AppLogger.Initialize();
+
+        // Apply persisted language (stock default: English)
+        LocalizationManager.Instance.CurrentLanguage = _settingsManager.Current.Language ?? "en";
 
         // Apply theme and watch Windows system theme changes automatically
         SystemThemeWatcher.Watch(this);
@@ -73,7 +77,7 @@ public partial class MainWindow : FluentWindow
         });
 
         // 5. Set Initial View
-        RootFrame.Navigate(_fileOrganizerView);
+        NavigateToTag("FileOrganizer");
 
         // 6. Update Status Bar
         UpdateStatusBar();
@@ -82,6 +86,8 @@ public partial class MainWindow : FluentWindow
         {
             _fileOrganizerModule.Engine.StatusChanged += (s, ev) => Dispatcher.Invoke(UpdateStatusBar);
         }
+
+        LocalizationManager.Instance.PropertyChanged += (s, ev) => Dispatcher.Invoke(UpdateStatusBar);
     }
 
     private void UpdateStatusBar()
@@ -93,35 +99,62 @@ public partial class MainWindow : FluentWindow
         {
             var folder = System.IO.Path.GetFileName(_fileOrganizerModule.Engine.WatchedFolder);
             StatusMonitoring.Text = _fileOrganizerModule.Engine.IsMonitoring
-                ? $"Monitoring: Active ({folder})"
-                : "Monitoring: Paused";
+                ? LocalizationManager.Instance.GetString("StatusMonitoringActive", folder)
+                : LocalizationManager.Get("StatusMonitoringPaused");
 
             _trayHelper?.UpdateTooltip($"NPUtil — File Organizer ({(_fileOrganizerModule.Engine.IsMonitoring ? "Active" : "Paused")})");
         }
 
-        StatusPower.Text = diag.IsOnBattery ? $"Battery: {diag.BatteryPercent}%" : "AC Power";
+        StatusPower.Text = diag.IsOnBattery 
+            ? LocalizationManager.Instance.GetString("PowerBattery", diag.BatteryPercent) 
+            : LocalizationManager.Get("PowerAc");
+    }
+
+    private void RootNavItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is NavigationViewItem item)
+        {
+            NavigateToTag(item.Tag?.ToString());
+        }
     }
 
     private void RootNavigation_SelectionChanged(NavigationView sender, RoutedEventArgs args)
     {
-        if (!IsLoaded) return;
-
         if (sender.SelectedItem is NavigationViewItem item)
         {
-            var tag = item.Tag?.ToString();
-            if (tag == "FileOrganizer" && _fileOrganizerView != null)
-            {
-                RootFrame.Navigate(_fileOrganizerView);
-            }
-            else if (tag == "Hardware" && _hardwareView != null)
-            {
-                _hardwareView.RefreshDiagnostics();
-                RootFrame.Navigate(_hardwareView);
-            }
-            else if (tag == "Settings" && _globalSettingsView != null)
-            {
-                RootFrame.Navigate(_globalSettingsView);
-            }
+            NavigateToTag(item.Tag?.ToString());
+        }
+        else if (args.Source is NavigationViewItem sourceItem)
+        {
+            NavigateToTag(sourceItem.Tag?.ToString());
+        }
+    }
+
+    private void NavigateToTag(string? tag)
+    {
+        if (string.IsNullOrEmpty(tag)) return;
+
+        foreach (var menuItem in RootNavigation.MenuItems)
+        {
+            if (menuItem is NavigationViewItem ni) ni.IsActive = (ni.Tag?.ToString() == tag);
+        }
+        foreach (var menuItem in RootNavigation.FooterMenuItems)
+        {
+            if (menuItem is NavigationViewItem ni) ni.IsActive = (ni.Tag?.ToString() == tag);
+        }
+
+        if (tag == "FileOrganizer" && _fileOrganizerView != null)
+        {
+            RootFrame.Navigate(_fileOrganizerView);
+        }
+        else if (tag == "Hardware" && _hardwareView != null)
+        {
+            _hardwareView.RefreshDiagnostics();
+            RootFrame.Navigate(_hardwareView);
+        }
+        else if (tag == "Settings" && _globalSettingsView != null)
+        {
+            RootFrame.Navigate(_globalSettingsView);
         }
     }
 

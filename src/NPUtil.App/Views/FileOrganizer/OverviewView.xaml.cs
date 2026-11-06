@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using NPUtil.Core.Localization;
 using NPUtil.Modules.FileOrganizer;
 
 namespace NPUtil.App.Views.FileOrganizer;
@@ -29,6 +30,8 @@ public partial class OverviewView : UserControl
             });
         }
 
+        LocalizationManager.Instance.PropertyChanged += (s, e) => Dispatcher.Invoke(RefreshStatus);
+
         Loaded += (s, e) => RefreshStatus();
     }
 
@@ -36,10 +39,10 @@ public partial class OverviewView : UserControl
     {
         if (_module.Engine == null) return;
 
-        BarMonitoring.Message = $"Sledovaný adresář: {_module.Engine.WatchedFolder}";
+        BarMonitoring.Message = LocalizationManager.Instance.GetString("MonitoringWatchedFolder", _module.Engine.WatchedFolder);
         BarMonitoring.Severity = _module.Engine.IsMonitoring ? Wpf.Ui.Controls.InfoBarSeverity.Success : Wpf.Ui.Controls.InfoBarSeverity.Warning;
-        BarMonitoring.Title = _module.Engine.IsMonitoring ? "Sledování složky aktivní" : "Sledování složky pozastaveno";
-        BtnToggleMonitoring.Content = _module.Engine.IsMonitoring ? "Pozastavit" : "Obnovit";
+        BarMonitoring.Title = _module.Engine.IsMonitoring ? LocalizationManager.Get("MonitoringActiveTitle") : LocalizationManager.Get("MonitoringPausedTitle");
+        BtnToggleMonitoring.Content = _module.Engine.IsMonitoring ? LocalizationManager.Get("BtnPause") : LocalizationManager.Get("BtnResume");
 
         var (totalMoved, active, undone) = _module.Engine.GetOperationCounts();
         TxtOrganizedCount.Text = active.ToString();

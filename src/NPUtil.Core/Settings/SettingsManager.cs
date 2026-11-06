@@ -13,6 +13,7 @@ public enum AppTheme
 public class GlobalSettings
 {
     public AppTheme Theme { get; set; } = AppTheme.System;
+    public string Language { get; set; } = "en";
     public bool StartWithWindows { get; set; } = false;
     public bool MinimizeToTray { get; set; } = true;
     public bool CloseToTray { get; set; } = false;

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using NPUtil.Core.Hardware;
+using NPUtil.Core.Localization;
 using NPUtil.Core.Logging;
 
 namespace NPUtil.App.Views.Hardware;
@@ -38,7 +39,9 @@ public partial class HardwareView : UserControl
         TxtOs.Text = diag.OperatingSystem;
         TxtActiveAi.Text = diag.ActiveAiBackend;
         TxtQnnStatus.Text = diag.IsQnnLibraryAvailable ? "Installed and Verified" : "CPU Fallback Active";
-        TxtPowerStatus.Text = diag.IsOnBattery ? $"Battery ({diag.BatteryPercent}%) - Throttling Enabled" : "AC Power (Full Performance)";
+        TxtPowerStatus.Text = diag.IsOnBattery 
+            ? LocalizationManager.Instance.GetString("PowerBattery", diag.BatteryPercent) 
+            : LocalizationManager.Get("PowerAc");
 
         // Populate recent logs
         var recent = AppLogger.GetRecentEntries();

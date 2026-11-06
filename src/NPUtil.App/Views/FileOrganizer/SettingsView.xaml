@@ -4,62 +4,63 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
              d:DesignHeight="750" d:DesignWidth="850">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="32,24,32,32" MaxWidth="760" HorizontalAlignment="Left">
             
             <!-- Page Header -->
-            <TextBlock Text="Předvolby modulu File Organizer" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
-            <TextBlock Text="Konfigurace parametrů sledování, úrovně automatizace a hardwarové akcelerace."
+            <TextBlock Text="{loc:Loc ModuleSettingsTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+            <TextBlock Text="{loc:Loc ModuleSettingsSubtitle}"
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,24" />
 
             <!-- Directory Monitoring Section -->
-            <TextBlock Text="Sledovaný adresář" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <TextBlock Text="{loc:Loc WatchedDirSection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,20" Padding="16">
                 <StackPanel>
-                    <TextBlock Text="Cesta ke složce Stažené soubory" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6" />
+                    <TextBlock Text="{loc:Loc WatchedPathLabel}" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6" />
                     <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <ui:TextBox x:Name="TxtWatchedPath" Grid.Column="0" Margin="0,0,8,0" Height="32" />
-                        <ui:Button x:Name="BtnBrowseFolder" Grid.Column="1" Content="Procházet..." Appearance="Secondary" Click="BtnBrowseFolder_Click" Width="90" Height="32" />
+                        <ui:Button x:Name="BtnBrowseFolder" Grid.Column="1" Content="{loc:Loc BtnBrowse}" Appearance="Secondary" Click="BtnBrowseFolder_Click" Width="90" Height="32" />
                     </Grid>
-                    <TextBlock Text="NPUtil automaticky zjišťuje skutečné systémové umístění složky Downloads přes Windows Known Folders API."
+                    <TextBlock Text="{loc:Loc KnownFolderHint}"
                                FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
             </ui:Card>
 
             <!-- Automation Mode Section -->
-            <TextBlock Text="Úroveň automatizace" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <TextBlock Text="{loc:Loc AutomationSection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,20" Padding="16">
                 <StackPanel>
                     <RadioButton x:Name="RadioReviewEverything" GroupName="OrgMode" IsChecked="True">
                         <StackPanel Margin="6,0,0,0">
-                            <TextBlock Text="Revize všeho (Doporučeno)" FontWeight="SemiBold" />
-                            <TextBlock Text="Každý navržený přesun se zařadí do Fronty k revizi a čeká na vaše potvrzení." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{loc:Loc ModeReviewEverything}" FontWeight="SemiBold" />
+                            <TextBlock Text="{loc:Loc ModeReviewDesc}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                     </RadioButton>
 
                     <RadioButton x:Name="RadioIntelligentAuto" GroupName="OrgMode" Margin="0,10,0,0">
                         <StackPanel Margin="6,0,0,0">
-                            <TextBlock Text="Inteligentní automatika" FontWeight="SemiBold" />
-                            <TextBlock Text="Jednoznačné soubory s vysokou jistotou přesune automaticky, sporné případy zařadí do fronty." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{loc:Loc ModeIntelligentAuto}" FontWeight="SemiBold" />
+                            <TextBlock Text="{loc:Loc ModeIntelligentDesc}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                     </RadioButton>
 
                     <RadioButton x:Name="RadioFullyAutomatic" GroupName="OrgMode" Margin="0,10,0,0">
                         <StackPanel Margin="6,0,0,0">
-                            <TextBlock Text="Plně automatický" FontWeight="SemiBold" />
-                            <TextBlock Text="Organizovat všechny soubory ihned po dokončení stahování podle nejvyšší shody." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{loc:Loc ModeFullyAuto}" FontWeight="SemiBold" />
+                            <TextBlock Text="{loc:Loc ModeFullyDesc}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                     </RadioButton>
 
                     <Separator Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="0,16,0,14" />
 
-                    <TextBlock Text="Prah jistoty pro automatické zařazení:" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                    <TextBlock Text="{loc:Loc ConfidenceThreshold}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -73,25 +74,25 @@
             </ui:Card>
 
             <!-- Hardware & Performance Section -->
-            <TextBlock Text="Hardware a správa napájení" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <TextBlock Text="{loc:Loc HardwarePowerSection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,24" Padding="16">
                 <StackPanel>
-                    <TextBlock Text="Zprostředkovatel AI akcelerace" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6" />
+                    <TextBlock Text="{loc:Loc AiProviderLabel}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6" />
                     <ComboBox x:Name="CmbHardwareBackend" Height="30" Margin="0,0,0,14">
-                        <ComboBoxItem Content="Automaticky (Qualcomm Hexagon NPU pokud je k dispozici, jinak CPU)" IsSelected="True" />
-                        <ComboBoxItem Content="Vynutit Qualcomm Hexagon NPU (QNN HTP)" />
-                        <ComboBoxItem Content="Vynutit CPU (ARM64 Vectorized / NEON)" />
+                        <ComboBoxItem Content="{loc:Loc AiAuto}" IsSelected="True" />
+                        <ComboBoxItem Content="{loc:Loc AiForceQnn}" />
+                        <ComboBoxItem Content="{loc:Loc AiForceCpu}" />
                     </ComboBox>
 
-                    <CheckBox x:Name="ChkThrottleBattery" Content="Omezit úlohy a pozastavit skenování při chodu na baterii" IsChecked="True" Margin="0,0,0,8" />
-                    <CheckBox x:Name="ChkIgnoreIncomplete" Content="Ignorovat nedokončená stahování prohlížeče (.crdownload, .part, .tmp)" IsChecked="True" Margin="0,0,0,8" />
-                    <CheckBox x:Name="ChkIgnoreHidden" Content="Ignorovat skryté a systémové soubory" IsChecked="True" />
+                    <CheckBox x:Name="ChkThrottleBattery" Content="{loc:Loc OptThrottleBattery}" IsChecked="True" Margin="0,0,0,8" />
+                    <CheckBox x:Name="ChkIgnoreIncomplete" Content="{loc:Loc OptIgnoreIncomplete}" IsChecked="True" Margin="0,0,0,8" />
+                    <CheckBox x:Name="ChkIgnoreHidden" Content="{loc:Loc OptIgnoreHidden}" IsChecked="True" />
                 </StackPanel>
             </ui:Card>
 
             <!-- Save Action Button -->
             <StackPanel Orientation="Horizontal">
-                <ui:Button x:Name="BtnSaveSettings" Content="Uložit nastavení" Appearance="Primary"
+                <ui:Button x:Name="BtnSaveSettings" Content="{loc:Loc BtnSaveSettings}" Appearance="Primary"
                            Click="BtnSaveSettings_Click" Padding="20,6" Margin="0,0,12,0" />
                 <TextBlock x:Name="TxtSaveFeedback" Text="" VerticalAlignment="Center" Foreground="{DynamicResource SystemFillColorSuccessBrush}" FontWeight="SemiBold" />
             </StackPanel>
