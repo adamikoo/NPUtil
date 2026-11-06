@@ -4,8 +4,8 @@
     <!-- Fluent ComboBox ToggleButton Template -->
     <ControlTemplate x:Key="FluentComboBoxToggleButtonTemplate" TargetType="{x:Type ToggleButton}">
         <Border x:Name="TemplateRoot"
-                Background="{DynamicResource SurfaceBackgroundBrush}"
-                BorderBrush="{DynamicResource BorderBrush}"
+                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 CornerRadius="6"
                 SnapsToDevicePixels="True">
@@ -21,7 +21,7 @@
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center"
                       Data="M 0 0 L 4.5 4.5 L 9 0"
-                      Stroke="{DynamicResource TextSecondaryBrush}"
+                      Stroke="{DynamicResource TextFillColorSecondaryBrush}"
                       StrokeThickness="1.5"
                       StrokeStartLineCap="Round"
                       StrokeEndLineCap="Round" />
@@ -29,12 +29,12 @@
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="TemplateRoot" Property="Background" Value="{DynamicResource SidebarSelectedBrush}" />
-                <Setter TargetName="TemplateRoot" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
-                <Setter TargetName="Chevron" Property="Stroke" Value="{DynamicResource TextPrimaryBrush}" />
+                <Setter TargetName="TemplateRoot" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                <Setter TargetName="TemplateRoot" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                <Setter TargetName="Chevron" Property="Stroke" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
-                <Setter TargetName="TemplateRoot" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                <Setter TargetName="TemplateRoot" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
                 <Setter TargetName="Chevron" Property="RenderTransform">
                     <Setter.Value>
                         <RotateTransform Angle="180" CenterX="4.5" CenterY="2.25" />
@@ -47,13 +47,13 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <!-- Fluent ComboBoxItem Style -->
+    <!-- Implicit & Keyed Fluent ComboBoxItem Style (Applies cleanly to all ComboBoxItems) -->
     <Style x:Key="FluentComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Padding" Value="12,8" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Template">
@@ -63,22 +63,22 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="0"
-                            CornerRadius="4"
+                            CornerRadius="5"
                             Padding="{TemplateBinding Padding}"
-                            Margin="2,1"
+                            Margin="3,1"
                             SnapsToDevicePixels="True">
                         <ContentPresenter Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          TextElement.Foreground="{DynamicResource TextPrimaryBrush}" />
+                                          TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SidebarSelectedBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SidebarSelectedBrush}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
                             <Setter Property="FontWeight" Value="SemiBold" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
@@ -90,12 +90,15 @@
         </Setter>
     </Style>
 
+    <!-- Implicit ComboBoxItem style so explicitly declared items in XAML automatically use it -->
+    <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource FluentComboBoxItemStyle}" />
+
     <!-- Global Fluent ComboBox Style -->
     <Style TargetType="{x:Type ComboBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-        <Setter Property="Background" Value="{DynamicResource SurfaceBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
@@ -117,7 +120,7 @@
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Stretch" />
 
-                        <!-- Content of Selected Item -->
+                        <!-- Content of Selected Item - Injected ComboBoxItem Style strips out any outer borders or indicators -->
                         <ContentPresenter x:Name="ContentSite"
                                           IsHitTestVisible="False"
                                           Content="{TemplateBinding SelectionBoxItem}"
@@ -126,7 +129,27 @@
                                           Margin="12,0,36,0"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          TextElement.Foreground="{DynamicResource TextPrimaryBrush}" />
+                                          TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+                            <ContentPresenter.Resources>
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                                                <ContentPresenter Content="{TemplateBinding Content}"
+                                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                  TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
 
                         <!-- Dropdown Popup -->
                         <Popup x:Name="PART_Popup"
@@ -139,8 +162,8 @@
                             <Border x:Name="DropDownBorder"
                                     MinWidth="{Binding ActualWidth, ElementName=MainGrid}"
                                     MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                                    Background="{DynamicResource SurfaceBackgroundBrush}"
-                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                     BorderThickness="1"
                                     CornerRadius="8"
                                     Padding="4,6"
@@ -149,7 +172,7 @@
                                     <DropShadowEffect BlurRadius="16"
                                                       Direction="270"
                                                       ShadowDepth="4"
-                                                      Opacity="0.35"
+                                                      Opacity="0.45"
                                                       Color="#000000" />
                                 </Border.Effect>
                                 <ScrollViewer x:Name="DropDownScrollViewer"
@@ -168,7 +191,7 @@
                             <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -13,6 +13,7 @@ public record OcrResultData
 {
     public required string FullText { get; init; }
     public IReadOnlyList<OcrLineInfo> Lines { get; init; } = [];
+    public int WordCount { get; init; }
     public string Language { get; init; } = "cs";
     public bool Success { get; init; }
     public string? ErrorMessage { get; init; }
@@ -22,6 +23,6 @@ public interface IOcrService
 {
     bool IsLanguageSupported(string languageTag);
     IReadOnlyList<string> GetAvailableLanguages();
-    Task<OcrResultData> RecognizeAsync(string imagePath, string languageTag = "cs", CancellationToken ct = default);
-    Task<OcrResultData> RecognizeBytesAsync(byte[] imageBytes, string languageTag = "cs", CancellationToken ct = default);
+    Task<OcrResultData> RecognizeAsync(string imagePath, string languageTag = "auto", CancellationToken ct = default);
+    Task<OcrResultData> RecognizeBytesAsync(byte[] imageBytes, string languageTag = "auto", CancellationToken ct = default);
 }

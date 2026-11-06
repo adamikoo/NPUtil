@@ -40,4 +40,18 @@
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}" />
     <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}" />
 
+    <!-- Fluent Theme Bridge Brushes -->
+    <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#FAFAFA" />
+    <SolidColorBrush x:Key="ControlFillColorSecondaryBrush" Color="#F0F0F0" />
+    <SolidColorBrush x:Key="ControlFillColorTertiaryBrush" Color="#E5E5E5" />
+    <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush" Color="#F0F0F0" />
+    <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush" Color="#E5E5E5" />
+    <SolidColorBrush x:Key="ControlStrokeColorDefaultBrush" Color="#D1D1D1" />
+    <SolidColorBrush x:Key="ControlStrokeColorSecondaryBrush" Color="#B8B8B8" />
+    <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#1A1A1A" />
+    <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="#5C5C5C" />
+    <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="ApplicationBackgroundBrush" Color="#F3F3F3" />
+    <SolidColorBrush x:Key="AccentFillColorDefaultBrush" Color="#0067C0" />
+
 </ResourceDictionary>

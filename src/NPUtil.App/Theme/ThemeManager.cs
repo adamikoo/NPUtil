@@ -26,19 +26,28 @@ public class ThemeManager
             ? new Uri("pack://application:,,,/Theme/DarkTheme.xaml", UriKind.Absolute)
             : new Uri("pack://application:,,,/Theme/LightTheme.xaml", UriKind.Absolute);
 
-        var appDicts = Application.Current.Resources.MergedDictionaries;
-        var existing = appDicts.FirstOrDefault(d => d.Source != null && d.Source.OriginalString.Contains("Theme.xaml"));
+        var appDicts = Application.Current?.Resources?.MergedDictionaries;
+        if (appDicts != null)
+        {
+            var existing = appDicts.FirstOrDefault(d => d.Source != null && d.Source.OriginalString.EndsWith("Theme.xaml", StringComparison.OrdinalIgnoreCase));
+            var newDict = new ResourceDictionary { Source = dictUri };
+            if (existing != null)
+            {
+                var index = appDicts.IndexOf(existing);
+                appDicts[index] = newDict;
+            }
+            else
+            {
+                appDicts.Add(newDict);
+            }
+        }
 
-        var newDict = new ResourceDictionary { Source = dictUri };
-        if (existing != null)
+        try
         {
-            var index = appDicts.IndexOf(existing);
-            appDicts[index] = newDict;
+            var wpfUiTheme = isDark ? Wpf.Ui.Appearance.ApplicationTheme.Dark : Wpf.Ui.Appearance.ApplicationTheme.Light;
+            Wpf.Ui.Appearance.ApplicationThemeManager.Apply(wpfUiTheme, Wpf.Ui.Controls.WindowBackdropType.Mica, updateAccent: false);
         }
-        else
-        {
-            appDicts.Add(newDict);
-        }
+        catch { /* ignore */ }
 
         ThemeChanged?.Invoke(null, theme);
     }

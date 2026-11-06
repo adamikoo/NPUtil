@@ -73,7 +73,8 @@ public partial class MainWindow : FluentWindow
         // Apply persisted language (stock default: English)
         LocalizationManager.Instance.CurrentLanguage = _settingsManager.Current.Language ?? "en";
 
-        // Apply theme and watch Windows system theme changes automatically
+        // Apply persisted theme (defaults to System matching Windows)
+        Theme.ThemeManager.ApplyTheme(_settingsManager.Current.Theme);
         SystemThemeWatcher.Watch(this);
 
         Loaded += MainWindow_Loaded;

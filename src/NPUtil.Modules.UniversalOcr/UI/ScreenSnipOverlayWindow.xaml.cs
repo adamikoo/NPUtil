@@ -59,18 +59,33 @@ public partial class ScreenSnipOverlayWindow : Window
         {
             _isSelecting = false;
             ReleaseMouseCapture();
-            Hide();
 
             var cur = e.GetPosition(this);
-            var x = (int)Math.Min(_startPoint.X, cur.X);
-            var y = (int)Math.Min(_startPoint.Y, cur.Y);
-            var w = (int)Math.Abs(cur.X - _startPoint.X);
-            var h = (int)Math.Abs(cur.Y - _startPoint.Y);
 
-            if (w > 10 && h > 10)
+            // Convert WPF DIP coordinates to physical monitor device pixels BEFORE hiding the window
+            var p1 = PointToScreen(_startPoint);
+            var p2 = PointToScreen(cur);
+
+            int physX = (int)Math.Min(p1.X, p2.X);
+            int physY = (int)Math.Min(p1.Y, p2.Y);
+            int physW = (int)Math.Abs(p2.X - p1.X);
+            int physH = (int)Math.Abs(p2.Y - p1.Y);
+
+            // Calculate DIP bounds for positioning UI windows (e.g. ScreenLensWindow)
+            int dipX = (int)Math.Min(_startPoint.X, cur.X);
+            int dipY = (int)Math.Min(_startPoint.Y, cur.Y);
+            int dipW = (int)Math.Abs(cur.X - _startPoint.X);
+            int dipH = (int)Math.Abs(cur.Y - _startPoint.Y);
+
+            Hide();
+
+            if (physW > 10 && physH > 10)
             {
-                var bounds = new System.Drawing.Rectangle(x, y, w, h);
-                var bytes = CaptureScreenRegion(x, y, w, h);
+                // Brief pause so Desktop Window Manager redraws without the translucent overlay
+                System.Threading.Thread.Sleep(35);
+
+                var bounds = new System.Drawing.Rectangle(dipX, dipY, dipW, dipH);
+                var bytes = CaptureScreenRegion(physX, physY, physW, physH);
                 RegionCaptured?.Invoke(bytes);
                 RegionCapturedWithBounds?.Invoke(bytes, bounds);
             }

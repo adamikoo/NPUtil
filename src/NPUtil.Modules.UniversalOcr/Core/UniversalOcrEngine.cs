@@ -54,8 +54,8 @@ public class UniversalOcrEngine
 
         try
         {
-            // 1. OCR Recognition
-            var ocr = await _ocrService.RecognizeBytesAsync(imageBytes, "cs", ct);
+            // 1. OCR Recognition (use auto language detection / user profile OCR recognizer)
+            var ocr = await _ocrService.RecognizeBytesAsync(imageBytes, "auto", ct);
             if (!ocr.Success)
             {
                 return new OcrTranslationResult

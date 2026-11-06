@@ -60,4 +60,26 @@ public class UniversalOcrTests
         var langs = _ocrService.GetAvailableLanguages();
         Assert.NotEmpty(langs);
     }
+
+    [Fact]
+    public async Task OcrService_RecognizesTextOnDarkBackground()
+    {
+        // Render crisp white text on a dark background (simulating Reddit / VS Code dark mode)
+        using var bmp = new System.Drawing.Bitmap(400, 120);
+        using (var g = System.Drawing.Graphics.FromImage(bmp))
+        {
+            g.Clear(System.Drawing.Color.FromArgb(24, 24, 24));
+            using var font = new System.Drawing.Font("Arial", 28, System.Drawing.FontStyle.Bold);
+            using var brush = new System.Drawing.SolidBrush(System.Drawing.Color.White);
+            g.DrawString("Snapdragon Elite", font, brush, new System.Drawing.PointF(20, 35));
+        }
+
+        using var ms = new System.IO.MemoryStream();
+        bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+        var bytes = ms.ToArray();
+
+        var result = await _ocrService.RecognizeBytesAsync(bytes, "auto");
+        Assert.True(result.Success);
+        Assert.Contains("Snapdragon", result.FullText, StringComparison.OrdinalIgnoreCase);
+    }
 }
