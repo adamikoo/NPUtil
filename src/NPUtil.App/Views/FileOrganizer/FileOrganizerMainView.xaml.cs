@@ -86,29 +86,25 @@ public partial class FileOrganizerMainView : System.Windows.Controls.UserControl
             }
         }
 
-        switch (tag)
+        FrameworkElement? target = tag switch
         {
-            case "Overview":
-                _overviewView.RefreshStatus();
-                ContentArea.Content = _overviewView;
-                break;
-            case "Review":
-                _reviewQueueView.RefreshQueue();
-                ContentArea.Content = _reviewQueueView;
-                break;
-            case "Explorer":
-                ContentArea.Content = _folderExplorerView;
-                break;
-            case "Search":
-                ContentArea.Content = _searchView;
-                break;
-            case "Activity":
-                _activityView.RefreshHistory();
-                ContentArea.Content = _activityView;
-                break;
-            case "Settings":
-                ContentArea.Content = _settingsView;
-                break;
+            "Overview" => _overviewView,
+            "Review" => _reviewQueueView,
+            "Explorer" => _folderExplorerView,
+            "Search" => _searchView,
+            "Activity" => _activityView,
+            "Settings" => _settingsView,
+            _ => null
+        };
+
+        if (target != null)
+        {
+            if (tag == "Overview") _overviewView.RefreshStatus();
+            else if (tag == "Review") _reviewQueueView.RefreshQueue();
+            else if (tag == "Activity") _activityView.RefreshHistory();
+
+            ContentArea.Content = target;
+            NPUtil.App.Common.FluentAnimationHelper.AnimateEntrance(target);
         }
     }
 }

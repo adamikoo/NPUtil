@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
+using System.Windows.Media;
 
 namespace NPUtil.App.Common;
 
@@ -20,12 +20,12 @@ public static class SmoothScrollHelper
     public static void SetIsSmoothScrollEnabled(DependencyObject obj, bool value) =>
         obj.SetValue(IsSmoothScrollEnabledProperty, value);
 
-    private static readonly DependencyProperty TargetOffsetProperty =
+    private static readonly DependencyProperty ControllerProperty =
         DependencyProperty.RegisterAttached(
-            "TargetOffset",
-            typeof(double),
+            "Controller",
+            typeof(SmoothScrollController),
             typeof(SmoothScrollHelper),
-            new PropertyMetadata(0.0));
+            new PropertyMetadata(null));
 
     private static void OnIsSmoothScrollEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -33,60 +33,109 @@ public static class SmoothScrollHelper
         {
             if ((bool)e.NewValue)
             {
-                scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
+                var controller = new SmoothScrollController(scrollViewer);
+                scrollViewer.SetValue(ControllerProperty, controller);
             }
             else
             {
-                scrollViewer.PreviewMouseWheel -= OnPreviewMouseWheel;
+                if (scrollViewer.GetValue(ControllerProperty) is SmoothScrollController controller)
+                {
+                    controller.Dispose();
+                    scrollViewer.ClearValue(ControllerProperty);
+                }
             }
-        }
-    }
-
-    private static void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        if (sender is not ScrollViewer sv) return;
-
-        e.Handled = true;
-
-        // Controlled scroll step (75 pixels per notch, smooth and restrained)
-        var step = -Math.Sign(e.Delta) * 75.0;
-
-        var currentTarget = (double)sv.GetValue(TargetOffsetProperty);
-        if (Math.Abs(currentTarget - sv.VerticalOffset) > 200)
-        {
-            currentTarget = sv.VerticalOffset;
-        }
-
-        var newTarget = Math.Clamp(currentTarget + step, 0, sv.ScrollableHeight);
-        sv.SetValue(TargetOffsetProperty, newTarget);
-
-        var anim = new ScrollAnimation
-        {
-            From = sv.VerticalOffset,
-            To = newTarget,
-            Duration = TimeSpan.FromMilliseconds(220),
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
-        };
-
-        sv.BeginAnimation(AnimatableVerticalOffsetProperty, anim);
-    }
-
-    public static readonly DependencyProperty AnimatableVerticalOffsetProperty =
-        DependencyProperty.RegisterAttached(
-            "AnimatableVerticalOffset",
-            typeof(double),
-            typeof(SmoothScrollHelper),
-            new PropertyMetadata(0.0, OnAnimatableOffsetChanged));
-
-    private static void OnAnimatableOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is ScrollViewer sv)
-        {
-            sv.ScrollToVerticalOffset((double)e.NewValue);
         }
     }
 }
 
-internal class ScrollAnimation : DoubleAnimation
+internal class SmoothScrollController : IDisposable
 {
+    private readonly ScrollViewer _sv;
+    private double _targetOffset;
+    private bool _isRendering;
+
+    public SmoothScrollController(ScrollViewer sv)
+    {
+        _sv = sv;
+        _targetOffset = sv.VerticalOffset;
+        _sv.PreviewMouseWheel += OnPreviewMouseWheel;
+        _sv.ScrollChanged += OnScrollChanged;
+    }
+
+    private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
+    {
+        // When user manually drags the scrollbar thumb, keep target synchronized
+        if (!_isRendering)
+        {
+            _targetOffset = _sv.VerticalOffset;
+        }
+    }
+
+    private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (_sv.ScrollableHeight <= 0) return;
+
+        e.Handled = true;
+
+        // Controlled, comfortable scrolling velocity:
+        // Discrete mouse wheel ticks (|delta| >= 120): ~48 pixels per notch.
+        // Precision touchpads (|delta| < 120): proportional gentle scaling.
+        double step;
+        if (Math.Abs(e.Delta) >= 120)
+        {
+            step = -Math.Sign(e.Delta) * 48.0;
+        }
+        else
+        {
+            step = -e.Delta * 0.45;
+        }
+
+        // Clamp target offset to valid scrollable range
+        _targetOffset = Math.Clamp(_targetOffset + step, 0, _sv.ScrollableHeight);
+
+        StartRendering();
+    }
+
+    private void StartRendering()
+    {
+        if (!_isRendering)
+        {
+            _isRendering = true;
+            CompositionTarget.Rendering += OnRendering;
+        }
+    }
+
+    private void StopRendering()
+    {
+        if (_isRendering)
+        {
+            _isRendering = false;
+            CompositionTarget.Rendering -= OnRendering;
+        }
+    }
+
+    private void OnRendering(object? sender, EventArgs e)
+    {
+        double current = _sv.VerticalOffset;
+        double diff = _targetOffset - current;
+
+        // Snapping threshold when very close to target
+        if (Math.Abs(diff) < 0.4)
+        {
+            _sv.ScrollToVerticalOffset(_targetOffset);
+            StopRendering();
+            return;
+        }
+
+        // Exponential damping tailored for 60Hz and 120Hz displays
+        double next = current + diff * 0.22;
+        _sv.ScrollToVerticalOffset(next);
+    }
+
+    public void Dispose()
+    {
+        StopRendering();
+        _sv.PreviewMouseWheel -= OnPreviewMouseWheel;
+        _sv.ScrollChanged -= OnScrollChanged;
+    }
 }

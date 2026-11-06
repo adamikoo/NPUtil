@@ -326,30 +326,25 @@ public partial class MainWindow : FluentWindow
             if (menuItem is NavigationViewItem ni) ni.IsActive = (ni.Tag?.ToString() == tag);
         }
 
-        switch (tag)
+        FrameworkElement? targetView = tag switch
         {
-            case "FileOrganizer":
-                if (_fileOrganizerView != null) RootFrame.Navigate(_fileOrganizerView);
-                break;
-            case "ContextAssistant":
-                if (_contextAssistantView != null) RootFrame.Navigate(_contextAssistantView);
-                break;
-            case "SmartDataExtractor":
-                if (_smartDataExtractorView != null) RootFrame.Navigate(_smartDataExtractorView);
-                break;
-            case "UniversalOcr":
-                if (_universalOcrView != null) RootFrame.Navigate(_universalOcrView);
-                break;
-            case "Hardware":
-                if (_hardwareView != null)
-                {
-                    _hardwareView.RefreshDiagnostics();
-                    RootFrame.Navigate(_hardwareView);
-                }
-                break;
-            case "Settings":
-                if (_globalSettingsView != null) RootFrame.Navigate(_globalSettingsView);
-                break;
+            "FileOrganizer" => _fileOrganizerView,
+            "ContextAssistant" => _contextAssistantView,
+            "SmartDataExtractor" => _smartDataExtractorView,
+            "UniversalOcr" => _universalOcrView,
+            "Hardware" => _hardwareView,
+            "Settings" => _globalSettingsView,
+            _ => null
+        };
+
+        if (targetView != null)
+        {
+            if (tag == "Hardware" && _hardwareView != null)
+            {
+                _hardwareView.RefreshDiagnostics();
+            }
+            RootFrame.Navigate(targetView);
+            NPUtil.App.Common.FluentAnimationHelper.AnimateEntrance(targetView);
         }
     }
 
