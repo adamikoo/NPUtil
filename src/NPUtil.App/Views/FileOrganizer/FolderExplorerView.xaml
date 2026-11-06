@@ -14,7 +14,7 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Kategorie a složky" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Kategorie a složky" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
             <TextBlock Text="Upravujte hierarchii složek, sémantické popisy pro AI model a přiřazená klíčová slova."
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
         </StackPanel>

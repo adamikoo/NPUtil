@@ -9,12 +9,12 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="32,24,32,32" MaxWidth="760" HorizontalAlignment="Left">
             
-            <TextBlock Text="Nastavení NPUtil" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Nastavení NPUtil" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
             <TextBlock Text="Globální předvolby vzhledu, integrace se systémem Windows a chování na pozadí."
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,24" />
 
             <!-- Appearance Section -->
-            <TextBlock Text="Vzhled a motiv" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <TextBlock Text="Vzhled a motiv" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,20" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -35,7 +35,7 @@
             </ui:Card>
 
             <!-- Windows Integration Cards -->
-            <TextBlock Text="Integrace se systémem Windows" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <TextBlock Text="Integrace se systémem Windows" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,10" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>

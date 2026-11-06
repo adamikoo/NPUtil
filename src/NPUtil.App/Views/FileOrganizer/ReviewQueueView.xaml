@@ -16,7 +16,7 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Fronta k revizi" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Fronta k revizi" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
             <TextBlock Text="Zkontrolujte a schvalte navržená zařazení před provedením bezpečného přesunu."
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
         </StackPanel>

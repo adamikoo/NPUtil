@@ -52,37 +52,61 @@ public partial class FileOrganizerMainView : System.Windows.Controls.UserControl
         NavReviewItem.Content = count > 0 ? $"Fronta k revizi ({count})" : "Fronta k revizi";
     }
 
+    private void NavItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is NavigationViewItem item)
+        {
+            SwitchTab(item.Tag?.ToString());
+        }
+    }
+
     private void TopNav_SelectionChanged(NavigationView sender, RoutedEventArgs args)
     {
-        if (!IsLoaded) return;
-
         if (sender.SelectedItem is NavigationViewItem item)
         {
-            var tag = item.Tag?.ToString();
-            switch (tag)
+            SwitchTab(item.Tag?.ToString());
+        }
+        else if (args.Source is NavigationViewItem sourceItem)
+        {
+            SwitchTab(sourceItem.Tag?.ToString());
+        }
+    }
+
+    private void SwitchTab(string? tag)
+    {
+        if (string.IsNullOrEmpty(tag)) return;
+
+        foreach (var menuItem in TopNav.MenuItems)
+        {
+            if (menuItem is NavigationViewItem navItem)
             {
-                case "Overview":
-                    _overviewView.RefreshStatus();
-                    ContentArea.Content = _overviewView;
-                    break;
-                case "Review":
-                    _reviewQueueView.RefreshQueue();
-                    ContentArea.Content = _reviewQueueView;
-                    break;
-                case "Explorer":
-                    ContentArea.Content = _folderExplorerView;
-                    break;
-                case "Search":
-                    ContentArea.Content = _searchView;
-                    break;
-                case "Activity":
-                    _activityView.RefreshHistory();
-                    ContentArea.Content = _activityView;
-                    break;
-                case "Settings":
-                    ContentArea.Content = _settingsView;
-                    break;
+                navItem.IsActive = (navItem.Tag?.ToString() == tag);
             }
+        }
+
+        switch (tag)
+        {
+            case "Overview":
+                _overviewView.RefreshStatus();
+                ContentArea.Content = _overviewView;
+                break;
+            case "Review":
+                _reviewQueueView.RefreshQueue();
+                ContentArea.Content = _reviewQueueView;
+                break;
+            case "Explorer":
+                ContentArea.Content = _folderExplorerView;
+                break;
+            case "Search":
+                ContentArea.Content = _searchView;
+                break;
+            case "Activity":
+                _activityView.RefreshHistory();
+                ContentArea.Content = _activityView;
+                break;
+            case "Settings":
+                ContentArea.Content = _settingsView;
+                break;
         }
     }
 }

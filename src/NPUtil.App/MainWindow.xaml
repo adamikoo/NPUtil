@@ -11,7 +11,8 @@
         MinHeight="600" MinWidth="850"
         WindowStartupLocation="CenterScreen"
         ExtendsContentIntoTitleBar="True"
-        WindowBackdropType="Mica">
+        WindowBackdropType="Mica"
+        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
     <Grid>
         <Grid.RowDefinitions>

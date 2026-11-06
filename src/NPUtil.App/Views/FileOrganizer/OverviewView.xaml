@@ -10,7 +10,7 @@
         <StackPanel Margin="32,24,32,32">
             
             <!-- Authentic Windows 11 Page Header -->
-            <TextBlock Text="File Organizer" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="File Organizer" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
             <TextBlock Text="Průběžně monitoruje složku Stažené soubory a automaticky navrhuje sémantické zařazení do kategorií."
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,20" />
 
@@ -29,7 +29,7 @@
             </StackPanel>
 
             <!-- Metrics Summary Section (Windows 11 Settings Style Cards) -->
-            <TextBlock Text="Přehled stavu" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <TextBlock Text="Přehled stavu" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <Grid Margin="0,0,0,24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -68,7 +68,7 @@
             </Grid>
 
             <!-- AI Engine Card -->
-            <TextBlock Text="Hardwarová akcelerace a AI model" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <TextBlock Text="Hardwarová akcelerace a AI model" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,24" Padding="16">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -101,7 +101,7 @@
             </ui:Card>
 
             <!-- Recent Activity Table -->
-            <TextBlock Text="Poslední operace organizace" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <TextBlock Text="Poslední operace organizace" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4">
                 <DataGrid x:Name="GridRecentActivity" MinHeight="140" MaxHeight="240" AutoGenerateColumns="False" BorderThickness="0">
                     <DataGrid.Columns>

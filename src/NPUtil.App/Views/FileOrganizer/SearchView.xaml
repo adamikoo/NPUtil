@@ -16,7 +16,7 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Lokální a sémantické vyhledávání" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Lokální a sémantické vyhledávání" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
             <TextBlock Text="Prohledávejte indexované soubory podle názvu, kategorie, přípony i sémantického významu obsahu."
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
         </StackPanel>

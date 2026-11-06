@@ -10,12 +10,12 @@
         <StackPanel Margin="32,24,32,32" MaxWidth="760" HorizontalAlignment="Left">
             
             <!-- Page Header -->
-            <TextBlock Text="Předvolby modulu File Organizer" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Předvolby modulu File Organizer" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
             <TextBlock Text="Konfigurace parametrů sledování, úrovně automatizace a hardwarové akcelerace."
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,24" />
 
             <!-- Directory Monitoring Section -->
-            <TextBlock Text="Sledovaný adresář" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <TextBlock Text="Sledovaný adresář" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,20" Padding="16">
                 <StackPanel>
                     <TextBlock Text="Cesta ke složce Stažené soubory" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6" />
@@ -33,7 +33,7 @@
             </ui:Card>
 
             <!-- Automation Mode Section -->
-            <TextBlock Text="Úroveň automatizace" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <TextBlock Text="Úroveň automatizace" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,20" Padding="16">
                 <StackPanel>
                     <RadioButton x:Name="RadioReviewEverything" GroupName="OrgMode" IsChecked="True">
@@ -73,7 +73,7 @@
             </ui:Card>
 
             <!-- Hardware & Performance Section -->
-            <TextBlock Text="Hardware a správa napájení" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <TextBlock Text="Hardware a správa napájení" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,24" Padding="16">
                 <StackPanel>
                     <TextBlock Text="Zprostředkovatel AI akcelerace" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6" />

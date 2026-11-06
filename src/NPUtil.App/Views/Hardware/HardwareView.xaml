@@ -15,7 +15,7 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Systém a diagnostika hardwaru" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Systém a diagnostika hardwaru" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
             <TextBlock Text="Informace o běhovém prostředí ARM64, Qualcomm Hexagon NPU a živý záznam událostí."
                        FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,20" />
         </StackPanel>
@@ -75,7 +75,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Margin="0,0,0,8">
-                <TextBlock Text="Živý záznam událostí (Aplikační log)" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <TextBlock Text="Živý záznam událostí (Aplikační log)" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
                 <ui:Button x:Name="BtnExportLogs" Content="Exportovat záznam do souboru" Appearance="Secondary" HorizontalAlignment="Right" Click="BtnExportLogs_Click" />
             </Grid>
 
