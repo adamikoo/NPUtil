@@ -19,7 +19,10 @@ public partial class ContextAssistantMainView : UserControl
 
         TxtContextInput.TextChanged += (s, e) =>
         {
-            TxtContextLength.Text = $"{TxtContextInput.Text.Length} characters";
+            if (TxtContextLength != null && TxtContextInput != null)
+            {
+                TxtContextLength.Text = $"{TxtContextInput.Text.Length} characters";
+            }
         };
 
         Loaded += async (s, e) =>

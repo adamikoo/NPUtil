@@ -81,7 +81,6 @@
                             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="12">
                         <TextBox x:Name="TxtOriginalText" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
                                  FontSize="13" Background="Transparent" Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0"
-                                 TextChanged="TxtOriginalText_TextChanged"
                                  Text="Click 'Snip Screen Area' or load an image to recognize text..." />
                     </Border>
 

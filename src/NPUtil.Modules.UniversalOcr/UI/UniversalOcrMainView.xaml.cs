@@ -23,6 +23,11 @@ public partial class UniversalOcrMainView : UserControl
         _engine = engine;
         _onSendToAssistant = onSendToAssistant;
         _onSendToExtractor = onSendToExtractor;
+
+        Loaded += (s, e) =>
+        {
+            TxtOriginalText.TextChanged += TxtOriginalText_TextChanged;
+        };
     }
 
     private void UserControl_DragOver(object sender, DragEventArgs e)
@@ -150,9 +155,13 @@ public partial class UniversalOcrMainView : UserControl
         }
     }
 
-    private void TxtOriginalText_TextChanged(object sender, TextChangedEventArgs e)
+    private void TxtOriginalText_TextChanged(object? sender, TextChangedEventArgs? e)
     {
-        TxtOcrStats.Text = $"{TxtOriginalText.Text.Split('\n').Length} lines, {TxtOriginalText.Text.Length} chars";
+        if (TxtOcrStats != null && TxtOriginalText != null)
+        {
+            var lines = TxtOriginalText.Text?.Split('\n') ?? [];
+            TxtOcrStats.Text = $"{lines.Length} lines, {TxtOriginalText.Text?.Length ?? 0} chars";
+        }
     }
 
     private void BtnCopyOriginal_Click(object sender, RoutedEventArgs e)
