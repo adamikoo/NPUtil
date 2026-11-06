@@ -1,0 +1,98 @@
+<UserControl x:Class="NPUtil.App.Views.FileOrganizer.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900">
+    <Grid Margin="24,16,24,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Local &amp; Semantic File Search" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Search through indexed files using full-text keyword matching and local AI semantic concepts."
+                       Style="{StaticResource PageSubtitleStyle}" />
+        </StackPanel>
+
+        <!-- Search Bar & Filters -->
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceBackgroundBrush}" 
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="14,12" Margin="0,0,0,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="TxtSearchQuery" Grid.Column="0" KeyDown="TxtSearchQuery_KeyDown"
+                             Margin="0,0,8,0" Height="30" FontSize="13" />
+                    <Button x:Name="BtnSearch" Grid.Column="1" Content="Search" Style="{StaticResource AccentButtonStyle}"
+                            Click="BtnSearch_Click" Width="80" />
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Category:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextSecondaryBrush}" />
+                    <ComboBox x:Name="CmbCategoryFilter" Grid.Column="1" Height="26" SelectionChanged="Filter_SelectionChanged" />
+
+                    <TextBlock Grid.Column="3" Text="Type:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextSecondaryBrush}" />
+                    <ComboBox x:Name="CmbExtensionFilter" Grid.Column="4" Height="26" SelectionChanged="Filter_SelectionChanged" />
+
+                    <TextBlock x:Name="TxtResultCount" Grid.Column="5" Text="0 results" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Results DataGrid -->
+        <DataGrid Grid.Row="2" x:Name="GridSearchResults" AutoGenerateColumns="False" SelectionChanged="GridSearchResults_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="File Name" Binding="{Binding FileName}" Width="200" />
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="180" />
+                <DataGridTextColumn Header="Extension" Binding="{Binding Extension}" Width="65" />
+                <DataGridTextColumn Header="Modified" Binding="{Binding ModifiedDate, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="125" />
+                <DataGridTextColumn Header="Content Snippet" Binding="{Binding Snippet}" Width="*" />
+                <DataGridTextColumn Header="Relevance" Binding="{Binding RelevanceScore, StringFormat={}{0:F2}}" Width="75" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Action bar for selected item -->
+        <Border Grid.Row="3" Background="{DynamicResource SurfaceBackgroundBrush}" 
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="12,10" Margin="0,12,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="TxtSelectedFilePath" Grid.Column="0" Text="Select a search result to view location."
+                           VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="BtnOpenFile" Content="Open File" Click="BtnOpenFile_Click" Margin="0,0,8,0" IsEnabled="False" />
+                    <Button x:Name="BtnOpenFolder" Content="Show in Explorer" Click="BtnOpenFolder_Click" Margin="0,0,8,0" IsEnabled="False" />
+                    <Button x:Name="BtnCopyPath" Content="Copy Path" Click="BtnCopyPath_Click" IsEnabled="False" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

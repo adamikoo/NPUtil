@@ -1,0 +1,49 @@
+<UserControl x:Class="NPUtil.App.Views.Settings.GlobalSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="850">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24,16,24,24" MaxWidth="700" HorizontalAlignment="Left">
+            
+            <TextBlock Text="Global NPUtil Settings" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Configure overall desktop suite preferences, theme appearance, and background execution."
+                       Style="{StaticResource PageSubtitleStyle}" />
+
+            <!-- Appearance Section -->
+            <TextBlock Text="Appearance" Style="{StaticResource SectionHeaderStyle}" />
+            <Border Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="16,14" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Application Theme" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6" />
+                    <ComboBox x:Name="CmbAppTheme" Height="28" Width="240" HorizontalAlignment="Left" SelectionChanged="CmbAppTheme_SelectionChanged">
+                        <ComboBoxItem Content="Match Windows System Theme" />
+                        <ComboBoxItem Content="Light" />
+                        <ComboBoxItem Content="Dark" />
+                    </ComboBox>
+                    <TextBlock Text="NPUtil respects your Windows 11 system accent and contrast choices." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,6,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Application Lifecycle -->
+            <TextBlock Text="Lifecycle &amp; System Integration" Style="{StaticResource SectionHeaderStyle}" />
+            <Border Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="16,14" Margin="0,0,0,16">
+                <StackPanel>
+                    <CheckBox x:Name="ChkStartWithWindows" Content="Start NPUtil automatically when logging into Windows" Margin="0,0,0,8" />
+                    <CheckBox x:Name="ChkMinimizeToTray" Content="Minimize window to Windows notification area (System Tray)" IsChecked="True" Margin="0,0,0,8" />
+                    <CheckBox x:Name="ChkCloseToTray" Content="Close button minimizes to Tray instead of exiting application" Margin="0,0,0,8" />
+                    <CheckBox x:Name="ChkThrottleBattery" Content="Throttle background scanning when on battery power" IsChecked="True" />
+                </StackPanel>
+            </Border>
+
+            <!-- Save Button -->
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <Button x:Name="BtnSaveGlobalSettings" Content="Save Global Settings" Style="{StaticResource AccentButtonStyle}"
+                        Click="BtnSaveGlobalSettings_Click" Padding="16,6" Margin="0,0,12,0" />
+                <TextBlock x:Name="TxtGlobalFeedback" Text="" VerticalAlignment="Center" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" />
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,77 @@
+<UserControl x:Class="NPUtil.App.Views.Hardware.HardwareView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="900">
+    <Grid Margin="24,16,24,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="System Diagnostics &amp; Qualcomm NPU" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Real-time hardware status, Qualcomm Hexagon NPU diagnostics, and application log stream."
+                       Style="{StaticResource PageSubtitleStyle}" />
+        </StackPanel>
+
+        <!-- Hardware Info Card -->
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceBackgroundBrush}" 
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="16" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Hardware Platform" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,8" />
+                    
+                    <TextBlock Text="Processor:" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" />
+                    <TextBlock x:Name="TxtProcessor" Text="Qualcomm Snapdragon X Elite" FontWeight="SemiBold" Margin="0,0,0,6" />
+
+                    <TextBlock Text="Architecture:" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" />
+                    <TextBlock x:Name="TxtArch" Text="ARM64 (Native Execution)" FontWeight="SemiBold" Margin="0,0,0,6" />
+
+                    <TextBlock Text="Operating System:" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" />
+                    <TextBlock x:Name="TxtOs" Text="Windows 11 ARM64" FontWeight="SemiBold" Margin="0,0,0,6" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="AI Acceleration &amp; Power" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,8" />
+
+                    <TextBlock Text="Active AI Execution Provider:" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" />
+                    <TextBlock x:Name="TxtActiveAi" Text="Qualcomm Hexagon NPU (QNN HTP)" FontWeight="SemiBold" Margin="0,0,0,6" Foreground="{DynamicResource AccentBrush}" />
+
+                    <TextBlock Text="QNN Native Libraries:" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" />
+                    <TextBlock x:Name="TxtQnnStatus" Text="Available (QnnHtp.dll, onnxruntime_providers_qnn.dll)" FontWeight="SemiBold" Margin="0,0,0,6" />
+
+                    <TextBlock Text="Power Source:" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" />
+                    <TextBlock x:Name="TxtPowerStatus" Text="AC Power (Optimal Performance)" FontWeight="SemiBold" Margin="0,0,0,6" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Live Application Logs -->
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,8">
+                <TextBlock Text="Live Application Logs" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
+                <Button x:Name="BtnExportLogs" Content="Export Logs" HorizontalAlignment="Right" Click="BtnExportLogs_Click" />
+            </Grid>
+
+            <TextBox x:Name="TxtLogViewer" Grid.Row="1" IsReadOnly="True" VerticalScrollBarVisibility="Auto" 
+                     FontFamily="Consolas, monospace" FontSize="11" Background="{DynamicResource WindowBackgroundBrush}"
+                     BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="10" />
+        </Grid>
+
+    </Grid>
+</UserControl>

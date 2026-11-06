@@ -1,0 +1,95 @@
+<UserControl x:Class="NPUtil.App.Views.FileOrganizer.ActivityView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900">
+    <Grid Margin="24,16,24,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Activity &amp; Reversible History" Style="{StaticResource PageTitleStyle}" />
+            <TextBlock Text="Persistent SQLite audit trail of all organize operations with single-click and batch undo."
+                       Style="{StaticResource PageSubtitleStyle}" />
+        </StackPanel>
+
+        <!-- Toolbar -->
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceBackgroundBrush}" 
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="12,8" Margin="0,0,0,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock x:Name="TxtHistorySummary" Text="Total operations: 0" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,16,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="BtnUndoBatch" Content="Undo Selected Batch" Click="BtnUndoBatch_Click" Margin="0,0,8,0" />
+                    <Button x:Name="BtnRefresh" Content="Refresh Log" Click="BtnRefresh_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- DataGrid of Operations -->
+        <DataGrid Grid.Row="2" x:Name="GridOperations" AutoGenerateColumns="False" SelectionChanged="GridOperations_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="140" />
+                <DataGridTextColumn Header="File Name" Binding="{Binding FileName}" Width="180" />
+                <DataGridTextColumn Header="Destination" Binding="{Binding Category}" Width="180" />
+                <DataGridTextColumn Header="Confidence" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
+                <DataGridTextColumn Header="Batch ID" Binding="{Binding BatchId}" Width="140" />
+                <DataGridTemplateColumn Header="Status" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="Active" />
+                                        <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsUndone}" Value="True">
+                                                <Setter Property="Text" Value="Undone" />
+                                                <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}" />
+                                                <Setter Property="FontWeight" Value="Normal" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Action" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Undo Move" Click="BtnUndoRow_Click" Padding="6,2" FontSize="11">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                        <Setter Property="IsEnabled" Value="True" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsUndone}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                                <Setter Property="Content" Value="Restored" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</UserControl>
