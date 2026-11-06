@@ -35,11 +35,17 @@ Všestranný nástroj pro vytěžování a strukturování dat z dokumentů a so
   - **Vlastní instrukce**: Zpracování požadavků v přirozeném jazyce (např. *"Vytáhni všechny produkty a ceny"*).
 - **Export**: Výstup lze uložit do formátů **CSV**, **XLSX** (nativní Excel), **JSON**, **TXT** a **DOCX** (Word).
 
-### 4. Universal OCR & Translator (Klávesová zkratka: `Ctrl+Alt+O`)
-Systémový OCR snímač a překladač obrazovky dostupný odkudkoliv ve Windows.
-- **Výřez obrazovky**: Po stisku zkratky se zobrazí zatmavené překrytí obrazovky pro výběr libovolné oblasti myší.
+### 4. Universal OCR, Translator & Screen Lens (Klávesová zkratka: `Ctrl+Alt+L` / `Ctrl+Alt+O`)
+Systémový OCR snímač, překladač a inteligentní **Screen Lens** (ve stylu Google Lens) dostupný odkudkoliv ve Windows.
+- **Plovoucí Google Lens Card (`ScreenLensWindow`)**: Po výběru oblasti obrazovky se neotevírá velké hlavní okno, nýbrž se přímo vedle výběru zobrazí elegantní plovoucí panel s Mica efektem a automaticky zacíleným textovým polem (*"Ask about this selection..."*).
+- **Interaktivní dotazování ("Type to it")**: Na výběr se můžete přímo dotazovat (např. *"what can you see"*, *"explain error"*, *"how to fix"*). Pro chybové hlášky a stack trace systém automaticky detekuje typ výjimky, soubor, řádek a navrhne konkrétní opravu kódu.
+- **Jednoklikové rychlé akce (Lens Chips)**:
+  - 🔍 **What can you see?**: Komplexní rozbor a přehled zachyceného obsahu na obrazovce.
+  - 💡 **Explain & Fix**: Automaticky zvýrazněno při detekci kódu nebo runtime výjimky.
+  - 🌐 **Translate**: Okamžitý překlad mezi češtinou a angličtinou.
+  - 📊 **Extract Table / Data**: Strukturování dat do tabulky či JSON formátu.
+  - 📄 **Copy Text / Image**: Okamžité zkopírování vytěženého textu nebo výřezu obrázku do schránky.
 - **Nativní Windows OCR**: Využívá integrovaný engine `Windows.Media.Ocr` s plnou hardwarovou akcelerací a podporou češtiny i angličtiny.
-- **Okamžitý obousměrný překlad**: Zobrazení originálu a překladu bok po boku s možností editace.
 - **Provázanost modulů**: Jedním kliknutím odešlete rozpoznaný text do **Context Assistantu** nebo **Smart Data Extraktoru**.
 - **Dávkové OCR**: Možnost nahrát více obrázků najednou a hromadně vytěžit text.
 
@@ -92,6 +98,7 @@ Poklepejte na `run.bat` v kořenovém adresáři, nebo spusťte přímo:
 
 ### Globální klávesové zkratky
 - **`Ctrl+Alt+A`**: Otevře plovoucí okno **Context Assistantu** se zachyceným textem z aktuálního okna.
+- **`Ctrl+Alt+L`**: Spustí **NPUtil Screen Lens** (výběr oblasti obrazovky a plovoucí Google Lens AI karta). Lze přizpůsobit v Nastavení.
 - **`Ctrl+Alt+O`**: Spustí zatmavení obrazovky pro okamžitý **OCR výřez** libovolného textu na monitoru.
 
 ### Sestavení a testy
@@ -99,6 +106,7 @@ V PowerShellu spusťte:
 ```powershell
 .\build.ps1
 ```
+Spustí kompilaci v konfiguraci Release pro ARM64, provede všech **37 automatizovaných testů** a publikuje samostatnou aplikaci do `publish/win-arm64/NPUtil.exe`.
 Tento skript sestaví všechny projekty, provede všech **34 automatizovaných testů** a publikuje optimalizované binárky do `publish\win-arm64\`.
 
 ---
