@@ -68,7 +68,7 @@
                         <CheckBox Content="Auto-Sync Selection" IsChecked="True" VerticalAlignment="Center" Margin="0,0,16,0" />
                         <Button x:Name="BtnCaptureWindow" Click="BtnCaptureWindow_Click">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <ui:SymbolIcon Symbol="Scan24" FontSize="14" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,6,0" />
+                                <ui:SymbolIcon Symbol="Scan24" FontSize="14" Foreground="{DynamicResource PrimaryBrush}" Margin="0,0,6,0" />
                                 <TextBlock Text="Capture Window" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
@@ -92,7 +92,7 @@
                         <StackPanel>
                             <Grid Margin="0,0,0,10">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <ui:SymbolIcon Symbol="Document24" FontSize="16" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,6,0" />
+                                    <ui:SymbolIcon Symbol="Document24" FontSize="16" Foreground="{DynamicResource PrimaryBrush}" Margin="0,0,6,0" />
                                     <TextBlock Text="Captured Context &amp; Selection" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
                                 </StackPanel>
                                 <Button x:Name="BtnAttachFile" Click="BtnAttachFile_Click" HorizontalAlignment="Right">
@@ -137,7 +137,7 @@
                             <WrapPanel Margin="0,0,0,14">
                                 <Button Style="{StaticResource ActionChipButtonStyle}" Tag="Explain" Click="QuickAction_Click" Margin="0,0,8,8">
                                     <StackPanel Orientation="Horizontal">
-                                        <ui:SymbolIcon Symbol="Lightbulb24" FontSize="14" Foreground="{DynamicResource SecondaryColor}" Margin="0,0,6,0" />
+                                        <ui:SymbolIcon Symbol="Lightbulb24" FontSize="14" Foreground="{DynamicResource SecondaryBrush}" Margin="0,0,6,0" />
                                         <TextBlock Text="Explain" />
                                     </StackPanel>
                                 </Button>
@@ -149,7 +149,7 @@
                                 </Button>
                                 <Button Style="{StaticResource ActionChipButtonStyle}" Tag="Translate" Click="QuickAction_Click" Margin="0,0,8,8">
                                     <StackPanel Orientation="Horizontal">
-                                        <ui:SymbolIcon Symbol="Translate24" FontSize="14" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,6,0" />
+                                        <ui:SymbolIcon Symbol="Translate24" FontSize="14" Foreground="{DynamicResource PrimaryBrush}" Margin="0,0,6,0" />
                                         <TextBlock Text="Translate (CS ↔ EN)" />
                                     </StackPanel>
                                 </Button>

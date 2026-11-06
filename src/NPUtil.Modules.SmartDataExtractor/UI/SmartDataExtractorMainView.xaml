@@ -107,7 +107,7 @@
                             </Ellipse>
                             <TextBlock Text="Extraction Preview" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,12,0" />
                             <Border Background="{DynamicResource SurfaceContainerHighestBrush}" CornerRadius="12" Padding="8,2" Margin="0,0,8,0">
-                                <TextBlock x:Name="TxtResultStatus" Text="Ready · 6 items parsed" FontSize="11" Foreground="{DynamicResource PrimaryColor}" />
+                                <TextBlock x:Name="TxtResultStatus" Text="Ready · 6 items parsed" FontSize="11" Foreground="{DynamicResource PrimaryBrush}" />
                             </Border>
                             <TextBlock x:Name="TxtConfidence" Text="" FontSize="11" Foreground="{DynamicResource OutlineBrush}" VerticalAlignment="Center" />
                         </StackPanel>

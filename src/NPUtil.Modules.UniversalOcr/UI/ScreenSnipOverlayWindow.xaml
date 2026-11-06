@@ -4,8 +4,8 @@
         Title="Screen Region Selector"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="#55000000"
-        WindowState="Maximized"
+        Background="Transparent"
+        WindowState="Normal"
         Topmost="True"
         ShowInTaskbar="False"
         Cursor="Cross"
@@ -13,14 +13,25 @@
         MouseMove="Window_MouseMove"
         MouseUp="Window_MouseUp"
         KeyDown="Window_KeyDown">
-    <Canvas x:Name="CanvasOverlay">
-        <Rectangle x:Name="RectSelection"
-                   Stroke="{DynamicResource AccentTextFillColorPrimaryBrush}"
-                   StrokeThickness="2"
-                   Fill="#220078D4"
-                   Visibility="Collapsed" />
-        <Border x:Name="BadgeHint" Background="#CC000000" CornerRadius="4" Padding="12,6" Canvas.Top="30" Canvas.Left="30">
-            <TextBlock Text="Click and drag to select screen region for OCR (Press Esc to cancel)" Foreground="White" FontSize="13" />
-        </Border>
-    </Canvas>
+    <Grid x:Name="RootGrid">
+        <!-- Display frozen desktop screenshot -->
+        <Image x:Name="ImgFrozenDesktop" Stretch="Fill" />
+
+        <!-- Dark dimming overlay -->
+        <Border Background="#44000000" />
+
+        <Canvas x:Name="CanvasOverlay">
+            <Rectangle x:Name="RectSelection"
+                       Stroke="{DynamicResource PrimaryContainerBrush}"
+                       StrokeThickness="2"
+                       Fill="#1560CDFF"
+                       Visibility="Collapsed" />
+            <Border x:Name="BadgeHint" Background="#E5131315" BorderBrush="#353437" BorderThickness="1" CornerRadius="6" Padding="14,8" Canvas.Top="32" Canvas.Left="32">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="✦ " Foreground="{DynamicResource PrimaryContainerBrush}" FontWeight="Bold" />
+                    <TextBlock Text="Drag to select screen area for NPU OCR (Esc to exit)" Foreground="#E4E2E4" FontSize="13" />
+                </StackPanel>
+            </Border>
+        </Canvas>
+    </Grid>
 </Window>

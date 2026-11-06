@@ -59,7 +59,7 @@
                         <ui:SymbolIcon Symbol="FolderOpen24" FontSize="18" Foreground="{DynamicResource PrimaryContainerBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
                         <TextBlock Text="Watching:" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource OutlineBrush}" Margin="0,0,8,0" />
                         <Border Background="{DynamicResource SurfaceContainerHighestBrush}" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
-                            <TextBlock x:Name="TxtWatchedPath" Text="C:\Users\Asus\Downloads" FontFamily="Consolas, Segoe UI" FontSize="11" Foreground="{DynamicResource PrimaryColor}" />
+                            <TextBlock x:Name="TxtWatchedPath" Text="C:\Users\Asus\Downloads" FontFamily="Consolas, Segoe UI" FontSize="11" Foreground="{DynamicResource PrimaryBrush}" />
                         </Border>
                         <TextBlock Text="&amp; active subfolders" FontSize="11" Foreground="{DynamicResource OutlineBrush}" VerticalAlignment="Center" />
                     </StackPanel>

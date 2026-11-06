@@ -82,4 +82,37 @@ public class UniversalOcrTests
         Assert.True(result.Success);
         Assert.Contains("Snapdragon", result.FullText, StringComparison.OrdinalIgnoreCase);
     }
+
+    [Fact]
+    public async Task OcrService_RecognizesSmallUiTextOnDarkBackground()
+    {
+        using var bmp = new System.Drawing.Bitmap(250, 180);
+        using (var g = System.Drawing.Graphics.FromImage(bmp))
+        {
+            g.Clear(System.Drawing.Color.FromArgb(14, 17, 19));
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            using var font = new System.Drawing.Font("Segoe UI", 11, System.Drawing.FontStyle.Regular);
+            using var brush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(215, 218, 220));
+            using var iconBrush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(128, 128, 128));
+
+            string[] items = ["Home", "Popular", "News", "Explore"];
+            for (int i = 0; i < items.Length; i++)
+            {
+                int y = 15 + i * 35;
+                g.FillEllipse(iconBrush, 12, y + 2, 12, 12);
+                g.DrawString(items[i], font, brush, 32, y);
+            }
+        }
+
+        using var ms = new System.IO.MemoryStream();
+        bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+        var bytes = ms.ToArray();
+
+        var result = await _ocrService.RecognizeBytesAsync(bytes, "auto");
+        Assert.True(result.Success);
+        Assert.Contains("Home", result.FullText);
+        Assert.Contains("Popular", result.FullText);
+    }
 }

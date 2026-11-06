@@ -71,13 +71,13 @@
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button x:Name="BtnSendToAssistant" Click="BtnSendToAssistant_Click" Margin="0,0,8,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <ui:SymbolIcon Symbol="Chat24" FontSize="13" Foreground="{DynamicResource SecondaryColor}" Margin="0,0,4,0" />
+                                <ui:SymbolIcon Symbol="Chat24" FontSize="13" Foreground="{DynamicResource SecondaryBrush}" Margin="0,0,4,0" />
                                 <TextBlock Text="Send to Assistant" FontSize="11" />
                             </StackPanel>
                         </Button>
                         <Button x:Name="BtnSendToExtractor" Click="BtnSendToExtractor_Click">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <ui:SymbolIcon Symbol="DocumentTable24" FontSize="13" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,4,0" />
+                                <ui:SymbolIcon Symbol="DocumentTable24" FontSize="13" Foreground="{DynamicResource PrimaryBrush}" Margin="0,0,4,0" />
                                 <TextBlock Text="Send to Extractor" FontSize="11" />
                             </StackPanel>
                         </Button>
@@ -207,7 +207,7 @@
                 <Border Grid.Column="0" Style="{StaticResource FluentGlassCardStyle}" Padding="14,12">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                            <ui:SymbolIcon Symbol="Desktop24" FontSize="16" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <ui:SymbolIcon Symbol="Desktop24" FontSize="16" Foreground="{DynamicResource PrimaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
                             <TextBlock Text="High-DPI Screen Grabber" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
                         </StackPanel>
                         <TextBlock Text="DirectX GI desktop duplication API capturing uncompressed sub-pixel matrices at 120 FPS."
@@ -219,7 +219,7 @@
                 <Border Grid.Column="2" Style="{StaticResource FluentGlassCardStyle}" Padding="14,12">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                            <ui:SymbolIcon Symbol="Flash24" FontSize="16" Foreground="{DynamicResource SecondaryColor}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <ui:SymbolIcon Symbol="Flash24" FontSize="16" Foreground="{DynamicResource SecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
                             <TextBlock Text="Qualcomm Hexagon V73" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
                         </StackPanel>
                         <TextBlock Text="Sub-5ms token inference latency running int8 quantized multilingual Transformer models directly on NPU."

@@ -1,17 +1,28 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using Point = System.Windows.Point;
 
 namespace NPUtil.Modules.UniversalOcr.UI;
 
 public partial class ScreenSnipOverlayWindow : Window
 {
+    [DllImport("user32.dll")]
+    private static extern int GetSystemMetrics(int nIndex);
+
+    private const int SM_XVIRTUALSCREEN = 76;
+    private const int SM_YVIRTUALSCREEN = 77;
+    private const int SM_CXVIRTUALSCREEN = 78;
+    private const int SM_CYVIRTUALSCREEN = 79;
+
     private Point _startPoint;
     private bool _isSelecting;
+    private Bitmap? _freezeFrame;
 
     public event Action<byte[]>? RegionCaptured;
     public event Action<byte[], System.Drawing.Rectangle>? RegionCapturedWithBounds;
@@ -19,6 +30,57 @@ public partial class ScreenSnipOverlayWindow : Window
     public ScreenSnipOverlayWindow()
     {
         InitializeComponent();
+
+        CaptureDesktopFreezeFrame();
+
+        WindowState = WindowState.Normal;
+        WindowStyle = WindowStyle.None;
+        Left = SystemParameters.VirtualScreenLeft;
+        Top = SystemParameters.VirtualScreenTop;
+        Width = SystemParameters.VirtualScreenWidth;
+        Height = SystemParameters.VirtualScreenHeight;
+
+        Closed += (s, e) =>
+        {
+            _freezeFrame?.Dispose();
+            _freezeFrame = null;
+        };
+    }
+
+    private void CaptureDesktopFreezeFrame()
+    {
+        try
+        {
+            int virtX = GetSystemMetrics(SM_XVIRTUALSCREEN);
+            int virtY = GetSystemMetrics(SM_YVIRTUALSCREEN);
+            int virtW = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+            int virtH = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+            if (virtW <= 0) virtW = (int)SystemParameters.PrimaryScreenWidth;
+            if (virtH <= 0) virtH = (int)SystemParameters.PrimaryScreenHeight;
+
+            _freezeFrame = new Bitmap(virtW, virtH, PixelFormat.Format32bppArgb);
+            using (var g = Graphics.FromImage(_freezeFrame))
+            {
+                g.CopyFromScreen(virtX, virtY, 0, 0, new System.Drawing.Size(virtW, virtH), CopyPixelOperation.SourceCopy);
+            }
+
+            using var ms = new MemoryStream();
+            _freezeFrame.Save(ms, ImageFormat.Png);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.StreamSource = ms;
+            bi.EndInit();
+            bi.Freeze();
+            ImgFrozenDesktop.Source = bi;
+        }
+        catch
+        {
+            // Fallback gracefully if freeze-frame capture encounters an anomaly
+        }
     }
 
     private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -62,32 +124,51 @@ public partial class ScreenSnipOverlayWindow : Window
 
             var cur = e.GetPosition(this);
 
-            // Convert WPF DIP coordinates to physical monitor device pixels BEFORE hiding the window
-            var p1 = PointToScreen(_startPoint);
-            var p2 = PointToScreen(cur);
-
-            int physX = (int)Math.Min(p1.X, p2.X);
-            int physY = (int)Math.Min(p1.Y, p2.Y);
-            int physW = (int)Math.Abs(p2.X - p1.X);
-            int physH = (int)Math.Abs(p2.Y - p1.Y);
-
-            // Calculate DIP bounds for positioning UI windows (e.g. ScreenLensWindow)
-            int dipX = (int)Math.Min(_startPoint.X, cur.X);
-            int dipY = (int)Math.Min(_startPoint.Y, cur.Y);
-            int dipW = (int)Math.Abs(cur.X - _startPoint.X);
-            int dipH = (int)Math.Abs(cur.Y - _startPoint.Y);
+            double relX = Math.Min(_startPoint.X, cur.X);
+            double relY = Math.Min(_startPoint.Y, cur.Y);
+            double relW = Math.Abs(cur.X - _startPoint.X);
+            double relH = Math.Abs(cur.Y - _startPoint.Y);
 
             Hide();
 
-            if (physW > 10 && physH > 10)
+            if (relW > 8 && relH > 8)
             {
-                // Brief pause so Desktop Window Manager redraws without the translucent overlay
-                System.Threading.Thread.Sleep(35);
+                byte[]? capturedBytes = null;
+                var bounds = new System.Drawing.Rectangle((int)relX, (int)relY, (int)relW, (int)relH);
 
-                var bounds = new System.Drawing.Rectangle(dipX, dipY, dipW, dipH);
-                var bytes = CaptureScreenRegion(physX, physY, physW, physH);
-                RegionCaptured?.Invoke(bytes);
-                RegionCapturedWithBounds?.Invoke(bytes, bounds);
+                if (_freezeFrame != null)
+                {
+                    double scaleX = (double)_freezeFrame.Width / Math.Max(1, ActualWidth);
+                    double scaleY = (double)_freezeFrame.Height / Math.Max(1, ActualHeight);
+
+                    int physX = (int)(relX * scaleX);
+                    int physY = (int)(relY * scaleY);
+                    int physW = (int)(relW * scaleX);
+                    int physH = (int)(relH * scaleY);
+
+                    // Add generous 6px safety padding around selection so characters on the border are never clipped
+                    int pad = 6;
+                    int finalX = Math.Max(0, physX - pad);
+                    int finalY = Math.Max(0, physY - pad);
+                    int finalW = Math.Min(_freezeFrame.Width - finalX, physW + (physX - finalX) + pad);
+                    int finalH = Math.Min(_freezeFrame.Height - finalY, physH + (physY - finalY) + pad);
+
+                    if (finalW > 4 && finalH > 4)
+                    {
+                        using var cropped = _freezeFrame.Clone(
+                            new System.Drawing.Rectangle(finalX, finalY, finalW, finalH),
+                            _freezeFrame.PixelFormat);
+                        using var ms = new MemoryStream();
+                        cropped.Save(ms, ImageFormat.Png);
+                        capturedBytes = ms.ToArray();
+                    }
+                }
+
+                if (capturedBytes != null)
+                {
+                    RegionCaptured?.Invoke(capturedBytes);
+                    RegionCapturedWithBounds?.Invoke(capturedBytes, bounds);
+                }
             }
 
             Close();
@@ -100,18 +181,5 @@ public partial class ScreenSnipOverlayWindow : Window
         {
             Close();
         }
-    }
-
-    private static byte[] CaptureScreenRegion(int x, int y, int width, int height)
-    {
-        using var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-        using (var g = Graphics.FromImage(bmp))
-        {
-            g.CopyFromScreen(x, y, 0, 0, new System.Drawing.Size(width, height), CopyPixelOperation.SourceCopy);
-        }
-
-        using var ms = new MemoryStream();
-        bmp.Save(ms, ImageFormat.Png);
-        return ms.ToArray();
     }
 }

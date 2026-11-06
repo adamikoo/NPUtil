@@ -78,16 +78,16 @@ internal class SmoothScrollController : IDisposable
         e.Handled = true;
 
         // Controlled, comfortable scrolling velocity:
-        // Discrete mouse wheel ticks (|delta| >= 120): ~48 pixels per notch.
-        // Precision touchpads (|delta| < 120): proportional gentle scaling.
+        // Discrete mouse wheel ticks (|delta| >= 120): ~52 pixels per notch (calibrated for 1080p/4K).
+        // Precision touchpads (|delta| < 120): soft proportional scaling without overshooting.
         double step;
         if (Math.Abs(e.Delta) >= 120)
         {
-            step = -Math.Sign(e.Delta) * 48.0;
+            step = -Math.Sign(e.Delta) * 52.0;
         }
         else
         {
-            step = -e.Delta * 0.45;
+            step = -e.Delta * 0.28;
         }
 
         // Clamp target offset to valid scrollable range
@@ -127,8 +127,8 @@ internal class SmoothScrollController : IDisposable
             return;
         }
 
-        // Exponential damping tailored for 60Hz and 120Hz displays
-        double next = current + diff * 0.22;
+        // Exponential fluid damping tailored for 60Hz and 120Hz displays
+        double next = current + diff * 0.14;
         _sv.ScrollToVerticalOffset(next);
     }
 

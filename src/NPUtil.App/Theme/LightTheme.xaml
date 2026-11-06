@@ -32,6 +32,13 @@
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
     <SolidColorBrush x:Key="TextDisabledBrush" Color="{StaticResource TextDisabledColor}" />
     
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#0067C0" />
+    <SolidColorBrush x:Key="OnPrimaryBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="SecondaryBrush" Color="#0078D4" />
+    <SolidColorBrush x:Key="TertiaryBrush" Color="#8F6B00" />
+    <SolidColorBrush x:Key="OutlineBrush" Color="#707070" />
+    <SolidColorBrush x:Key="OutlineVariantBrush" Color="#CCCCCC" />
+
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
     <SolidColorBrush x:Key="AccentHoverBrush" Color="{StaticResource AccentHoverColor}" />
     <SolidColorBrush x:Key="AccentTextBrush" Color="{StaticResource AccentTextColor}" />

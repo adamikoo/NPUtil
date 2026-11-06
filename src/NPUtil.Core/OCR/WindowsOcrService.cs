@@ -114,15 +114,18 @@ public class WindowsOcrService : IOcrService
         try
         {
             var engine = GetEngine(languageTag);
-            var result = await ExecuteEngineAsync(engine, imageBytes);
+
+            // Adaptive super-sampling: upscale screen snips 2x to bring lowercase glyph heights to 30-40px (the optimal OCR range)
+            var preparedBytes = PreprocessImageBytes(imageBytes);
+            var result = await ExecuteEngineAsync(engine, preparedBytes);
 
             // If the image is dark or recognized few words, perform dual-pass inverted OCR
-            bool isDark = IsPredominantlyDark(imageBytes);
+            bool isDark = IsPredominantlyDark(preparedBytes);
             if (isDark || result.WordCount < 3)
             {
                 try
                 {
-                    var invertedBytes = InvertImageBytes(imageBytes);
+                    var invertedBytes = InvertImageBytes(preparedBytes);
                     var invertedResult = await ExecuteEngineAsync(engine, invertedBytes);
 
                     if (invertedResult.WordCount > result.WordCount ||
@@ -195,6 +198,44 @@ public class WindowsOcrService : IOcrService
             Language = engine.RecognizerLanguage?.LanguageTag ?? "unknown",
             Success = true
         };
+    }
+
+    private static byte[] PreprocessImageBytes(byte[] imageBytes)
+    {
+        try
+        {
+            using var msIn = new MemoryStream(imageBytes);
+            using var bmp = new System.Drawing.Bitmap(msIn);
+
+            // Windows Media OCR performs best when character heights are 30-50 pixels.
+            // On standard screen captures (where UI text is 10-15px high), upscaling by 2x
+            // significantly improves glyph boundary detection and reduces character misrecognitions.
+            if (bmp.Width < 2200 && bmp.Height < 1500)
+            {
+                int targetW = bmp.Width * 2;
+                int targetH = bmp.Height * 2;
+
+                using var upscaled = new System.Drawing.Bitmap(targetW, targetH, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                using (var g = System.Drawing.Graphics.FromImage(upscaled))
+                {
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                    g.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, targetW, targetH), 0, 0, bmp.Width, bmp.Height, System.Drawing.GraphicsUnit.Pixel);
+                }
+
+                using var msOut = new MemoryStream();
+                upscaled.Save(msOut, System.Drawing.Imaging.ImageFormat.Png);
+                return msOut.ToArray();
+            }
+
+            return imageBytes;
+        }
+        catch
+        {
+            return imageBytes;
+        }
     }
 
     private static bool IsPredominantlyDark(byte[] imageBytes)

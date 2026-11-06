@@ -30,7 +30,7 @@
                     <StackPanel>
                         <Grid Margin="0,0,0,14">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <ui:SymbolIcon Symbol="Laptop24" FontSize="18" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <ui:SymbolIcon Symbol="Laptop24" FontSize="18" Foreground="{DynamicResource PrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
                                 <TextBlock Text="{loc:Loc PlatformCardTitle}" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
                             </StackPanel>
                             <Border Background="{DynamicResource SurfaceContainerHighestBrush}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
@@ -84,7 +84,7 @@
 
                     <Grid Grid.Row="0" Margin="0,0,0,12">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <ui:SymbolIcon Symbol="DocumentBulletList24" FontSize="16" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <ui:SymbolIcon Symbol="DocumentBulletList24" FontSize="16" Foreground="{DynamicResource PrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
                             <TextBlock Text="{loc:Loc LiveLogsTitle}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
                             <Border Background="{DynamicResource SurfaceContainerHighestBrush}" CornerRadius="4" Padding="6,1">
                                 <TextBlock Text="Ring Buffer Log" FontSize="10" Foreground="{DynamicResource OutlineBrush}" />
