@@ -1,0 +1,90 @@
+<ui:FluentWindow x:Class="NPUtil.Modules.ContextAssistant.UI.ContextAssistantPopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="NPUtil Context Assistant"
+        Height="480" Width="440"
+        WindowStartupLocation="Manual"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        WindowBackdropType="Mica"
+        ExtendsContentIntoTitleBar="True"
+        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Compact Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <ui:SymbolIcon Symbol="Bot24" FontSize="18" Margin="0,0,8,0" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                <TextBlock Text="Context Assistant" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
+            </StackPanel>
+            <ui:Button x:Name="BtnClose" Content="✕" Appearance="Secondary" Padding="6,2" FontSize="12" HorizontalAlignment="Right" Click="BtnClose_Click" />
+        </Grid>
+
+        <!-- Context Badge -->
+        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="TxtContextSource" Text="Captured from: VS Code" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                <ui:Button x:Name="BtnRefreshContext" Grid.Column="1" Content="Re-capture" Appearance="Secondary" FontSize="10" Padding="6,2" Click="BtnRefreshContext_Click" />
+            </Grid>
+        </Border>
+
+        <!-- Quick Actions & Result Area -->
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Quick Action Buttons -->
+            <WrapPanel Grid.Row="0" Margin="0,0,0,8">
+                <ui:Button x:Name="BtnQuickExplain" Content="Explain" Appearance="Secondary" Margin="0,0,6,6" Click="Action_Click" Tag="Explain" />
+                <ui:Button x:Name="BtnQuickSummarize" Content="Summarize" Appearance="Secondary" Margin="0,0,6,6" Click="Action_Click" Tag="Summarize" />
+                <ui:Button x:Name="BtnQuickTranslate" Content="Translate" Appearance="Secondary" Margin="0,0,6,6" Click="Action_Click" Tag="Translate" />
+                <ui:Button x:Name="BtnQuickPoints" Content="Key Points" Appearance="Secondary" Margin="0,0,6,6" Click="Action_Click" Tag="ExtractPoints" />
+                <ui:Button x:Name="BtnQuickRewrite" Content="Polish" Appearance="Secondary" Margin="0,0,6,6" Click="Action_Click" Tag="Rewrite" />
+            </WrapPanel>
+
+            <!-- Result Box -->
+            <Border Grid.Row="1" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+                <TextBox x:Name="TxtOutput" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                         FontSize="12" Background="Transparent" Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0"
+                         Text="Select an action above or type a custom instruction below..." />
+            </Border>
+        </Grid>
+
+        <!-- Custom Prompt Input -->
+        <Grid Grid.Row="3" Margin="0,10,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBox x:Name="TxtCustomPrompt" Grid.Column="0" PlaceholderText="Ask custom question about context..."
+                        Height="32" Margin="0,0,8,0" KeyDown="TxtCustomPrompt_KeyDown" />
+            <ui:Button x:Name="BtnSendPrompt" Grid.Column="1" Content="Send" Appearance="Primary" Height="32" Click="BtnSendPrompt_Click" />
+        </Grid>
+
+        <!-- Footer Actions -->
+        <Grid Grid.Row="4">
+            <TextBlock x:Name="TxtStatus" Text="Ready" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button x:Name="BtnCopyResult" Content="Copy" Appearance="Secondary" Padding="10,4" Margin="0,0,6,0" Click="BtnCopyResult_Click" />
+                <ui:Button x:Name="BtnOpenFull" Content="Open in NPUtil" Appearance="Secondary" Padding="10,4" Click="BtnOpenFull_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

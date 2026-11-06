@@ -1,16 +1,29 @@
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using NPUtil.App.Views.FileOrganizer;
 using NPUtil.App.Views.Hardware;
 using NPUtil.App.Views.Settings;
+using NPUtil.Core.AI;
+using NPUtil.Core.Context;
+using NPUtil.Core.Extraction;
 using NPUtil.Core.Hardware;
 using NPUtil.Core.Localization;
 using NPUtil.Core.Logging;
 using NPUtil.Core.Modules;
+using NPUtil.Core.OCR;
 using NPUtil.Core.Services;
 using NPUtil.Core.Settings;
+using NPUtil.Core.Translation;
+using NPUtil.Modules.ContextAssistant;
+using NPUtil.Modules.ContextAssistant.UI;
 using NPUtil.Modules.FileOrganizer;
+using NPUtil.Modules.SmartDataExtractor;
+using NPUtil.Modules.SmartDataExtractor.UI;
+using NPUtil.Modules.UniversalOcr;
+using NPUtil.Modules.UniversalOcr.UI;
 
 namespace NPUtil.App;
 
@@ -23,10 +36,31 @@ public partial class MainWindow : FluentWindow
     private readonly ModuleRegistry _moduleRegistry = new();
 
     private FileOrganizerModule? _fileOrganizerModule;
+    private ContextAssistantModule? _contextAssistantModule;
+    private SmartDataExtractorModule? _smartDataExtractorModule;
+    private UniversalOcrModule? _universalOcrModule;
+
     private FileOrganizerMainView? _fileOrganizerView;
+    private ContextAssistantMainView? _contextAssistantView;
+    private SmartDataExtractorMainView? _smartDataExtractorView;
+    private UniversalOcrMainView? _universalOcrView;
+
     private HardwareView? _hardwareView;
     private GlobalSettingsView? _globalSettingsView;
     private TrayIconHelper? _trayHelper;
+
+    private HwndSource? _hwndSource;
+    private const int HOTKEY_ID_ASSISTANT = 9001;
+    private const int HOTKEY_ID_OCR = 9002;
+    private const uint MOD_ALT = 0x0001;
+    private const uint MOD_CONTROL = 0x0002;
+    private const uint WM_HOTKEY = 0x0312;
+
+    [DllImport("user32.dll")]
+    private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+    [DllImport("user32.dll")]
+    private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
     public MainWindow()
     {
@@ -46,27 +80,66 @@ public partial class MainWindow : FluentWindow
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        // 1. Initialize File Organizer Module
-        _fileOrganizerModule = new FileOrganizerModule();
+        // 1. Setup Shared Infrastructure Services
+        var modelManager = new ModelManager(_hardwareService, _logger);
+        var inferenceEngine = new LocalInferenceEngine(modelManager, _logger);
+        var translationService = new LocalTranslationService(_logger);
+        var documentExtractor = new DocumentExtractor();
+        var ocrService = new WindowsOcrService(_logger);
+        var captureService = new ContextCaptureService(_logger);
 
         var serviceProvider = new SimpleServiceProvider();
         serviceProvider.Register<ILogger>(_logger);
         serviceProvider.Register<IHardwareService>(_hardwareService);
         serviceProvider.Register<INotificationService>(_notificationService);
         serviceProvider.Register<SettingsManager>(_settingsManager);
+        serviceProvider.Register<IModelManager>(modelManager);
+        serviceProvider.Register<IInferenceEngine>(inferenceEngine);
+        serviceProvider.Register<ITranslationService>(translationService);
+        serviceProvider.Register<IDocumentExtractor>(documentExtractor);
+        serviceProvider.Register<IOcrService>(ocrService);
+        serviceProvider.Register<IContextCaptureService>(captureService);
 
+        // 2. Initialize Module 0: File Organizer
+        _fileOrganizerModule = new FileOrganizerModule();
         await _fileOrganizerModule.InitializeAsync(serviceProvider);
         _moduleRegistry.Register(_fileOrganizerModule);
-
-        // 2. Initialize Views
         _fileOrganizerView = new FileOrganizerMainView(_fileOrganizerModule);
+        _fileOrganizerModule.Engine?.StartMonitoring();
+
+        // 3. Initialize Module 1: Context Assistant
+        _contextAssistantModule = new ContextAssistantModule();
+        await _contextAssistantModule.InitializeAsync(serviceProvider);
+        _moduleRegistry.Register(_contextAssistantModule);
+        _contextAssistantView = (ContextAssistantMainView)_contextAssistantModule.CreateView();
+
+        // 4. Initialize Module 2: Smart Data Extractor
+        _smartDataExtractorModule = new SmartDataExtractorModule();
+        await _smartDataExtractorModule.InitializeAsync(serviceProvider);
+        _moduleRegistry.Register(_smartDataExtractorModule);
+        _smartDataExtractorView = (SmartDataExtractorMainView)_smartDataExtractorModule.CreateView();
+
+        // 5. Initialize Module 3: Universal OCR & Translator
+        _universalOcrModule = new UniversalOcrModule();
+        _universalOcrModule.OnSendToAssistant = text => Dispatcher.Invoke(() =>
+        {
+            NavigateToTag("ContextAssistant");
+            _contextAssistantView?.SetContextText(text);
+        });
+        _universalOcrModule.OnSendToExtractor = text => Dispatcher.Invoke(() =>
+        {
+            NavigateToTag("SmartDataExtractor");
+            _smartDataExtractorView?.SetExtractedText(text);
+        });
+        await _universalOcrModule.InitializeAsync(serviceProvider);
+        _moduleRegistry.Register(_universalOcrModule);
+        _universalOcrView = (UniversalOcrMainView)_universalOcrModule.CreateView();
+
+        // 6. Initialize Hardware & Settings Views
         _hardwareView = new HardwareView(_hardwareService);
         _globalSettingsView = new GlobalSettingsView(_settingsManager);
 
-        // 3. Start Downloads monitoring if configured
-        _fileOrganizerModule.Engine?.StartMonitoring();
-
-        // 4. Initialize System Tray Integration
+        // 7. Initialize System Tray Integration
         _trayHelper = new TrayIconHelper(this, _logger);
         _trayHelper.Initialize();
         _trayHelper.TrayDoubleClicked += () => Dispatcher.Invoke(() =>
@@ -76,10 +149,13 @@ public partial class MainWindow : FluentWindow
             Activate();
         });
 
-        // 5. Set Initial View
+        // 8. Register Global Shortcuts (Ctrl+Alt+A for Assistant, Ctrl+Alt+O for OCR Snip)
+        RegisterGlobalShortcuts();
+
+        // 9. Set Initial View
         NavigateToTag("FileOrganizer");
 
-        // 6. Update Status Bar
+        // 10. Update Status Bar
         UpdateStatusBar();
 
         if (_fileOrganizerModule.Engine != null)
@@ -88,6 +164,69 @@ public partial class MainWindow : FluentWindow
         }
 
         LocalizationManager.Instance.PropertyChanged += (s, ev) => Dispatcher.Invoke(UpdateStatusBar);
+    }
+
+    private void RegisterGlobalShortcuts()
+    {
+        try
+        {
+            var helper = new WindowInteropHelper(this);
+            _hwndSource = HwndSource.FromHwnd(helper.Handle);
+            _hwndSource.AddHook(HwndHook);
+
+            // Ctrl+Alt+A (Context Assistant)
+            RegisterHotKey(helper.Handle, HOTKEY_ID_ASSISTANT, MOD_CONTROL | MOD_ALT, 0x41);
+            // Ctrl+Alt+O (Universal OCR)
+            RegisterHotKey(helper.Handle, HOTKEY_ID_OCR, MOD_CONTROL | MOD_ALT, 0x4F);
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning("MainWindow", $"Failed to register global hotkeys: {ex.Message}", ex);
+        }
+    }
+
+    private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg == WM_HOTKEY)
+        {
+            int id = wParam.ToInt32();
+            if (id == HOTKEY_ID_ASSISTANT && _contextAssistantModule?.Engine != null)
+            {
+                handled = true;
+                Dispatcher.Invoke(() =>
+                {
+                    var popup = new ContextAssistantPopupWindow(_contextAssistantModule.Engine, () =>
+                    {
+                        Show();
+                        WindowState = WindowState.Normal;
+                        Activate();
+                        NavigateToTag("ContextAssistant");
+                    });
+                    popup.Show();
+                });
+            }
+            else if (id == HOTKEY_ID_OCR)
+            {
+                handled = true;
+                Dispatcher.Invoke(() =>
+                {
+                    var overlay = new ScreenSnipOverlayWindow();
+                    overlay.RegionCaptured += async (bytes) =>
+                    {
+                        Show();
+                        WindowState = WindowState.Normal;
+                        Activate();
+                        NavigateToTag("UniversalOcr");
+                        if (_universalOcrView != null)
+                        {
+                            await _universalOcrView.ProcessBytesAsync(bytes);
+                        }
+                    };
+                    overlay.Show();
+                });
+            }
+        }
+        return IntPtr.Zero;
     }
 
     private void UpdateStatusBar()
@@ -101,12 +240,10 @@ public partial class MainWindow : FluentWindow
             StatusMonitoring.Text = _fileOrganizerModule.Engine.IsMonitoring
                 ? LocalizationManager.Instance.GetString("StatusMonitoringActive", folder)
                 : LocalizationManager.Get("StatusMonitoringPaused");
-
-            _trayHelper?.UpdateTooltip($"NPUtil — File Organizer ({(_fileOrganizerModule.Engine.IsMonitoring ? "Active" : "Paused")})");
         }
 
-        StatusPower.Text = diag.IsOnBattery 
-            ? LocalizationManager.Instance.GetString("PowerBattery", diag.BatteryPercent) 
+        StatusPower.Text = diag.IsOnBattery
+            ? LocalizationManager.Instance.GetString("PowerBattery", diag.BatteryPercent)
             : LocalizationManager.Get("PowerAc");
     }
 
@@ -143,18 +280,30 @@ public partial class MainWindow : FluentWindow
             if (menuItem is NavigationViewItem ni) ni.IsActive = (ni.Tag?.ToString() == tag);
         }
 
-        if (tag == "FileOrganizer" && _fileOrganizerView != null)
+        switch (tag)
         {
-            RootFrame.Navigate(_fileOrganizerView);
-        }
-        else if (tag == "Hardware" && _hardwareView != null)
-        {
-            _hardwareView.RefreshDiagnostics();
-            RootFrame.Navigate(_hardwareView);
-        }
-        else if (tag == "Settings" && _globalSettingsView != null)
-        {
-            RootFrame.Navigate(_globalSettingsView);
+            case "FileOrganizer":
+                if (_fileOrganizerView != null) RootFrame.Navigate(_fileOrganizerView);
+                break;
+            case "ContextAssistant":
+                if (_contextAssistantView != null) RootFrame.Navigate(_contextAssistantView);
+                break;
+            case "SmartDataExtractor":
+                if (_smartDataExtractorView != null) RootFrame.Navigate(_smartDataExtractorView);
+                break;
+            case "UniversalOcr":
+                if (_universalOcrView != null) RootFrame.Navigate(_universalOcrView);
+                break;
+            case "Hardware":
+                if (_hardwareView != null)
+                {
+                    _hardwareView.RefreshDiagnostics();
+                    RootFrame.Navigate(_hardwareView);
+                }
+                break;
+            case "Settings":
+                if (_globalSettingsView != null) RootFrame.Navigate(_globalSettingsView);
+                break;
         }
     }
 
@@ -167,8 +316,19 @@ public partial class MainWindow : FluentWindow
             return;
         }
 
+        try
+        {
+            var helper = new WindowInteropHelper(this);
+            UnregisterHotKey(helper.Handle, HOTKEY_ID_ASSISTANT);
+            UnregisterHotKey(helper.Handle, HOTKEY_ID_OCR);
+        }
+        catch { /* ignore */ }
+
         _trayHelper?.Dispose();
-        _fileOrganizerModule?.ShutdownAsync().Wait(1000);
+        _fileOrganizerModule?.ShutdownAsync().Wait(500);
+        _contextAssistantModule?.ShutdownAsync().Wait(500);
+        _smartDataExtractorModule?.ShutdownAsync().Wait(500);
+        _universalOcrModule?.ShutdownAsync().Wait(500);
     }
 
     private class SimpleServiceProvider : IServiceProvider

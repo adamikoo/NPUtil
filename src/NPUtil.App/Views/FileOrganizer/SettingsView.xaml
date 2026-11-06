@@ -78,7 +78,7 @@
             <ui:Card Margin="0,0,0,24" Padding="16">
                 <StackPanel>
                     <TextBlock Text="{loc:Loc AiProviderLabel}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6" />
-                    <ComboBox x:Name="CmbHardwareBackend" Height="30" Margin="0,0,0,14">
+                    <ComboBox x:Name="CmbHardwareBackend" Height="36" VerticalContentAlignment="Center" Margin="0,0,0,14">
                         <ComboBoxItem Content="{loc:Loc AiAuto}" IsSelected="True" />
                         <ComboBoxItem Content="{loc:Loc AiForceQnn}" />
                         <ComboBoxItem Content="{loc:Loc AiForceCpu}" />

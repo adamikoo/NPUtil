@@ -1,0 +1,154 @@
+<UserControl x:Class="NPUtil.Modules.ContextAssistant.UI.ContextAssistantMainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="1000">
+    <Grid Margin="32,24,32,32">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Context Assistant" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+                <TextBlock Text="Intelligent workflow assistant that acts on selected text, active application and attached documents."
+                           FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <ui:Button x:Name="BtnOpenPopup" Content="Open Quick Flyout" Appearance="Secondary" Click="BtnOpenPopup_Click" Margin="0,0,8,0" />
+                <ui:Button x:Name="BtnViewHistory" Content="History" Appearance="Secondary" Click="BtnViewHistory_Click" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Workspace Split: Context & Prompt (Left) + Output (Right) -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="420" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: Context Input & Action Trigger -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Active App Bar -->
+                <ui:Card Grid.Row="0" Margin="0,0,0,12" Padding="12,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtAppSource" Text="Active Window: Desktop" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="Explicit workflow context" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                        <ui:Button x:Name="BtnCaptureWindow" Grid.Column="1" Content="Capture" Appearance="Secondary" FontSize="11" Padding="8,3" Click="BtnCaptureWindow_Click" />
+                    </Grid>
+                </ui:Card>
+
+                <!-- Context Content Editor / Preview -->
+                <ui:Card Grid.Row="1" Margin="0,0,0,12" Padding="14">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,8">
+                            <TextBlock Text="Captured Context &amp; Selection" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" />
+                            <ui:Button x:Name="BtnAttachFile" Content="Attach Document..." Appearance="Secondary" FontSize="11" HorizontalAlignment="Right" Click="BtnAttachFile_Click" />
+                        </Grid>
+
+                        <TextBox x:Name="TxtContextInput" Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto" BorderThickness="0" Background="Transparent"
+                                 FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                        <TextBlock x:Name="TxtContextLength" Grid.Row="2" Text="0 characters" FontSize="11"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,6,0,0" />
+                    </Grid>
+                </ui:Card>
+
+                <!-- Suggested Actions Palette -->
+                <ui:Card Grid.Row="2" Margin="0,0,0,12" Padding="12,10">
+                    <StackPanel>
+                        <TextBlock Text="Suggested Actions" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,8" />
+                        <WrapPanel>
+                            <ui:Button Content="Explain" Appearance="Secondary" Margin="0,0,6,6" Tag="Explain" Click="QuickAction_Click" />
+                            <ui:Button Content="Summarize" Appearance="Secondary" Margin="0,0,6,6" Tag="Summarize" Click="QuickAction_Click" />
+                            <ui:Button Content="Translate (CS↔EN)" Appearance="Secondary" Margin="0,0,6,6" Tag="Translate" Click="QuickAction_Click" />
+                            <ui:Button Content="Extract Key Points" Appearance="Secondary" Margin="0,0,6,6" Tag="ExtractPoints" Click="QuickAction_Click" />
+                            <ui:Button Content="Polish &amp; Rewrite" Appearance="Secondary" Margin="0,0,6,6" Tag="Rewrite" Click="QuickAction_Click" />
+                        </WrapPanel>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- Custom Instruction Prompt Box -->
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBox x:Name="TxtCustomInstruction" Grid.Column="0" PlaceholderText="Ask custom question or instruction..."
+                                Height="36" Margin="0,0,8,0" KeyDown="TxtCustomInstruction_KeyDown" />
+                    <ui:Button x:Name="BtnRunCustom" Grid.Column="1" Content="Execute" Appearance="Primary" Height="36" Click="BtnRunCustom_Click" />
+                </Grid>
+            </Grid>
+
+            <!-- Right: Results & Detailed Analysis Area -->
+            <ui:Card Grid.Column="2" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Result Header -->
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtResultTitle" Text="Assistant Output" FontSize="16" FontWeight="SemiBold" />
+                            <TextBlock x:Name="TxtResultMeta" Text="Local Inference • Ready" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <ui:Button x:Name="BtnCopyOutput" Content="Copy" Appearance="Secondary" Click="BtnCopyOutput_Click" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnExportOutput" Content="Save to File..." Appearance="Secondary" Click="BtnExportOutput_Click" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnClearOutput" Content="Clear" Appearance="Secondary" Click="BtnClearOutput_Click" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Main Output Viewer -->
+                    <Border Grid.Row="1" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="14">
+                        <TextBox x:Name="TxtMainOutput" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                 FontSize="13" Background="Transparent" Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0"
+                                 Text="Select an action on the left or enter a custom prompt to analyze context." />
+                    </Border>
+
+                    <!-- Privacy Transparency Note -->
+                    <Grid Grid.Row="2" Margin="0,12,0,0">
+                        <TextBlock Text="Privacy Guard: Context is analyzed 100% locally on your Snapdragon X Elite NPU/CPU. No cloud calls."
+                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                    </Grid>
+                </Grid>
+            </ui:Card>
+        </Grid>
+    </Grid>
+</UserControl>

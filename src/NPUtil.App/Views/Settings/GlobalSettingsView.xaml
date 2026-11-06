@@ -29,10 +29,10 @@
                         <TextBlock Text="{loc:Loc ThemeDesc}" 
                                    FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
-                    <ComboBox x:Name="CmbAppTheme" Grid.Column="1" Height="30" Width="220" SelectionChanged="CmbAppTheme_SelectionChanged">
-                        <ComboBoxItem Content="{loc:Loc ThemeSystem}" />
-                        <ComboBoxItem Content="{loc:Loc ThemeLight}" />
-                        <ComboBoxItem Content="{loc:Loc ThemeDark}" />
+                    <ComboBox x:Name="CmbAppTheme" Grid.Column="1" Height="36" Width="220" VerticalContentAlignment="Center" SelectionChanged="CmbAppTheme_SelectionChanged">
+                        <ComboBoxItem Content="{loc:Loc ThemeSystem}" VerticalAlignment="Center" />
+                        <ComboBoxItem Content="{loc:Loc ThemeLight}" VerticalAlignment="Center" />
+                        <ComboBoxItem Content="{loc:Loc ThemeDark}" VerticalAlignment="Center" />
                     </ComboBox>
                 </Grid>
             </ui:Card>
@@ -49,9 +49,9 @@
                         <TextBlock Text="{loc:Loc LanguageDesc}" 
                                    FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
-                    <ComboBox x:Name="CmbLanguage" Grid.Column="1" Height="30" Width="220" SelectionChanged="CmbLanguage_SelectionChanged">
-                        <ComboBoxItem Content="{loc:Loc LangEn}" Tag="en" />
-                        <ComboBoxItem Content="{loc:Loc LangCs}" Tag="cs" />
+                    <ComboBox x:Name="CmbLanguage" Grid.Column="1" Height="36" Width="220" VerticalContentAlignment="Center" SelectionChanged="CmbLanguage_SelectionChanged">
+                        <ComboBoxItem Content="{loc:Loc LangEn}" Tag="en" VerticalAlignment="Center" />
+                        <ComboBoxItem Content="{loc:Loc LangCs}" Tag="cs" VerticalAlignment="Center" />
                     </ComboBox>
                 </Grid>
             </ui:Card>

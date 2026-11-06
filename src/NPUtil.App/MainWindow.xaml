@@ -40,15 +40,11 @@
                                IsPaneOpen="True"
                                IsBackButtonVisible="Collapsed"
                                SelectionChanged="RootNavigation_SelectionChanged">
-                <ui:NavigationView.Header>
-                    <StackPanel Orientation="Horizontal" Margin="10,8,0,8" VerticalAlignment="Center">
-                        <Image Source="Assets/logo.png" Width="24" Height="24" Margin="0,0,10,0" RenderOptions.BitmapScalingMode="HighQuality" />
-                        <TextBlock Text="NPUtil" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" />
-                    </StackPanel>
-                </ui:NavigationView.Header>
-
                 <ui:NavigationView.MenuItems>
                     <ui:NavigationViewItem Content="{loc:Loc NavFileOrganizer}" Tag="FileOrganizer" Icon="{ui:SymbolIcon Folder24}" Click="RootNavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc NavContextAssistant}" Tag="ContextAssistant" Icon="{ui:SymbolIcon Bot24}" Click="RootNavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc NavSmartDataExtractor}" Tag="SmartDataExtractor" Icon="{ui:SymbolIcon DocumentTable24}" Click="RootNavItem_Click" />
+                    <ui:NavigationViewItem Content="{loc:Loc NavUniversalOcr}" Tag="UniversalOcr" Icon="{ui:SymbolIcon Scan24}" Click="RootNavItem_Click" />
                 </ui:NavigationView.MenuItems>
 
                 <ui:NavigationView.FooterMenuItems>

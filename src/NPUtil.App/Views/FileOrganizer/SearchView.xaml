@@ -54,10 +54,10 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Text="Category:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbCategoryFilter" Grid.Column="1" Height="28" SelectionChanged="Filter_SelectionChanged" />
+                    <ComboBox x:Name="CmbCategoryFilter" Grid.Column="1" Height="36" VerticalContentAlignment="Center" SelectionChanged="Filter_SelectionChanged" />
 
                     <TextBlock Grid.Column="3" Text="File type:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbExtensionFilter" Grid.Column="4" Height="28" SelectionChanged="Filter_SelectionChanged" />
+                    <ComboBox x:Name="CmbExtensionFilter" Grid.Column="4" Height="36" VerticalContentAlignment="Center" SelectionChanged="Filter_SelectionChanged" />
 
                     <TextBlock x:Name="TxtResultCount" Grid.Column="5" Text="0 results found" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </Grid>

@@ -65,6 +65,9 @@ public class LocalizationManager : INotifyPropertyChanged
         // App
         { "AppTitle", "NPUtil — Windows Utility Suite" },
         { "NavFileOrganizer", "File Organizer" },
+        { "NavContextAssistant", "Context Assistant" },
+        { "NavSmartDataExtractor", "Smart Data Extractor" },
+        { "NavUniversalOcr", "Universal OCR & Translator" },
         { "NavHardware", "System & Diagnostics" },
         { "NavSettings", "Settings" },
 
@@ -240,6 +243,9 @@ public class LocalizationManager : INotifyPropertyChanged
         // App
         { "AppTitle", "NPUtil — Windows Utility Suite" },
         { "NavFileOrganizer", "Organizace souborů" },
+        { "NavContextAssistant", "Kontextový asistent" },
+        { "NavSmartDataExtractor", "Chytrý extraktor dat" },
+        { "NavUniversalOcr", "Univerzální OCR a překladač" },
         { "NavHardware", "Systém a diagnostika" },
         { "NavSettings", "Nastavení" },
 

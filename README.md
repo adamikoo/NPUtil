@@ -1,134 +1,120 @@
-# NPUtil — Modulární desktopová sada nástrojů pro Windows
+# NPUtil — Modulární desktopová sada nástrojů pro Windows 11
 
-**NPUtil** je lehká, modulární desktopová aplikace pro systém Windows 11 (ARM64 a x64), navržená jako osobní sada užitečných nástrojů. 
+**NPUtil** je lehká, modulární desktopová aplikace pro systém Windows 11 (nativní ARM64 a x64), navržená jako integrovaná sada praktických nástrojů s lokální umělou inteligencí.
 
-Aplikace je od základu koncipována jako **rozšiřitelná platforma**. Jejím prvním plně funkčním modulem je **Intelligent File Organizer** (Inteligentní organizátor souborů), který automaticky třídí a udržuje složku *Stažené soubory* (Downloads) na základě sémantického porozumění obsahu, pravidel a lokálních AI modelů.
-
----
-
-## 1. Klíčové vlastnosti
-
-- **Nativní podpora Windows 11 ARM64**: Běží nativně na procesorech Qualcomm Snapdragon X Elite (ASUS Vivobook S15 apod.) bez emulace.
-- **Akcelerace NPU přes Qualcomm QNN**: Připraveno pro inferenci na Qualcomm Hexagon NPU prostřednictvím ONNX Runtime QNN Execution Provideru s automatickým plynulým přechodem (fallbackem) na vektorizovaný CPU (ARM64 NEON).
-- **100% lokální zpracování (Privacy-First)**: Žádné cloudové API, telemetrie ani odesílání dat. Všechny extrakce textu, indexování a vnoření (vektory) probíhají výhradně lokálně.
-- **Dynamická kategorizace a hybridní sémantická klasifikace**:
-  - Přísná pravidla s ochranou proti chybnému zařazení dokumentů (např. *Zpravodaj* / periodika do financí).
-  - Pokud si systém není jistý (`confidence < 0.58`), dynamicky vytvoří novou vhodnou kategorii na základě analýzy klíčových témat dokumentu.
-- **Bezpečnost souborů a plná reverzibilita (Undo)**:
-  - Žádné přepisování existujících souborů (detekce kolizí s bezpečným číslováním `soubor (1).ext`).
-  - Podpora jednotlivého i hromadného vrácení operací (Undo) z persistentní SQLite databáze.
-  - Zachování časových razítek a metadat souborů.
-  - Kontrola stability stahování (ignorování `.crdownload`, `.part`, `.tmp`).
-- **Nativní a střídmý Windows vzhled**:
-  - Respektuje pravidla Windows 11 Fluent UI (světlý i tmavý režim).
-  - Žádné umělé neonové přechody, falešné kontrolky ani přebublané karty. Čistý, funkční a přehledný nástroj.
-- **Lokální fulltextové a sémantické vyhledávání**: SQLite FTS5 s odstraněním diakritiky v kombinaci s kosinovou podobností vektorů.
+Aplikace běží **100% lokálně** s hardwarovou akcelerací na procesorech **Qualcomm Snapdragon X Elite** s využitím **Qualcomm Hexagon NPU** (prostřednictvím ONNX Runtime QNN Execution Provideru) a plynulým fallbackem na vektorizovaný CPU (ARM64 NEON).
 
 ---
 
-## 2. Architektura aplikace
+## 1. Čtyři integrované moduly
 
-NPUtil se dělí na **Core** (jádro) a **nezávislé moduly**:
+### 1. Intelligent File Organizer
+Automaticky monitoruje složku *Stažené soubory* (Downloads) a na základě sémantické analýzy obsahu souborů a hybridního AI modelu organizuje dokumenty do přehledné adresářové struktury.
+- **Dynamická kategorizace**: Pokud systém narazí na nespecifikovaný dokument (např. *Zpravodaj* nebo periodikum), nevloží jej chybně do financí, nýbrž dynamicky vytvoří novou vhodnou kategorii (`Work\Newsletters` apod.).
+- **Plná reverzibilita (Undo)**: Bezpečné kolizní číslování souborů a možnost okamžitého vrácení jednotlivých i hromadných operací z persistentní SQLite databáze.
+- **Lokální vyhledávání**: SQLite FTS5 s odstraněním diakritiky v kombinaci s kosinovou podobností vektorů.
+
+### 2. Context Assistant (Klávesová zkratka: `Ctrl+Alt+A`)
+Inteligentní asistent porozumí kontextu vaší aktuální práce napříč systémem Windows.
+- **Zpracování vybraného textu**: Zvolte text v jakékoliv aplikaci a stiskněte globální zkratku. Asistent nabídne kontextové akce: vysvětlení kódu nebo textu, shrnutí, překlad, extrakci klíčových bodů či profesionální přepis.
+- **Detekce aktivní aplikace (Opt-in)**: Zjišťuje aktivní okno (VS Code, prohlížeč, PDF čtečka, Průzkumník) a přizpůsobuje nabídku akcí.
+- **Podpora dokumentů**: Možnost přiložit libovolný dokument (PDF, DOCX, XLSX, TXT, CSV) jako kontext.
+- **Soukromí na prvním místě**: Žádné skryté snímky obrazovky ani nahrávání. Uživatel vždy vidí přesný náhled zachyceného kontextu před odesláním do lokálního inferenčního modelu.
+- **Historie konverzací**: Všechny dotazy jsou lokálně uloženy v SQLite databázi (`context_assistant.db`).
+
+### 3. Smart Data Extractor
+Všestranný nástroj pro vytěžování a strukturování dat z dokumentů a souborů.
+- **Podporované formáty**: PDF, DOCX, XLSX, PPTX, CSV, TXT / Markdown, naskenované obrázky (PNG, JPG, WebP).
+- **Předdefinované kategorie**:
+  - **Tables & Data**: Detekce tabulek, číselných řad a mřížek s dynamickým náhledem v tabulce.
+  - **Formatted Text**: Zachování nadpisů, odstavců a struktury.
+  - **Invoices & Receipts**: Automatická identifikace dodavatele, odběratele, čísla faktury, data vystavení/splatnosti, částky, DPH a položek.
+  - **Lists & Records**: Extrakce záznamů, seznamů a klíčových dvojic.
+  - **Dates & Deadlines**: Vyhledání všech termínů, schůzek a deadlinů s okolním kontextem.
+  - **Structured JSON**: Konverze dokumentu do validního formátovaného JSONu.
+  - **Vlastní instrukce**: Zpracování požadavků v přirozeném jazyce (např. *"Vytáhni všechny produkty a ceny"*).
+- **Export**: Výstup lze uložit do formátů **CSV**, **XLSX** (nativní Excel), **JSON**, **TXT** a **DOCX** (Word).
+
+### 4. Universal OCR & Translator (Klávesová zkratka: `Ctrl+Alt+O`)
+Systémový OCR snímač a překladač obrazovky dostupný odkudkoliv ve Windows.
+- **Výřez obrazovky**: Po stisku zkratky se zobrazí zatmavené překrytí obrazovky pro výběr libovolné oblasti myší.
+- **Nativní Windows OCR**: Využívá integrovaný engine `Windows.Media.Ocr` s plnou hardwarovou akcelerací a podporou češtiny i angličtiny.
+- **Okamžitý obousměrný překlad**: Zobrazení originálu a překladu bok po boku s možností editace.
+- **Provázanost modulů**: Jedním kliknutím odešlete rozpoznaný text do **Context Assistantu** nebo **Smart Data Extraktoru**.
+- **Dávkové OCR**: Možnost nahrát více obrázků najednou a hromadně vytěžit text.
+
+---
+
+## 2. Architektura řešení
 
 ```
 NPUtil/
 ├── src/
-│   ├── NPUtil.Core/                   # Jádro aplikace
-│   │   ├── Hardware/                  # Diagnostika ARM64, Snapdragon X Elite, NPU, baterie
-│   │   ├── Logging/                   # Strukturované logování do souboru i paměti
-│   │   ├── Modules/                   # Rozhraní IModule, ModuleRegistry
-│   │   ├── Services/                  # Notifikace a koordinace úloh
-│   │   └── Settings/                  # Globální nastavení a JSON persistence
-│   ├── NPUtil.Modules.FileOrganizer/  # První modul: Inteligentní organizátor souborů
-│   │   ├── Classification/            # Hybridní klasifikátor, QNN detektor, ONNX embedding engine, paměť preferencí
-│   │   ├── Core/                      # OrganizerEngine, dynamická taxonomie složek (TaxonomyManager)
-│   │   ├── Extraction/                # Extrakce z PDF (PdfPig), DOCX, XLSX, PPTX, TXT, kódů, obrázků
-│   │   ├── FileOperations/            # Bezpečný přesun (SafeFileMover), UndoManager, SQLite historie
-│   │   ├── Models/                    # Modely a datové entity
-│   │   ├── Monitoring/                # Sledování složky Downloads (DownloadsWatcher) a stabilita souborů
-│   │   └── Search/                    # Lokální vyhledávač (SQLite FTS5 + sémantická podobnost)
-│   └── NPUtil.App/                    # Nativní WPF desktopové uživatelské rozhraní
-│       ├── Assets/                    # Ikona aplikace (nputil.ico)
-│       ├── Theme/                     # Světlý / tmavý režim, nativní ovládací prvky
-│       └── Views/                     # Jednotlivé obrazovky modulu a diagnostiky
+│   ├── NPUtil.Core/                         # Sdílená inteligence a systémové jádro
+│   │   ├── AI/                              # ModelManager (správa RAM a modelů), LocalInferenceEngine
+│   │   ├── Context/                         # ContextCaptureService, ContextAssistantHistoryDb
+│   │   ├── Extraction/                      # DocumentExtractor (PDF, DOCX, XLSX, PPTX, CSV, TXT)
+│   │   ├── Hardware/                        # Diagnostika Qualcomm Snapdragon X Elite, NPU, baterie
+│   │   ├── Localization/                    # Lokalizační engine (angličtina výchozí, živý přepínač do češtiny)
+│   │   ├── Logging/                         # Logování (AppLogger)
+│   │   ├── Modules/                         # IModule a ModuleRegistry
+│   │   ├── OCR/                             # WindowsOcrService (Windows.Media.Ocr)
+│   │   └── Translation/                     # LocalTranslationService (bilingvní česko-anglický engine)
+│   ├── NPUtil.Modules.FileOrganizer/        # Modul 0: Organizace souborů
+│   ├── NPUtil.Modules.ContextAssistant/     # Modul 1: Kontextový asistent
+│   │   ├── Core/                            # ContextAssistantEngine
+│   │   └── UI/                              # ContextAssistantMainView, ContextAssistantPopupWindow
+│   ├── NPUtil.Modules.SmartDataExtractor/   # Modul 2: Chytrý extraktor dat
+│   │   ├── Engine/                          # SmartDataExtractorEngine
+│   │   ├── Export/                          # DataExporter (CSV, XLSX, JSON, TXT, DOCX)
+│   │   └── UI/                              # SmartDataExtractorMainView
+│   ├── NPUtil.Modules.UniversalOcr/         # Modul 3: Univerzální OCR a překladač
+│   │   ├── Core/                            # UniversalOcrEngine
+│   │   └── UI/                              # UniversalOcrMainView, ScreenSnipOverlayWindow
+│   └── NPUtil.App/                          # Hlavní aplikace WPF Fluent UI
 ├── tests/
-│   └── NPUtil.Tests/                  # Sada 21 automatických testů (extrakce, klasifikace, integrita, undo, dynamické kategorie)
+│   └── NPUtil.Tests/                        # 34 automatizovaných unit a integračních testů
 ├── publish/
-│   └── win-arm64/                     # Výsledné publikované ARM64 nativní binárky
-├── build.ps1                          # Skript pro kompletní sestavení, otestování a publikaci
-└── run.bat                            # Skript pro okamžité spuštění aplikace
+│   └── win-arm64/                           # Publikované nativní ARM64 spustitelné soubory
+├── build.ps1                                # Skript pro sestavení, otestování a publikaci
+└── run.bat                                  # Skript pro okamžité spuštění
 ```
 
 ---
 
-## 3. Rychlý start
-
-### Požadavky
-- Windows 11 (doporučeno ARM64, podporováno i x64)
-- .NET 9 Runtime nebo SDK (SDK je nainstalováno v `C:\Users\Asus\.dotnet`)
+## 3. Rychlé spuštění a ovládání
 
 ### Spuštění aplikace
-Jednoduše poklepejte na `run.bat` v kořenovém adresáři, nebo spusťte přímo:
+Poklepejte na `run.bat` v kořenovém adresáři, nebo spusťte přímo:
 ```powershell
 .\publish\win-arm64\NPUtil.exe
 ```
 
-### Sestavení ze zdrojových kódů a spuštění testů
-V PowerShellu spusťte automatizovaný skript:
+### Globální klávesové zkratky
+- **`Ctrl+Alt+A`**: Otevře plovoucí okno **Context Assistantu** se zachyceným textem z aktuálního okna.
+- **`Ctrl+Alt+O`**: Spustí zatmavení obrazovky pro okamžitý **OCR výřez** libovolného textu na monitoru.
+
+### Sestavení a testy
+V PowerShellu spusťte:
 ```powershell
 .\build.ps1
 ```
-Tento skript:
-1. Sestaví celou solution v konfiguraci Release.
-2. Spustí 19 automatických unit a integračních testů.
-3. Vygeneruje nativní sestavení do složky `publish\win-arm64\`.
+Tento skript sestaví všechny projekty, provede všech **34 automatizovaných testů** a publikuje optimalizované binárky do `publish\win-arm64\`.
 
 ---
 
-## 4. Modul: Inteligentní organizátor souborů
+## 4. Licence a podmínky použití
 
-Modul nabízí 6 přehledných zobrazení:
+Projekt **NPUtil** podléhá licenci **NPUtil Source-Available Non-Commercial License (Version 1.0)**. Kompletní znění licence naleznete v souboru [`LICENSE`](LICENSE).
 
-1. **Přehled (Overview)**:
-   - Stav sledování (Aktivní / Pozastaveno) a tlačítko *Spustit skenování*.
-   - Kompaktní metriky: počet indexovaných souborů, zorganizovaných souborů, fronta k revizi, vrácené operace.
-   - Stav AI akcelerace (Qualcomm Hexagon NPU / CPU) a správa stažení neuronového modelu.
-   - Poslední aktivita přesunů.
-2. **Fronta k revizi (Review Queue)**:
-   - Seznam souborů čekajících na schválení s navrženou cílovou složkou, mírou spolehlivosti a vysvětlením.
-   - Možnost schválit jedním kliknutím, zamítnout, nebo vybrat alternativní cílovou kategorii.
-   - Tlačítko pro hromadné schválení všech položek.
-3. **Průzkumník složek (Folder Explorer)**:
-   - Stromová hierarchie kategorií (`Education\Languages\English`, `Finance\Invoices\2026`, `Programming\Projects` atd.).
-   - Editace názvů, sémantických popisů (které AI model používá pro párování), klíčových slov a přípon.
-   - Možnost vyloučit složku z automatizace nebo otevřít složku v Průzkumníku Windows.
-4. **Vyhledávání (Search)**:
-   - Okamžité vyhledávání v reálném čase podle názvu, kategorie, přípony i vytěženého obsahu dokumentů.
-   - Sémantické vyhledávání: dotaz např. *"Cambridge English"* najde relevantní materiály (např. `c1_advanced_handbook.pdf`), i když se slova neshodují přesně.
-5. **Historie a Undo (Activity)**:
-   - Kompletní auditní stopa každé provedené operace.
-   - Tlačítko **Vrátit přesun (Undo)** u každého souboru i možnost vrátit celou dávku (Undo Batch).
-6. **Nastavení modulu (Settings)**:
-   - Volba sledované složky (výchozí: systémová složka *Stažené soubory* zjištěná přes Windows Known Folders API).
-   - Režimy organizace:
-     - *Revize všeho (výchozí, doporučeno)* — Žádný soubor se nepřesune bez vašeho schválení.
-     - *Inteligentní automatika* — Soubory s vysokou jistotou (např. >75 %) přesune rovnou, sporné zařadí do fronty.
-     - *Plně automatický* — Přesouvá automaticky podle nejvyšší shody.
-   - Nastavení prahu spolehlivosti a chování při napájení z baterie.
+### Co je povoleno:
+- Prohlížet a studovat kompletní zdrojové kódy.
+- Forkovat repozitář a vytvářet vlastní odvozené verze.
+- Modifikovat, rozšiřovat a přepisovat libovolnou část kódu.
+- Využívat software a jeho modifikace pro osobní, vzdělávací a nekomerční účely.
+- Bezplatně šířit zdrojové kódy i sestavené binární verze za předpokladu zachování informací o původních autorech.
 
----
-
-## 5. Lokální AI a akcelerace na Qualcomm Snapdragon NPU
-
-### Podpora hardwaru
-Aplikace obsahuje komponentu `QnnDetector`, která prověřuje dostupnost knihoven `QnnHtp.dll` a `onnxruntime_providers_qnn.dll`.
-Při inicializaci provede zkušební inferenci. Pokud je NPU dostupné, aktivuje se Hexagon HTP backend. V případě jakékoli nekompatibility operátorů nebo nedostupnosti ovladače se aplikace automaticky a bezpečně přepne na vektorizovaný běh na CPU (ARM64 NEON).
-
-### Dvojúrovňový inferenční systém
-1. **Rychlý vestavěný vícejazyčný vektorizér**:
-   - Funguje okamžitě offline bez nutnosti stahovat externí modely.
-   - Mapuje české i anglické texty, n-gramy a klíčová slova do L2-normalizovaného 384-dimenzionálního prostoru.
-2. **Kvantizovaný neuronový model (ONNX)**:
-   - Model `paraphrase-multilingual-MiniLM-L12-v2` (~112 MB) pod licencí Apache 2.0.
-   - Lze stáhnout přímo z rozhraní aplikace jediným kliknutím.
-   - Zajišťuje špičkovou sémantickou přesnost pro složité české i anglické dokumenty.
+### Co je zakázáno:
+- Prodávat NPUtil nebo jeho odvozeniny za peníze.
+- Monetizovat software (předplatné, placený hosting, placené pluginy či placené balíčky).
+- Vydávat dílo za svůj vlastní původní produkt bez uvedení původního projektu.

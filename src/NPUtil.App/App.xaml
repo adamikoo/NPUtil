@@ -22,6 +22,12 @@
                 <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
             </Style>
 
+            <!-- Global ComboBox styling to avoid vertical text clipping -->
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="MinHeight" Value="36" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+
             <!-- Subtle Fluent Page Entrance Transition -->
             <Style TargetType="{x:Type UserControl}">
                 <Style.Triggers>

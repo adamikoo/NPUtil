@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
@@ -21,6 +21,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\NPUtil.Core\NPUtil.Core.csproj" />
     <ProjectReference Include="..\..\src\NPUtil.Modules.FileOrganizer\NPUtil.Modules.FileOrganizer.csproj" />
+    <ProjectReference Include="..\..\src\NPUtil.Modules.ContextAssistant\NPUtil.Modules.ContextAssistant.csproj" />
+    <ProjectReference Include="..\..\src\NPUtil.Modules.SmartDataExtractor\NPUtil.Modules.SmartDataExtractor.csproj" />
+    <ProjectReference Include="..\..\src\NPUtil.Modules.UniversalOcr\NPUtil.Modules.UniversalOcr.csproj" />
   </ItemGroup>
 
 </Project>

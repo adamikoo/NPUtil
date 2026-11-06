@@ -1,0 +1,26 @@
+<Window x:Class="NPUtil.Modules.UniversalOcr.UI.ScreenSnipOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Screen Region Selector"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#55000000"
+        WindowState="Maximized"
+        Topmost="True"
+        ShowInTaskbar="False"
+        Cursor="Cross"
+        MouseDown="Window_MouseDown"
+        MouseMove="Window_MouseMove"
+        MouseUp="Window_MouseUp"
+        KeyDown="Window_KeyDown">
+    <Canvas x:Name="CanvasOverlay">
+        <Rectangle x:Name="RectSelection"
+                   Stroke="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                   StrokeThickness="2"
+                   Fill="#220078D4"
+                   Visibility="Collapsed" />
+        <Border x:Name="BadgeHint" Background="#CC000000" CornerRadius="4" Padding="12,6" Canvas.Top="30" Canvas.Left="30">
+            <TextBlock Text="Click and drag to select screen region for OCR (Press Esc to cancel)" Foreground="White" FontSize="13" />
+        </Border>
+    </Canvas>
+</Window>

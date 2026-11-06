@@ -1,0 +1,41 @@
+NPUtil Source-Available Non-Commercial License (Version 1.0)
+Copyright (c) 2026 NPUtil Contributors. All rights reserved.
+
+1. PERMISSIONS
+Subject to the terms and conditions of this License, you are granted a non-exclusive, 
+worldwide, royalty-free license to:
+  a) View, read, and study the complete source code of NPUtil.
+  b) Fork the source repository and create modified or derived versions.
+  c) Compile, build, and use NPUtil or its derivative works for personal, educational, 
+     academic, evaluation, and other strictly non-commercial purposes.
+  d) Redistribute unmodified or modified source code and compiled binaries free of charge, 
+     provided all notices and attribution requirements herein are preserved.
+  e) Submit contributions, bug fixes, and feature improvements to the official NPUtil repository.
+
+2. COMMERCIAL RESTRICTIONS
+Without prior explicit written permission from the original copyright holder, you MAY NOT:
+  a) Sell, rent, lease, or commercially license NPUtil or any derived or modified work.
+  b) Distribute NPUtil or derived works as part of any commercial, paid, or monetized 
+     product, bundle, or service.
+  c) Offer commercial hosting, cloud endpoints, paid APIs, or subscription-based access 
+     to NPUtil functionality.
+  d) Monetize NPUtil through paywalls, paid plugins, or commercial advertising wrappers.
+
+3. ATTRIBUTION AND FORKING CONDITIONS
+Any public redistribution or fork of NPUtil, in source or binary form, must:
+  a) Retain this complete License notice and all original copyright declarations.
+  b) Clearly acknowledge NPUtil as the original upstream project.
+  c) Prominently indicate that the work has been modified, identifying significant changes.
+  d) NOT use the official "NPUtil" name, logo, or branding as the title of any modified 
+     derivative work in a manner that falsely implies official endorsement.
+
+4. DISCLAIMER OF WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER 
+LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+5. NON-OSI NOTICE
+This software is source-available and freely modifiable for non-commercial use. 
+Because it prohibits commercial exploitation, it is not an OSI-approved Open Source license.
+Third-party dependencies (such as ONNX Runtime, WPF-UI, and Microsoft.Data.Sqlite) remain 
+subject to their respective upstream licenses (e.g., MIT, Apache-2.0).
