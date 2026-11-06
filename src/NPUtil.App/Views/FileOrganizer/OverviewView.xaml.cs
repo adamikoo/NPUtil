@@ -42,13 +42,18 @@ public partial class OverviewView : UserControl
         BarMonitoring.Message = LocalizationManager.Instance.GetString("MonitoringWatchedFolder", _module.Engine.WatchedFolder);
         BarMonitoring.Severity = _module.Engine.IsMonitoring ? Wpf.Ui.Controls.InfoBarSeverity.Success : Wpf.Ui.Controls.InfoBarSeverity.Warning;
         BarMonitoring.Title = _module.Engine.IsMonitoring ? LocalizationManager.Get("MonitoringActiveTitle") : LocalizationManager.Get("MonitoringPausedTitle");
-        BtnToggleMonitoring.Content = _module.Engine.IsMonitoring ? LocalizationManager.Get("BtnPause") : LocalizationManager.Get("BtnResume");
+        
+        TxtWatchedPath.Text = _module.Engine.WatchedFolder ?? "C:\\Users\\Asus\\Downloads";
 
         var (totalMoved, active, undone) = _module.Engine.GetOperationCounts();
-        TxtOrganizedCount.Text = active.ToString();
-        TxtUndoneCount.Text = undone.ToString();
-        TxtReviewCount.Text = _module.Engine.GetReviewQueue().Count.ToString();
+        TxtOrganizedCount.Text = $"{active} files";
+        TxtUndoneCount.Text = $"{undone} undone";
+        var pendingReviewCount = _module.Engine.GetReviewQueue().Count;
+        TxtReviewCount.Text = $"{pendingReviewCount} pending";
         TxtIndexedCount.Text = _module.Engine.GetIndexedFilesCount().ToString();
+
+        TxtOrganizedTodayHeader.Text = $"{active} files organized today";
+        TxtPendingReviewsHeader.Text = pendingReviewCount == 0 ? "Zero pending reviews" : $"{pendingReviewCount} pending reviews";
 
         TxtAiBackend.Text = _module.EmbeddingEng?.ActiveBackendName ?? "Auto-detecting...";
 
@@ -128,5 +133,10 @@ public partial class OverviewView : UserControl
             BtnDownloadModel.IsEnabled = true;
             RefreshStatus();
         }
+    }
+
+    private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshStatus();
     }
 }

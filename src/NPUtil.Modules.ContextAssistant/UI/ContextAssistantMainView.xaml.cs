@@ -81,7 +81,7 @@ public partial class ContextAssistantMainView : UserControl
 
     private async void QuickAction_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Wpf.Ui.Controls.Button btn && Enum.TryParse<ContextActionType>(btn.Tag?.ToString(), out var action))
+        if (sender is FrameworkElement elem && Enum.TryParse<ContextActionType>(elem.Tag?.ToString(), out var action))
         {
             await RunActionAsync(action);
         }

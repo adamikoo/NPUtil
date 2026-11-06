@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
 
         <!-- Native Windows 11 TitleBar with Mica Integration -->
-        <ui:TitleBar Grid.Row="0" Title="{loc:Loc AppTitle}" Icon="Assets/logo.png" />
+        <ui:TitleBar Grid.Row="0" Title="NPUtil  |  v2.4 Core" Icon="Assets/logo.png" />
 
         <!-- Windows 11 Settings-Style Navigation Grid -->
         <Grid Grid.Row="1">
@@ -32,10 +32,10 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Left Navigation View -->
+            <!-- Left Navigation View with Acrylic styling -->
             <ui:NavigationView Grid.Column="0" x:Name="RootNavigation"
                                PaneDisplayMode="Left"
-                               OpenPaneLength="250"
+                               OpenPaneLength="240"
                                CompactPaneLength="48"
                                IsPaneOpen="True"
                                IsBackButtonVisible="Collapsed"
@@ -59,20 +59,41 @@
             </Border>
         </Grid>
 
-        <!-- Native Status Bar -->
-        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
-                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
-                BorderThickness="0,1,0,0" Padding="16,4">
+        <!-- Specular Glass Status Bar matching Stitch -->
+        <Border Grid.Row="2" Background="{DynamicResource SurfaceContainerLowestBrush}" 
+                BorderBrush="{DynamicResource SpecularEdgeBorderBrush}" 
+                BorderThickness="0,1,0,0" Padding="16,5">
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="StatusBackend" Grid.Column="0" Text="AI Engine: Auto-detecting..." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                <TextBlock x:Name="StatusMonitoring" Grid.Column="1" Text="Monitoring: Active (Downloads)" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,24,0" />
-                <TextBlock x:Name="StatusPower" Grid.Column="2" Text="AC Power" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <!-- Left: NPU Ready Status Pill -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="{DynamicResource SurfaceContainerHighBrush}" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="6" Height="6" Fill="{DynamicResource PrimaryContainerBrush}" Margin="0,0,6,0">
+                                <Ellipse.Effect>
+                                    <DropShadowEffect BlurRadius="6" Color="#60CDFF" ShadowDepth="0" Opacity="0.8" />
+                                </Ellipse.Effect>
+                            </Ellipse>
+                            <TextBlock Text="NPU Ready" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        </StackPanel>
+                    </Border>
+                    <TextBlock Text="•" FontSize="11" Foreground="{DynamicResource OutlineVariantBrush}" Margin="0,0,8,0" />
+                    <TextBlock x:Name="StatusBackend" Text="Qualcomm Hexagon V73 Active" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                </StackPanel>
+
+                <TextBlock x:Name="StatusMonitoring" Grid.Column="1" Text="Monitoring: Active (Downloads)" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" />
+
+                <!-- Right: DirectML / Power Telemetry -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="DirectML / Hexagon" FontSize="11" Foreground="{DynamicResource OutlineBrush}" Margin="0,0,8,0" />
+                    <TextBlock Text="•" FontSize="11" Foreground="{DynamicResource OutlineVariantBrush}" Margin="0,0,8,0" />
+                    <TextBlock x:Name="StatusPower" Text="0% Load • AC Power" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                </StackPanel>
             </Grid>
         </Border>
 

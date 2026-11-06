@@ -247,4 +247,30 @@ public partial class UniversalOcrMainView : UserControl
             MessageBox.Show("OCR text copied to clipboard! Switch to Smart Data Extractor to parse it.", "Sent to Extractor", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
+
+    private void BtnSampleDoc_Click(object sender, RoutedEventArgs e)
+    {
+        TxtOriginalText.Text = "Qualcomm Snapdragon X Elite NPU Architecture\nThis hardware module supports 45 TOPS of concurrent tensor throughput with dedicated neural coprocessor tiles.";
+        TxtSourceLangInfo.Text = "Source: English (Sample Document)";
+    }
+
+    private void BtnSampleJp_Click(object sender, RoutedEventArgs e)
+    {
+        TxtOriginalText.Text = "システム構成の更新が正常に完了しました。\nすべてのニューラルネットワーク重みはキャッシュされています。";
+        TxtSourceLangInfo.Text = "Source: Japanese (Sample UI)";
+    }
+
+    private async void BtnTts_Click(object sender, RoutedEventArgs e)
+    {
+        var text = TxtTranslatedText.Text;
+        if (string.IsNullOrWhiteSpace(text)) return;
+        try
+        {
+            var synth = new Windows.Media.SpeechSynthesis.SpeechSynthesizer();
+            var stream = await synth.SynthesizeTextToStreamAsync(text);
+            using var player = new System.Media.SoundPlayer(stream.AsStream());
+            player.Play();
+        }
+        catch { /* ignore TTS if audio device not ready */ }
+    }
 }

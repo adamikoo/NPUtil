@@ -6,28 +6,28 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="850">
+             d:DesignHeight="850" d:DesignWidth="950">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="32,24,32,32" MaxWidth="760" HorizontalAlignment="Left">
+        <StackPanel Margin="32,20,32,32" MaxWidth="800" HorizontalAlignment="Left">
             
-            <TextBlock Text="{loc:Loc GlobalSettingsTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+            <TextBlock Text="{loc:Loc GlobalSettingsTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4" />
             <TextBlock Text="{loc:Loc GlobalSettingsSubtitle}"
-                       FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,24" />
+                       FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,24" />
 
             <!-- Appearance Section -->
-            <TextBlock Text="{loc:Loc AppearanceSection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
+            <TextBlock Text="{loc:Loc AppearanceSection}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
             
             <!-- Theme Card -->
-            <ui:Card Margin="0,0,0,10" Padding="16">
+            <Border Style="{StaticResource FluentGlassCardStyle}" Margin="0,0,0,10" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{loc:Loc ThemeLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc ThemeLabel}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc ThemeDesc}" 
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ComboBox x:Name="CmbAppTheme" Grid.Column="1" Height="36" Width="220" VerticalContentAlignment="Center" SelectionChanged="CmbAppTheme_SelectionChanged">
                         <ComboBoxItem Content="{loc:Loc ThemeSystem}" VerticalAlignment="Center" />
@@ -35,84 +35,84 @@
                         <ComboBoxItem Content="{loc:Loc ThemeDark}" VerticalAlignment="Center" />
                     </ComboBox>
                 </Grid>
-            </ui:Card>
+            </Border>
 
             <!-- Language Card -->
-            <ui:Card Margin="0,0,0,20" Padding="16">
+            <Border Style="{StaticResource FluentGlassCardStyle}" Margin="0,0,0,20" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{loc:Loc LanguageLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc LanguageLabel}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc LanguageDesc}" 
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ComboBox x:Name="CmbLanguage" Grid.Column="1" Height="36" Width="220" VerticalContentAlignment="Center" SelectionChanged="CmbLanguage_SelectionChanged">
                         <ComboBoxItem Content="{loc:Loc LangEn}" Tag="en" VerticalAlignment="Center" />
                         <ComboBoxItem Content="{loc:Loc LangCs}" Tag="cs" VerticalAlignment="Center" />
                     </ComboBox>
                 </Grid>
-            </ui:Card>
+            </Border>
 
             <!-- Windows Integration Cards -->
-            <TextBlock Text="{loc:Loc WindowsIntegrationSection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
-            <ui:Card Margin="0,0,0,10" Padding="16">
+            <TextBlock Text="{loc:Loc WindowsIntegrationSection}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
+            <Border Style="{StaticResource FluentGlassCardStyle}" Margin="0,0,0,10" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{loc:Loc StartWithWindowsLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc StartWithWindowsLabel}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc StartWithWindowsDesc}" 
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ui:ToggleSwitch x:Name="ChkStartWithWindows" Grid.Column="1" />
                 </Grid>
-            </ui:Card>
+            </Border>
 
-            <ui:Card Margin="0,0,0,10" Padding="16">
+            <Border Style="{StaticResource FluentGlassCardStyle}" Margin="0,0,0,10" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{loc:Loc TrayIconLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc TrayIconLabel}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc TrayIconDesc}" 
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ui:ToggleSwitch x:Name="ChkMinimizeToTray" IsChecked="True" Grid.Column="1" />
                 </Grid>
-            </ui:Card>
+            </Border>
 
-            <ui:Card Margin="0,0,0,10" Padding="16">
+            <Border Style="{StaticResource FluentGlassCardStyle}" Margin="0,0,0,10" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{loc:Loc CloseToTrayLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc CloseToTrayLabel}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc CloseToTrayDesc}" 
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ui:ToggleSwitch x:Name="ChkCloseToTray" Grid.Column="1" />
                 </Grid>
-            </ui:Card>
+            </Border>
 
-            <ui:Card Margin="0,0,0,10" Padding="16">
+            <Border Style="{StaticResource FluentGlassCardStyle}" Margin="0,0,0,16" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{loc:Loc LensHotkeyLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc LensHotkeyLabel}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc LensHotkeyDesc}" 
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ComboBox x:Name="CmbLensHotkey" Grid.Column="1" Height="36" Width="220" VerticalContentAlignment="Center">
                         <ComboBoxItem Content="Ctrl + Alt + L (Default)" Tag="Ctrl+Alt+L" VerticalAlignment="Center" />
@@ -122,30 +122,32 @@
                         <ComboBoxItem Content="Alt + Space" Tag="Alt+Space" VerticalAlignment="Center" />
                     </ComboBox>
                 </Grid>
-            </ui:Card>
+            </Border>
 
             <!-- Resource Management -->
-            <TextBlock Text="{loc:Loc BatterySection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
-            <ui:Card Margin="0,0,0,24" Padding="16">
+            <TextBlock Text="{loc:Loc BatterySection}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
+            <Border Style="{StaticResource FluentGlassCardStyle}" Margin="0,0,0,24" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="{loc:Loc BatteryThrottleLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc BatteryThrottleLabel}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                         <TextBlock Text="{loc:Loc BatteryThrottleDesc}" 
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <ui:ToggleSwitch x:Name="ChkThrottleBattery" IsChecked="True" Grid.Column="1" />
                 </Grid>
-            </ui:Card>
+            </Border>
 
             <!-- Save Action Button -->
             <StackPanel Orientation="Horizontal">
-                <ui:Button x:Name="BtnSaveGlobalSettings" Content="{loc:Loc BtnSaveSettings}" Appearance="Primary"
-                           Click="BtnSaveGlobalSettings_Click" Padding="20,6" Margin="0,0,12,0" />
-                <TextBlock x:Name="TxtGlobalFeedback" Text="" VerticalAlignment="Center" Foreground="{DynamicResource SystemFillColorSuccessBrush}" FontWeight="SemiBold" />
+                <Button x:Name="BtnSaveGlobalSettings" Style="{StaticResource PrimaryGradientButtonStyle}"
+                        Click="BtnSaveGlobalSettings_Click" Padding="24,8" Margin="0,0,12,0">
+                    <TextBlock Text="{loc:Loc BtnSaveSettings}" FontWeight="SemiBold" Foreground="{DynamicResource OnPrimaryContainerBrush}" />
+                </Button>
+                <TextBlock x:Name="TxtGlobalFeedback" Text="" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryContainerBrush}" FontWeight="SemiBold" />
             </StackPanel>
 
         </StackPanel>

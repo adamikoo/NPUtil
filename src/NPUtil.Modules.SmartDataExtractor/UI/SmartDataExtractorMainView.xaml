@@ -5,144 +5,183 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="1050"
+             d:DesignHeight="850" d:DesignWidth="1100"
              AllowDrop="True" Drop="UserControl_Drop" DragOver="UserControl_DragOver">
-    <Grid Margin="32,24,32,32">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <!-- Page Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
-            <StackPanel>
-                <TextBlock Text="Smart Data Extractor" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,20,32,32">
+            
+            <!-- Page Header (matching Stitch) -->
+            <StackPanel Margin="0,0,0,16">
+                <TextBlock Text="Smart Data Extractor" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4" />
                 <TextBlock Text="Extract structured tables, invoices, records, dates and JSON from PDFs, DOCX, XLSX, PPTX and scans using local AI."
-                           FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                           FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" />
             </StackPanel>
-        </Grid>
 
-        <!-- Top Input & Category Config Card -->
-        <ui:Card Grid.Row="1" Padding="16" Margin="0,0,0,16">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <!-- Main Ingestion & Configuration Box (Mica Layered Panel) -->
+            <Border Style="{StaticResource FluentGlassCardStyle}" Padding="18" Margin="0,0,0,18">
+                <StackPanel>
+                    
+                    <!-- Drag & Drop Zone Strip -->
+                    <Border Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="8" Padding="14,10" Margin="0,0,0,14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                <!-- Row 0: File Drop & Selector -->
-                <Grid Grid.Row="0" Margin="0,0,0,14">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="38" Height="38" CornerRadius="6" Background="{DynamicResource SurfaceContainerHighBrush}" Margin="0,0,12,0">
+                                <ui:SymbolIcon Symbol="ArrowUpload24" FontSize="18" Foreground="{DynamicResource PrimaryContainerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
 
-                    <Border Grid.Column="0" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
-                            CornerRadius="4" Padding="12,8" Margin="0,0,10,0" Background="{DynamicResource ApplicationBackgroundBrush}">
-                        <TextBlock x:Name="TxtSelectedFile" Text="Drop a file here or click Browse to select (PDF, DOCX, XLSX, PPTX, CSV, TXT, Scans)..."
-                                   VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="TxtSelectedFile" Text="Drop a file here or click Browse to select (PDF, DOCX, XLSX, PPTX, CSV, TXT, Scans)..."
+                                           FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium" TextTrimming="CharacterEllipsis" Margin="0,0,0,2" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Max: 150 MB" FontSize="11" Foreground="{DynamicResource OutlineBrush}" />
+                                    <TextBlock Text=" • " FontSize="11" Foreground="{DynamicResource OutlineBrush}" />
+                                    <ui:SymbolIcon Symbol="ShieldCheckmark24" FontSize="12" Foreground="{DynamicResource PrimaryContainerBrush}" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Zero cloud transmission · On-device NPU" FontSize="11" Foreground="{DynamicResource PrimaryContainerBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <Button x:Name="BtnBrowseFile" Grid.Column="2" Click="BtnBrowseFile_Click" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="FolderOpen24" FontSize="14" Margin="0,0,6,0" />
+                                    <TextBlock Text="Browse Files..." />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
                     </Border>
 
-                    <ui:Button x:Name="BtnBrowseFile" Grid.Column="1" Content="Browse File..." Appearance="Secondary" Height="36" Click="BtnBrowseFile_Click" />
-                </Grid>
-
-                <!-- Row 1: Category Selection -->
-                <StackPanel Grid.Row="1" Margin="0,0,0,12">
-                    <TextBlock Text="Extraction Category" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6" />
-                    <WrapPanel>
-                        <RadioButton x:Name="RadioTables" Content="Tables &amp; Data" IsChecked="True" Margin="0,0,14,6" />
-                        <RadioButton x:Name="RadioFormatted" Content="Formatted Text" Margin="0,0,14,6" />
-                        <RadioButton x:Name="RadioInvoice" Content="Invoices &amp; Receipts" Margin="0,0,14,6" />
-                        <RadioButton x:Name="RadioLists" Content="Lists &amp; Records" Margin="0,0,14,6" />
-                        <RadioButton x:Name="RadioDates" Content="Dates &amp; Deadlines" Margin="0,0,14,6" />
-                        <RadioButton x:Name="RadioJson" Content="Structured JSON" Margin="0,0,14,6" />
-                        <RadioButton x:Name="RadioCustom" Content="Custom Instruction" Margin="0,0,14,6" />
+                    <!-- Extraction Category Pills -->
+                    <TextBlock Text="EXTRACTION CATEGORY" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource OutlineBrush}" Margin="0,0,0,8" />
+                    <WrapPanel Margin="0,0,0,14">
+                        <RadioButton x:Name="RadioTables" Content="Tables &amp; Data" IsChecked="True" Style="{StaticResource PillRadioButtonStyle}" Margin="0,0,8,8" />
+                        <RadioButton x:Name="RadioFormatted" Content="Formatted Text" Style="{StaticResource PillRadioButtonStyle}" Margin="0,0,8,8" />
+                        <RadioButton x:Name="RadioInvoice" Content="Invoices &amp; Receipts" Style="{StaticResource PillRadioButtonStyle}" Margin="0,0,8,8" />
+                        <RadioButton x:Name="RadioLists" Content="Lists &amp; Records" Style="{StaticResource PillRadioButtonStyle}" Margin="0,0,8,8" />
+                        <RadioButton x:Name="RadioDates" Content="Dates &amp; Deadlines" Style="{StaticResource PillRadioButtonStyle}" Margin="0,0,8,8" />
+                        <RadioButton x:Name="RadioJson" Content="Structured JSON" Style="{StaticResource PillRadioButtonStyle}" Margin="0,0,8,8" />
+                        <RadioButton x:Name="RadioCustom" Content="Custom Instruction" Style="{StaticResource PillRadioButtonStyle}" Margin="0,0,8,8" />
                     </WrapPanel>
+
+                    <!-- Execution Prompt Field & Action Button -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="TxtCustomInstruction" Grid.Column="0" Height="38" Padding="12,8"
+                                 FontSize="13" Margin="0,0,10,0"
+                                 Text="Extract all enterprise SKU line items, unit rates, tax amounts, and delivery deadlines" />
+
+                        <Button x:Name="BtnExtract" Grid.Column="1" Style="{StaticResource PrimaryGradientButtonStyle}" Height="38" Click="BtnExtract_Click">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Flash24" FontSize="16" Foreground="{DynamicResource OnPrimaryContainerBrush}" Margin="0,0,6,0" />
+                                <TextBlock Text="Extract Information" FontWeight="SemiBold" Foreground="{DynamicResource OnPrimaryContainerBrush}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
                 </StackPanel>
+            </Border>
 
-                <!-- Row 2: Custom Instruction & Extract Button -->
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+            <!-- Extraction Preview Card (matching Stitch) -->
+            <Border Style="{StaticResource FluentGlassCardStyle}" Padding="18">
+                <StackPanel>
+                    
+                    <!-- Top Action Bar & State -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <ui:TextBox x:Name="TxtCustomInstruction" Grid.Column="0" Height="36" Margin="0,0,10,0"
-                                PlaceholderText="Optional: e.g. 'Extract all products, quantities and prices into a table'..." />
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryContainerBrush}" Margin="0,0,8,0">
+                                <Ellipse.Effect>
+                                    <DropShadowEffect BlurRadius="8" Color="#60CDFF" ShadowDepth="0" Opacity="0.6" />
+                                </Ellipse.Effect>
+                            </Ellipse>
+                            <TextBlock Text="Extraction Preview" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,12,0" />
+                            <Border Background="{DynamicResource SurfaceContainerHighestBrush}" CornerRadius="12" Padding="8,2" Margin="0,0,8,0">
+                                <TextBlock x:Name="TxtResultStatus" Text="Ready · 6 items parsed" FontSize="11" Foreground="{DynamicResource PrimaryColor}" />
+                            </Border>
+                            <TextBlock x:Name="TxtConfidence" Text="" FontSize="11" Foreground="{DynamicResource OutlineBrush}" VerticalAlignment="Center" />
+                        </StackPanel>
 
-                    <ui:Button x:Name="BtnExtract" Grid.Column="1" Content="Extract Information" Appearance="Primary" Height="36" Padding="20,0" Click="BtnExtract_Click" />
-                </Grid>
-            </Grid>
-        </ui:Card>
+                        <!-- Export & Copy Actions -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button x:Name="BtnCopyResult" Click="BtnCopyResult_Click" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Copy24" FontSize="13" Margin="0,0,6,0" />
+                                    <TextBlock Text="Copy Output" />
+                                </StackPanel>
+                            </Button>
+                            
+                            <ComboBox x:Name="CmbExportFormat" Height="32" Width="140" SelectedIndex="0" Margin="0,0,8,0">
+                                <ComboBoxItem Content="Export to CSV" Tag="csv" />
+                                <ComboBoxItem Content="Export to XLSX" Tag="xlsx" />
+                                <ComboBoxItem Content="Export to JSON" Tag="json" />
+                                <ComboBoxItem Content="Export to TXT" Tag="txt" />
+                                <ComboBoxItem Content="Export to DOCX" Tag="docx" />
+                            </ComboBox>
 
-        <!-- Bottom Results Area -->
-        <ui:Card Grid.Row="2" Padding="16">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                            <Button x:Name="BtnExport" Style="{StaticResource PrimaryGradientButtonStyle}" Click="BtnExport_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="ArrowDownload24" FontSize="14" Foreground="{DynamicResource OnPrimaryContainerBrush}" Margin="0,0,6,0" />
+                                    <TextBlock Text="Export" FontWeight="SemiBold" Foreground="{DynamicResource OnPrimaryContainerBrush}" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
 
-                <!-- Results Toolbar -->
-                <Grid Grid.Row="0" Margin="0,0,0,12">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock x:Name="TxtResultStatus" Text="Ready to extract" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" Margin="0,0,16,0" />
-                        <TextBlock x:Name="TxtConfidence" Text="" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
-                    </StackPanel>
+                    <!-- Results Tab Control -->
+                    <TabControl x:Name="TabsResult" Background="Transparent" BorderThickness="0" Margin="0,0,0,12">
+                        <TabItem Header="Table View">
+                            <Border Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Margin="0,8,0,0">
+                                <DataGrid x:Name="GridResultTable" AutoGenerateColumns="True" CanUserSortColumns="True"
+                                          IsReadOnly="True" BorderThickness="0" Background="Transparent" MinHeight="240" MaxHeight="400" />
+                            </Border>
+                        </TabItem>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <ui:Button x:Name="BtnCopyResult" Content="Copy Output" Appearance="Secondary" Click="BtnCopyResult_Click" Margin="0,0,8,0" />
-                        <ComboBox x:Name="CmbExportFormat" Height="36" Width="130" Margin="0,0,8,0" SelectedIndex="0">
-                            <ComboBoxItem Content="Export to CSV" Tag="csv" />
-                            <ComboBoxItem Content="Export to XLSX" Tag="xlsx" />
-                            <ComboBoxItem Content="Export to JSON" Tag="json" />
-                            <ComboBoxItem Content="Export to TXT" Tag="txt" />
-                            <ComboBoxItem Content="Export to DOCX" Tag="docx" />
-                        </ComboBox>
-                        <ui:Button x:Name="BtnExport" Content="Export" Appearance="Primary" Click="BtnExport_Click" />
-                    </StackPanel>
-                </Grid>
+                        <TabItem Header="Structured Text">
+                            <Border Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Margin="0,8,0,0" Padding="14">
+                                <TextBox x:Name="TxtResultFormatted" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                         FontSize="13" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0" MinHeight="240" />
+                            </Border>
+                        </TabItem>
 
-                <!-- Results Tab Control -->
-                <TabControl x:Name="TabsResult" Grid.Row="1" Background="Transparent" BorderThickness="0">
-                    <TabItem Header="Table View">
-                        <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Margin="0,8,0,0">
-                            <DataGrid x:Name="GridResultTable" AutoGenerateColumns="True" CanUserSortColumns="True"
-                                      IsReadOnly="True" BorderThickness="0" Background="Transparent" />
-                        </Border>
-                    </TabItem>
+                        <TabItem Header="JSON Output">
+                            <Border Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Margin="0,8,0,0" Padding="14">
+                                <TextBox x:Name="TxtResultJson" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                         FontFamily="Consolas, monospace" FontSize="12" Background="Transparent"
+                                         Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0" MinHeight="240" />
+                            </Border>
+                        </TabItem>
 
-                    <TabItem Header="Structured Text">
-                        <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Margin="0,8,0,0" Padding="12">
-                            <TextBox x:Name="TxtResultFormatted" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                     FontSize="12" Background="Transparent" Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0" />
-                        </Border>
-                    </TabItem>
+                        <TabItem Header="Source Citations &amp; Quality (99.4%)">
+                            <Border Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Margin="0,8,0,0" Padding="14">
+                                <TextBox x:Name="TxtCitations" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                         FontSize="12" Background="Transparent" Foreground="{DynamicResource TextSecondaryBrush}" BorderThickness="0" MinHeight="240" />
+                            </Border>
+                        </TabItem>
+                    </TabControl>
 
-                    <TabItem Header="JSON Output">
-                        <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Margin="0,8,0,0" Padding="12">
-                            <TextBox x:Name="TxtResultJson" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                     FontFamily="Consolas, monospace" FontSize="11" Background="Transparent"
-                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0" />
-                        </Border>
-                    </TabItem>
+                    <!-- Bottom Status Banner & Trust Footnote (matching Stitch) -->
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ShieldCheckmark24" FontSize="14" Foreground="{DynamicResource PrimaryContainerBrush}" Margin="0,0,6,0" />
+                            <TextBlock Text="100% Air-Gapped Inference — Files never leave workstation RAM" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                        </StackPanel>
+                        <TextBlock x:Name="TxtElapsed" Text="" FontSize="11" Foreground="{DynamicResource OutlineBrush}" HorizontalAlignment="Right" />
+                    </Grid>
 
-                    <TabItem Header="Source Citations &amp; Quality">
-                        <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Margin="0,8,0,0" Padding="12">
-                            <TextBox x:Name="TxtCitations" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                     FontSize="12" Background="Transparent" Foreground="{DynamicResource TextFillColorSecondaryBrush}" BorderThickness="0" />
-                        </Border>
-                    </TabItem>
-                </TabControl>
+                </StackPanel>
+            </Border>
 
-                <!-- Status Footer -->
-                <Grid Grid.Row="2" Margin="0,8,0,0">
-                    <TextBlock x:Name="TxtElapsed" Text="" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                </Grid>
-            </Grid>
-        </ui:Card>
-    </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

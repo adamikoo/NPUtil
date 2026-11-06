@@ -6,86 +6,107 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:loc="clr-namespace:NPUtil.App.Common"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="950">
-    <Grid Margin="32,24,32,32">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+             d:DesignHeight="850" d:DesignWidth="1100">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,20,32,32">
+            
+            <!-- Page Header -->
+            <StackPanel Margin="0,0,0,16">
+                <TextBlock Text="System &amp; Diagnostics" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4" />
+                <TextBlock Text="Hardware topology, Qualcomm Hexagon NPU co-processor status, and live execution telemetry."
+                           FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" />
+            </StackPanel>
 
-        <!-- Page Header -->
-        <StackPanel Grid.Row="0">
-            <TextBlock Text="{loc:Loc HardwareTitle}" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
-            <TextBlock Text="{loc:Loc HardwareSubtitle}"
-                       FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,20" />
-        </StackPanel>
+            <!-- Diagnostics Cards Grid (matching Stitch 2-column layout) -->
+            <Grid Margin="0,0,0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-        <!-- Diagnostics Cards Grid -->
-        <Grid Grid.Row="1" Margin="0,0,0,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+                <!-- Left: Platform Architecture Card -->
+                <Border Grid.Column="0" Style="{StaticResource FluentGlassCardStyle}" Padding="18">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,14">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Laptop24" FontSize="18" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <TextBlock Text="{loc:Loc PlatformCardTitle}" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <Border Background="{DynamicResource SurfaceContainerHighestBrush}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
+                                <TextBlock Text="Qualcomm Oryon" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryContainerBrush}" />
+                            </Border>
+                        </Grid>
 
-            <!-- Left: Platform Info Card -->
-            <ui:Card Grid.Column="0" Padding="18">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <ui:SymbolIcon Symbol="Laptop24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
-                        <TextBlock Text="{loc:Loc PlatformCardTitle}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
+                        <TextBlock Text="{loc:Loc ProcessorLabel}" Foreground="{DynamicResource OutlineBrush}" FontSize="11" />
+                        <TextBlock x:Name="TxtProcessor" Text="Qualcomm Snapdragon X Elite (X1E-80-100)" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,2,0,10" />
+
+                        <TextBlock Text="{loc:Loc ArchitectureLabel}" Foreground="{DynamicResource OutlineBrush}" FontSize="11" />
+                        <TextBlock x:Name="TxtArch" Text="ARM64 (Native Execution, Vectorized NEON)" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,2,0,10" />
+
+                        <TextBlock Text="{loc:Loc OsLabel}" Foreground="{DynamicResource OutlineBrush}" FontSize="11" />
+                        <TextBlock x:Name="TxtOs" Text="Windows 11 ARM64 (Build 26100.x)" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                     </StackPanel>
+                </Border>
 
-                    <TextBlock Text="{loc:Loc ProcessorLabel}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" />
-                    <TextBlock x:Name="TxtProcessor" Text="Qualcomm Snapdragon X Elite" FontWeight="SemiBold" FontSize="13" Margin="0,1,0,8" />
+                <!-- Right: AI Co-Processor & Power Card -->
+                <Border Grid.Column="2" Style="{StaticResource FluentGlassCardStyle}" Padding="18">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,14">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="DeveloperBoard24" FontSize="18" Foreground="{DynamicResource PrimaryContainerBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <TextBlock Text="{loc:Loc AiCardTitle}" FontWeight="SemiBold" FontSize="14" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <Border Background="{DynamicResource SurfaceContainerHighestBrush}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
+                                <TextBlock Text="45 TOPS NPU" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryContainerBrush}" />
+                            </Border>
+                        </Grid>
 
-                    <TextBlock Text="{loc:Loc ArchitectureLabel}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" />
-                    <TextBlock x:Name="TxtArch" Text="ARM64 (Native Execution)" FontWeight="SemiBold" FontSize="13" Margin="0,1,0,8" />
+                        <TextBlock Text="{loc:Loc ActiveAiLabel}" Foreground="{DynamicResource OutlineBrush}" FontSize="11" />
+                        <TextBlock x:Name="TxtActiveAi" Text="Qualcomm Hexagon NPU (QNN HTP Execution Provider)" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource PrimaryContainerBrush}" Margin="0,2,0,10" />
 
-                    <TextBlock Text="{loc:Loc OsLabel}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" />
-                    <TextBlock x:Name="TxtOs" Text="Windows 11 ARM64" FontWeight="SemiBold" FontSize="13" />
-                </StackPanel>
-            </ui:Card>
+                        <TextBlock Text="{loc:Loc QnnStatusLabel}" Foreground="{DynamicResource OutlineBrush}" FontSize="11" />
+                        <TextBlock x:Name="TxtQnnStatus" Text="Ready (QnnHtp.dll, QnnHtpV73.dll, onnxruntime_providers_qnn.dll)" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,2,0,10" />
 
-            <!-- Right: AI & Power Card -->
-            <ui:Card Grid.Column="2" Padding="18">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <ui:SymbolIcon Symbol="DeveloperBoard24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
-                        <TextBlock Text="{loc:Loc AiCardTitle}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
+                        <TextBlock Text="{loc:Loc PowerStatusLabel}" Foreground="{DynamicResource OutlineBrush}" FontSize="11" />
+                        <TextBlock x:Name="TxtPowerStatus" Text="AC Power (Full Performance Mode, High TDP)" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
                     </StackPanel>
-
-                    <TextBlock Text="{loc:Loc ActiveAiLabel}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" />
-                    <TextBlock x:Name="TxtActiveAi" Text="Qualcomm Hexagon NPU (QNN HTP)" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="0,1,0,8" />
-
-                    <TextBlock Text="{loc:Loc QnnStatusLabel}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" />
-                    <TextBlock x:Name="TxtQnnStatus" Text="Available (QnnHtp.dll, onnxruntime_providers_qnn.dll)" FontWeight="SemiBold" FontSize="13" Margin="0,1,0,8" />
-
-                    <TextBlock Text="{loc:Loc PowerStatusLabel}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" />
-                    <TextBlock x:Name="TxtPowerStatus" Text="AC Power (Full Performance)" FontWeight="SemiBold" FontSize="13" />
-                </StackPanel>
-            </ui:Card>
-        </Grid>
-
-        <!-- Live Application Logs Section -->
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0" Margin="0,0,0,8">
-                <TextBlock Text="{loc:Loc LiveLogsTitle}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
-                <ui:Button x:Name="BtnExportLogs" Content="{loc:Loc BtnExportLogs}" Appearance="Secondary" HorizontalAlignment="Right" Click="BtnExportLogs_Click" />
+                </Border>
             </Grid>
 
-            <Border Grid.Row="1" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4">
-                <TextBox x:Name="TxtLogViewer" IsReadOnly="True" VerticalScrollBarVisibility="Auto" 
-                         FontFamily="Consolas, monospace" FontSize="11" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                         Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0" Padding="12" />
-            </Border>
-        </Grid>
+            <!-- Live Telemetry & Application Logs Section -->
+            <Border Style="{StaticResource FluentGlassCardStyle}" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-    </Grid>
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="DocumentBulletList24" FontSize="16" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Loc LiveLogsTitle}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <Border Background="{DynamicResource SurfaceContainerHighestBrush}" CornerRadius="4" Padding="6,1">
+                                <TextBlock Text="Ring Buffer Log" FontSize="10" Foreground="{DynamicResource OutlineBrush}" />
+                            </Border>
+                        </StackPanel>
+
+                        <Button x:Name="BtnExportLogs" HorizontalAlignment="Right" Click="BtnExportLogs_Click">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Save24" FontSize="13" Margin="0,0,6,0" />
+                                <TextBlock Text="{loc:Loc BtnExportLogs}" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <Border Grid.Row="1" Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Padding="14">
+                        <TextBox x:Name="TxtLogViewer" IsReadOnly="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" 
+                                 FontFamily="Cascadia Code, Consolas, monospace" FontSize="11" Background="Transparent"
+                                 Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0" MinHeight="260" MaxHeight="450" />
+                    </Border>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

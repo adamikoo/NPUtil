@@ -4,10 +4,8 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host " NPUtil - Windows ARM64 Build and Publish" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
-$dotnetPath = "C:\Users\Asus\.dotnet"
-if ($env:PATH -notlike "*$dotnetPath*") {
-    $env:PATH = "$dotnetPath;" + $env:PATH
-}
+$env:DOTNET_ROOT = "C:\Users\Asus\.dotnet"
+$env:PATH = "C:\Users\Asus\.dotnet;" + $env:PATH
 
 Write-Host ""
 Write-Host "[1/3] Building Solution (Release)..." -ForegroundColor Yellow

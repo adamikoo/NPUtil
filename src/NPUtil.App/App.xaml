@@ -9,6 +9,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Light" />
                 <ui:ControlsDictionary />
+                <ResourceDictionary Source="Theme/Styles.xaml" />
                 <ResourceDictionary Source="Theme/FluentComboBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
 

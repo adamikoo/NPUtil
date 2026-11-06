@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <!-- Top Navigation View (Fluent Top Segment) -->
-        <Border Grid.Row="0" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource SpecularEdgeBorderBrush}" BorderThickness="0,0,0,1">
             <ui:NavigationView x:Name="TopNav"
                                PaneDisplayMode="Top"
                                IsBackButtonVisible="Collapsed"

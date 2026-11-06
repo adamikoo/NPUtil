@@ -5,150 +5,270 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="750" d:DesignWidth="1000">
-    <Grid Margin="32,24,32,32">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+             d:DesignHeight="850" d:DesignWidth="1100">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,20,32,32">
+            
+            <!-- Top Command & Header Area (matching Stitch) -->
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-        <!-- Page Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,18">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Context Assistant" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4" />
+                    <TextBlock Text="Intelligent workflow assistant that acts on selected text, active application context, and attached documents with on-device neural acceleration."
+                               FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" MaxWidth="720" TextWrapping="Wrap" />
+                </StackPanel>
 
-            <StackPanel Grid.Column="0">
-                <TextBlock Text="Context Assistant" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
-                <TextBlock Text="Intelligent workflow assistant that acts on selected text, active application and attached documents."
-                           FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-            </StackPanel>
-
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <ui:Button x:Name="BtnOpenPopup" Content="Open Quick Flyout" Appearance="Secondary" Click="BtnOpenPopup_Click" Margin="0,0,8,0" />
-                <ui:Button x:Name="BtnViewHistory" Content="History" Appearance="Secondary" Click="BtnViewHistory_Click" />
-            </StackPanel>
-        </Grid>
-
-        <!-- Main Workspace Split: Context & Prompt (Left) + Output (Right) -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="420" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!-- Left: Context Input & Action Trigger -->
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <!-- Active App Bar -->
-                <ui:Card Grid.Row="0" Margin="0,0,0,12" Padding="12,10">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock x:Name="TxtAppSource" Text="Active Window: Desktop" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" />
-                            <TextBlock Text="Explicit workflow context" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <!-- Command Toolbar -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="BtnOpenPopup" Click="BtnOpenPopup_Click" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Open24" FontSize="14" Foreground="{DynamicResource PrimaryContainerBrush}" Margin="0,0,6,0" />
+                            <TextBlock Text="Open Quick Flyout" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <Border Background="{DynamicResource SurfaceContainerLowestBrush}" CornerRadius="3" Padding="4,1">
+                                <TextBlock Text="Win+Alt+C" FontSize="10" Foreground="{DynamicResource OutlineBrush}" />
+                            </Border>
                         </StackPanel>
-                        <ui:Button x:Name="BtnCaptureWindow" Grid.Column="1" Content="Capture" Appearance="Secondary" FontSize="11" Padding="8,3" Click="BtnCaptureWindow_Click" />
-                    </Grid>
-                </ui:Card>
+                    </Button>
+                    <Button x:Name="BtnViewHistory" Click="BtnViewHistory_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="History24" FontSize="14" Margin="0,0,6,0" />
+                            <TextBlock Text="History" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
 
-                <!-- Context Content Editor / Preview -->
-                <ui:Card Grid.Row="1" Margin="0,0,0,12" Padding="14">
+            <!-- Context Ingestion Strip / Active Surface Bar (matching Stitch) -->
+            <Border Style="{StaticResource FluentGlassCardStyle}" Padding="16,12" Margin="0,0,0,18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="36" Height="36" CornerRadius="6" Background="{DynamicResource SurfaceContainerHighestBrush}" Margin="0,0,12,0">
+                            <ui:SymbolIcon Symbol="Code24" FontSize="18" Foreground="{DynamicResource PrimaryContainerBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                <TextBlock Text="SOURCE SURFACE" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource OutlineBrush}" Margin="0,0,6,0" />
+                                <Ellipse Width="6" Height="6" Fill="{DynamicResource PrimaryContainerBrush}" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Synced" FontSize="10" FontWeight="Medium" Foreground="{DynamicResource PrimaryContainerBrush}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock x:Name="TxtAppSource" Text="Active Window: Visual Studio Code — nputil_agent.py" FontSize="13" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" MaxWidth="500" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <CheckBox Content="Auto-Sync Selection" IsChecked="True" VerticalAlignment="Center" Margin="0,0,16,0" />
+                        <Button x:Name="BtnCaptureWindow" Click="BtnCaptureWindow_Click">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Scan24" FontSize="14" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,6,0" />
+                                <TextBlock Text="Capture Window" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Two-Column Split Workstation -->
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column: Ingested Context & Direct Instruction -->
+                <StackPanel Grid.Column="0">
+                    
+                    <!-- Captured Context Card -->
+                    <Border Style="{StaticResource FluentGlassCardStyle}" Padding="16" Margin="0,0,0,16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Document24" FontSize="16" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,6,0" />
+                                    <TextBlock Text="Captured Context &amp; Selection" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                </StackPanel>
+                                <Button x:Name="BtnAttachFile" Click="BtnAttachFile_Click" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Attach24" FontSize="13" Margin="0,0,4,0" />
+                                        <TextBlock Text="Attach Document..." FontSize="11" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <!-- Code/Snippet Viewport with line numbering / dark background -->
+                            <Border Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Padding="12" MinHeight="160" MaxHeight="240">
+                                <TextBox x:Name="TxtContextInput" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                         FontSize="12" FontFamily="Cascadia Code, Consolas, Segoe UI" Background="Transparent"
+                                         Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
+                                         Text="def dispatch_inference_tensor(stream_handle, buffer_ptr):&#x0a;    # Offloads memory segment directly onto Hexagon HTP memory tile&#x0a;    return qnn_runtime.execute_async(graph_id=MODEL_LFM_Q4, input_mem=buffer_ptr)" />
+                            </Border>
+
+                            <Grid Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock x:Name="TxtContextLength" Text="186 characters" FontSize="11" Foreground="{DynamicResource OutlineBrush}" />
+                                    <TextBlock Text=" • " FontSize="11" Foreground="{DynamicResource OutlineBrush}" />
+                                    <TextBlock Text="Snapdragon X Direct Memory Mapped" FontSize="11" Foreground="{DynamicResource PrimaryContainerBrush}" />
+                                </StackPanel>
+                                <TextBlock Text="Latency Target: &lt;14ms" FontSize="11" Foreground="{DynamicResource OutlineBrush}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Suggested Quick Actions Card -->
+                    <Border Style="{StaticResource FluentGlassCardStyle}" Padding="16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Sparkle24" FontSize="16" Foreground="{DynamicResource PrimaryContainerBrush}" Margin="0,0,6,0" />
+                                    <TextBlock Text="Suggested Quick Actions" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                </StackPanel>
+                                <TextBlock Text="Click to compute on NPU" FontSize="11" Foreground="{DynamicResource OutlineBrush}" HorizontalAlignment="Right" />
+                            </Grid>
+
+                            <!-- Quick Action Chips -->
+                            <WrapPanel Margin="0,0,0,14">
+                                <Button Style="{StaticResource ActionChipButtonStyle}" Tag="Explain" Click="QuickAction_Click" Margin="0,0,8,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Lightbulb24" FontSize="14" Foreground="{DynamicResource SecondaryColor}" Margin="0,0,6,0" />
+                                        <TextBlock Text="Explain" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource ActionChipButtonStyle}" Tag="Summarize" Click="QuickAction_Click" Margin="0,0,8,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="TextBulletListSquare24" FontSize="14" Foreground="{DynamicResource TertiaryContainerBrush}" Margin="0,0,6,0" />
+                                        <TextBlock Text="Summarize" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource ActionChipButtonStyle}" Tag="Translate" Click="QuickAction_Click" Margin="0,0,8,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Translate24" FontSize="14" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,6,0" />
+                                        <TextBlock Text="Translate (CS ↔ EN)" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource ActionChipButtonStyle}" Tag="ExtractPoints" Click="QuickAction_Click" Margin="0,0,8,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="TaskListSquareAdd24" FontSize="14" Foreground="{DynamicResource SecondaryContainerBrush}" Margin="0,0,6,0" />
+                                        <TextBlock Text="Extract Key Points" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource ActionChipButtonStyle}" Tag="Rewrite" Click="QuickAction_Click" Margin="0,0,8,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Edit24" FontSize="14" Foreground="{DynamicResource SurfaceTintBrush}" Margin="0,0,6,0" />
+                                        <TextBlock Text="Polish &amp; Rewrite" />
+                                    </StackPanel>
+                                </Button>
+                            </WrapPanel>
+
+                            <!-- Custom Prompt Input Box -->
+                            <TextBlock Text="CUSTOM INSTRUCTION" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource OutlineBrush}" Margin="0,0,0,6" />
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="TxtCustomInstruction" Grid.Column="0" Height="38" Padding="12,8"
+                                         FontSize="13" KeyDown="TxtCustomInstruction_KeyDown" Margin="0,0,8,0" />
+                                <Button x:Name="BtnRunCustom" Grid.Column="1" Style="{StaticResource PrimaryGradientButtonStyle}" Height="38" Click="BtnRunCustom_Click">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Execute" FontWeight="SemiBold" Margin="0,0,6,0" />
+                                        <ui:SymbolIcon Symbol="ArrowRight24" FontSize="14" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <Grid>
+                                <TextBlock Text="Shift + Enter for multi-line instructions" FontSize="10" Foreground="{DynamicResource OutlineBrush}" />
+                                <TextBlock Text="Local Core: Llama-3.2-3B-Instruct-Q4" FontSize="10" Foreground="{DynamicResource OutlineBrush}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+
+                <!-- Right Column: Assistant Output Workspace -->
+                <Border Grid.Column="2" Style="{StaticResource FluentGlassCardStyle}" Padding="16">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" Margin="0,0,0,8">
-                            <TextBlock Text="Captured Context &amp; Selection" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" />
-                            <ui:Button x:Name="BtnAttachFile" Content="Attach Document..." Appearance="Secondary" FontSize="11" HorizontalAlignment="Right" Click="BtnAttachFile_Click" />
+                        <!-- Output Header Strip -->
+                        <Grid Grid.Row="0" Margin="0,0,0,10">
+                            <StackPanel VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="TxtResultTitle" Text="Assistant Output" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,8,0" />
+                                    <Ellipse Width="6" Height="6" Fill="{DynamicResource PrimaryContainerBrush}" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock x:Name="TxtResultMeta" Text="Local Inference • Ready" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Button x:Name="BtnCopyOutput" Click="BtnCopyOutput_Click" Margin="0,0,6,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Copy24" FontSize="13" Margin="0,0,4,0" />
+                                        <TextBlock Text="Copy" />
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="BtnExportOutput" Click="BtnExportOutput_Click" Margin="0,0,6,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Save24" FontSize="13" Margin="0,0,4,0" />
+                                        <TextBlock Text="Save to File..." />
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="BtnClearOutput" Click="BtnClearOutput_Click">
+                                    <ui:SymbolIcon Symbol="Delete24" FontSize="13" />
+                                </Button>
+                            </StackPanel>
                         </Grid>
 
-                        <TextBox x:Name="TxtContextInput" Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True"
-                                 VerticalScrollBarVisibility="Auto" BorderThickness="0" Background="Transparent"
-                                 FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <!-- Telemetry Metric Strip -->
+                        <Border Grid.Row="1" Background="{DynamicResource SurfaceContainerLowestBrush}" CornerRadius="4" Padding="10,6" Margin="0,0,0,12">
+                            <Grid>
+                                <TextBlock Text="ANALYSIS RESULT" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryContainerBrush}" />
+                                <TextBlock Text="Latency: 184ms • 32.4 tok/s • 0.8W Hexagon NPU" FontSize="10" FontFamily="Consolas, Segoe UI" Foreground="{DynamicResource OutlineBrush}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
 
-                        <TextBlock x:Name="TxtContextLength" Grid.Row="2" Text="0 characters" FontSize="11"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,6,0,0" />
+                        <!-- Main Output Text Box -->
+                        <Border Grid.Row="2" Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Padding="14" MinHeight="320">
+                            <TextBox x:Name="TxtMainOutput" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                     FontSize="13" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
+                                     Text="Ready for Context Processing. Select an action on the left or enter a custom prompt to analyze the captured buffer." />
+                        </Border>
+
+                        <!-- Privacy Guard Hardware Card at Bottom -->
+                        <Border Grid.Row="3" Background="{DynamicResource SurfaceContainerBrush}" CornerRadius="6" Padding="12,10" Margin="0,14,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ui:SymbolIcon Symbol="ShieldCheckmark24" FontSize="20" Foreground="{DynamicResource PrimaryContainerBrush}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Privacy Guard" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,6,0" />
+                                        <TextBlock Text="100% On-Device" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryContainerBrush}" />
+                                    </StackPanel>
+                                    <TextBlock Text="Context is analyzed 100% locally on your Snapdragon X Elite NPU. Zero cloud ingress, air-gapped memory space."
+                                               FontSize="10" Foreground="{DynamicResource OutlineBrush}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
                     </Grid>
-                </ui:Card>
-
-                <!-- Suggested Actions Palette -->
-                <ui:Card Grid.Row="2" Margin="0,0,0,12" Padding="12,10">
-                    <StackPanel>
-                        <TextBlock Text="Suggested Actions" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,8" />
-                        <WrapPanel>
-                            <ui:Button Content="Explain" Appearance="Secondary" Margin="0,0,6,6" Tag="Explain" Click="QuickAction_Click" />
-                            <ui:Button Content="Summarize" Appearance="Secondary" Margin="0,0,6,6" Tag="Summarize" Click="QuickAction_Click" />
-                            <ui:Button Content="Translate (CS↔EN)" Appearance="Secondary" Margin="0,0,6,6" Tag="Translate" Click="QuickAction_Click" />
-                            <ui:Button Content="Extract Key Points" Appearance="Secondary" Margin="0,0,6,6" Tag="ExtractPoints" Click="QuickAction_Click" />
-                            <ui:Button Content="Polish &amp; Rewrite" Appearance="Secondary" Margin="0,0,6,6" Tag="Rewrite" Click="QuickAction_Click" />
-                        </WrapPanel>
-                    </StackPanel>
-                </ui:Card>
-
-                <!-- Custom Instruction Prompt Box -->
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <ui:TextBox x:Name="TxtCustomInstruction" Grid.Column="0" PlaceholderText="Ask custom question or instruction..."
-                                Height="36" Margin="0,0,8,0" KeyDown="TxtCustomInstruction_KeyDown" />
-                    <ui:Button x:Name="BtnRunCustom" Grid.Column="1" Content="Execute" Appearance="Primary" Height="36" Click="BtnRunCustom_Click" />
-                </Grid>
+                </Border>
             </Grid>
 
-            <!-- Right: Results & Detailed Analysis Area -->
-            <ui:Card Grid.Column="2" Padding="20">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <!-- Result Header -->
-                    <Grid Grid.Row="0" Margin="0,0,0,12">
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock x:Name="TxtResultTitle" Text="Assistant Output" FontSize="16" FontWeight="SemiBold" />
-                            <TextBlock x:Name="TxtResultMeta" Text="Local Inference • Ready" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <ui:Button x:Name="BtnCopyOutput" Content="Copy" Appearance="Secondary" Click="BtnCopyOutput_Click" Margin="0,0,8,0" />
-                            <ui:Button x:Name="BtnExportOutput" Content="Save to File..." Appearance="Secondary" Click="BtnExportOutput_Click" Margin="0,0,8,0" />
-                            <ui:Button x:Name="BtnClearOutput" Content="Clear" Appearance="Secondary" Click="BtnClearOutput_Click" />
-                        </StackPanel>
-                    </Grid>
-
-                    <!-- Main Output Viewer -->
-                    <Border Grid.Row="1" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="14">
-                        <TextBox x:Name="TxtMainOutput" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                 FontSize="13" Background="Transparent" Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0"
-                                 Text="Select an action on the left or enter a custom prompt to analyze context." />
-                    </Border>
-
-                    <!-- Privacy Transparency Note -->
-                    <Grid Grid.Row="2" Margin="0,12,0,0">
-                        <TextBlock Text="Privacy Guard: Context is analyzed 100% locally on your Snapdragon X Elite NPU/CPU. No cloud calls."
-                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
-                    </Grid>
-                </Grid>
-            </ui:Card>
-        </Grid>
-    </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

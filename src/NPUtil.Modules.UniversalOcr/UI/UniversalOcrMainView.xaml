@@ -5,122 +5,241 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="750" d:DesignWidth="1050"
+             d:DesignHeight="850" d:DesignWidth="1100"
              AllowDrop="True" Drop="UserControl_Drop" DragOver="UserControl_DragOver">
-    <Grid Margin="32,24,32,32">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <!-- Page Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
-            <StackPanel>
-                <TextBlock Text="Universal OCR &amp; Translator" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,4" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,20,32,32">
+            
+            <!-- Page Header (matching Stitch) -->
+            <StackPanel Margin="0,0,0,16">
+                <TextBlock Text="Universal OCR &amp; Translator" FontSize="26" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4" />
                 <TextBlock Text="Capture any region of your screen or load images to perform local OCR and instant bilingual translation."
-                           FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                           FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" />
             </StackPanel>
-        </Grid>
 
-        <!-- Capture & Toolbar Card -->
-        <ui:Card Grid.Row="1" Padding="16,12" Margin="0,0,0,16">
-            <Grid>
+            <!-- Action & Capture Toolbar Card (matching Stitch) -->
+            <Border Style="{StaticResource FluentGlassCardStyle}" Padding="16,12" Margin="0,0,0,18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Primary Open Screen Lens Button -->
+                        <Button x:Name="BtnLaunchLens" Style="{StaticResource PrimaryGradientButtonStyle}" Height="34" Click="BtnLaunchLens_Click" Margin="0,0,8,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Search24" FontSize="14" Foreground="{DynamicResource OnPrimaryContainerBrush}" Margin="0,0,6,0" />
+                                <TextBlock Text="Open Screen Lens" FontWeight="SemiBold" Foreground="{DynamicResource OnPrimaryContainerBrush}" />
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Snip Screen Area Button -->
+                        <Button x:Name="BtnSnipScreen" Height="34" Click="BtnSnipScreen_Click" Margin="0,0,8,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Crop24" FontSize="14" Margin="0,0,6,0" />
+                                <TextBlock Text="Snip Screen Area" />
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Load Image File Button -->
+                        <Button x:Name="BtnLoadImage" Height="34" Click="BtnLoadImage_Click" Margin="0,0,12,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="ArrowUpload24" FontSize="14" Margin="0,0,6,0" />
+                                <TextBlock Text="Load Image File(s)..." />
+                            </StackPanel>
+                        </Button>
+
+                        <Border Width="1" Height="20" Background="{DynamicResource OutlineVariantBrush}" Opacity="0.4" Margin="0,0,12,0" VerticalAlignment="Center" />
+
+                        <!-- Quick Sample Pills -->
+                        <Button x:Name="BtnSampleDoc" Content="Doc Sample" FontSize="11" Padding="8,4" MinHeight="26" Click="BtnSampleDoc_Click" Margin="0,0,6,0" />
+                        <Button x:Name="BtnSampleJp" Content="Japanese UI" FontSize="11" Padding="8,4" MinHeight="26" Click="BtnSampleJp_Click" Margin="0,0,12,0" />
+
+                        <Border Width="1" Height="20" Background="{DynamicResource OutlineVariantBrush}" Opacity="0.4" Margin="0,0,12,0" VerticalAlignment="Center" />
+
+                        <!-- Translation Direction Dropdown -->
+                        <TextBlock Text="Target:" FontSize="11" Foreground="{DynamicResource OutlineBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <ComboBox x:Name="CmbTranslationDirection" Height="32" Width="170" SelectedIndex="0" SelectionChanged="CmbTranslationDirection_SelectionChanged">
+                            <ComboBoxItem Content="Auto (Detect ↔ Opposite)" Tag="auto" />
+                            <ComboBoxItem Content="Čeština → English" Tag="cs-en" />
+                            <ComboBoxItem Content="English → Čeština" Tag="en-cs" />
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Cross-Module Dispatch Buttons -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="BtnSendToAssistant" Click="BtnSendToAssistant_Click" Margin="0,0,8,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Chat24" FontSize="13" Foreground="{DynamicResource SecondaryColor}" Margin="0,0,4,0" />
+                                <TextBlock Text="Send to Assistant" FontSize="11" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="BtnSendToExtractor" Click="BtnSendToExtractor_Click">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="DocumentTable24" FontSize="13" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,4,0" />
+                                <TextBlock Text="Send to Extractor" FontSize="11" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 2-Column Side-by-Side Comparison Workspace (matching Stitch) -->
+            <Grid Margin="0,0,0,18">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <ui:Button x:Name="BtnLaunchLens" Grid.Column="0" Content="🔍 Open Screen Lens" Appearance="Primary" Height="36" Padding="14,0" Click="BtnLaunchLens_Click" Margin="0,0,10,0" />
-                <ui:Button x:Name="BtnSnipScreen" Grid.Column="1" Content="Snip Screen Area" Appearance="Secondary" Height="36" Padding="14,0" Click="BtnSnipScreen_Click" Margin="0,0,10,0" />
-                <ui:Button x:Name="BtnLoadImage" Grid.Column="2" Content="Load Image File(s)..." Appearance="Secondary" Height="36" Click="BtnLoadImage_Click" Margin="0,0,16,0" />
+                <!-- Left Column: Original Recognized Text -->
+                <Border Grid.Column="0" Style="{StaticResource FluentGlassCardStyle}" Padding="16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Translation Direction:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
-                    <ComboBox x:Name="CmbTranslationDirection" Height="36" Width="180" SelectedIndex="0" SelectionChanged="CmbTranslationDirection_SelectionChanged">
-                        <ComboBoxItem Content="Auto (Detect ↔ Opposite)" Tag="auto" />
-                        <ComboBoxItem Content="Čeština → English" Tag="cs-en" />
-                        <ComboBoxItem Content="English → Čeština" Tag="en-cs" />
-                    </ComboBox>
-                </StackPanel>
+                        <!-- Panel Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,10">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Original Recognized Text" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                <TextBlock x:Name="TxtSourceLangInfo" Text="Source: Ready (Auto-Detect: Latin / CJK)" FontSize="11" Foreground="{DynamicResource OutlineBrush}" />
+                            </StackPanel>
+                            <Button x:Name="BtnCopyOriginal" Click="BtnCopyOriginal_Click" HorizontalAlignment="Right">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Copy24" FontSize="13" Margin="0,0,4,0" />
+                                    <TextBlock Text="Copy Text" FontSize="11" />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
 
-                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:Button x:Name="BtnSendToAssistant" Content="Send to Assistant" Appearance="Secondary" Height="36" Click="BtnSendToAssistant_Click" Margin="0,0,8,0" />
-                    <ui:Button x:Name="BtnSendToExtractor" Content="Send to Extractor" Appearance="Secondary" Height="36" Click="BtnSendToExtractor_Click" />
-                </StackPanel>
+                        <!-- Text Editor Canvas -->
+                        <Border Grid.Row="1" Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Padding="14" MinHeight="280">
+                            <Grid>
+                                <TextBox x:Name="TxtOriginalText" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                         FontSize="13" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
+                                         Text="Click 'Snip Screen Area' or load an image to recognize text..." />
+                                <TextBlock Text="Drag &amp; drop images directly into editor" FontSize="11" Foreground="{DynamicResource OutlineVariantBrush}"
+                                           HorizontalAlignment="Left" VerticalAlignment="Bottom" IsHitTestVisible="False" Opacity="0.6" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Footer Stats -->
+                        <Grid Grid.Row="2" Margin="0,10,0,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Ellipse Width="6" Height="6" Fill="{DynamicResource SurfaceTintBrush}" Margin="0,0,6,0" />
+                                <TextBlock x:Name="TxtOcrStats" Text="0 lines recognized" FontSize="11" Foreground="{DynamicResource OutlineBrush}" />
+                            </StackPanel>
+                            <TextBlock Text="DirectML OCR Core • UTF-8" FontSize="11" Foreground="{DynamicResource OutlineBrush}" HorizontalAlignment="Right" />
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Right Column: Translated Text -->
+                <Border Grid.Column="2" Style="{StaticResource FluentGlassCardStyle}" Padding="16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Panel Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,10">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Translated Text" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                <TextBlock x:Name="TxtTargetLangInfo" Text="Target: English (Local MT Engine)" FontSize="11" Foreground="{DynamicResource OutlineBrush}" />
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Button x:Name="BtnTts" Padding="6,4" Click="BtnTts_Click" Margin="0,0,6,0" ToolTip="Listen synthesized audio">
+                                    <ui:SymbolIcon Symbol="Speaker224" FontSize="13" />
+                                </Button>
+                                <Button x:Name="BtnCopyTranslation" Click="BtnCopyTranslation_Click">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Copy24" FontSize="13" Margin="0,0,4,0" />
+                                        <TextBlock Text="Copy Translation" FontSize="11" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Text Editor Canvas -->
+                        <Border Grid.Row="1" Background="{DynamicResource SurfaceContainerLowestBrush}" BorderBrush="{DynamicResource OutlineVariantBrush}" BorderThickness="1" CornerRadius="6" Padding="14" MinHeight="280">
+                            <Grid>
+                                <TextBox x:Name="TxtTranslatedText" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                         FontSize="13" Background="Transparent" Foreground="{DynamicResource TextPrimaryBrush}" BorderThickness="0"
+                                         Text="Translation will appear here in real time..." />
+                                <TextBlock Text="Zero latency stream" FontSize="11" Foreground="{DynamicResource PrimaryContainerBrush}"
+                                           HorizontalAlignment="Left" VerticalAlignment="Bottom" IsHitTestVisible="False" Opacity="0.7" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Footer Stats -->
+                        <Grid Grid.Row="2" Margin="0,10,0,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Ellipse Width="6" Height="6" Fill="{DynamicResource PrimaryContainerBrush}" Margin="0,0,6,0" />
+                                <TextBlock x:Name="TxtTranslationStats" Text="100% Local Offline Translation" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="ShieldCheckmark24" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,4,0" />
+                                <TextBlock Text="Zero Network Calls" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
             </Grid>
-        </ui:Card>
 
-        <!-- Side-by-Side OCR and Translation Workspace -->
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <!-- Bottom Hardware Highlights Grid (matching Stitch) -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!-- Left: Original Recognized Text -->
-            <ui:Card Grid.Column="0" Padding="16">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0" Margin="0,0,0,10">
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="Original Recognized Text" FontWeight="SemiBold" FontSize="14" />
-                            <TextBlock x:Name="TxtSourceLangInfo" Text="Source: Ready" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <!-- Highlight Card 1 -->
+                <Border Grid.Column="0" Style="{StaticResource FluentGlassCardStyle}" Padding="14,12">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <ui:SymbolIcon Symbol="Desktop24" FontSize="16" Foreground="{DynamicResource PrimaryColor}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="High-DPI Screen Grabber" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
                         </StackPanel>
-                        <ui:Button x:Name="BtnCopyOriginal" Content="Copy Text" Appearance="Secondary" HorizontalAlignment="Right" Click="BtnCopyOriginal_Click" />
-                    </Grid>
+                        <TextBlock Text="DirectX GI desktop duplication API capturing uncompressed sub-pixel matrices at 120 FPS."
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
 
-                    <Border Grid.Row="1" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="12">
-                        <TextBox x:Name="TxtOriginalText" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                 FontSize="13" Background="Transparent" Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0"
-                                 Text="Click 'Snip Screen Area' or load an image to recognize text..." />
-                    </Border>
-
-                    <Grid Grid.Row="2" Margin="0,8,0,0">
-                        <TextBlock x:Name="TxtOcrStats" Text="0 lines recognized" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    </Grid>
-                </Grid>
-            </ui:Card>
-
-            <!-- Right: Translated Text -->
-            <ui:Card Grid.Column="2" Padding="16">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0" Margin="0,0,0,10">
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="Translated Text" FontWeight="SemiBold" FontSize="14" />
-                            <TextBlock x:Name="TxtTargetLangInfo" Text="Target: English" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <!-- Highlight Card 2 -->
+                <Border Grid.Column="2" Style="{StaticResource FluentGlassCardStyle}" Padding="14,12">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <ui:SymbolIcon Symbol="Flash24" FontSize="16" Foreground="{DynamicResource SecondaryColor}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Qualcomm Hexagon V73" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
                         </StackPanel>
-                        <ui:Button x:Name="BtnCopyTranslation" Content="Copy Translation" Appearance="Secondary" HorizontalAlignment="Right" Click="BtnCopyTranslation_Click" />
-                    </Grid>
+                        <TextBlock Text="Sub-5ms token inference latency running int8 quantized multilingual Transformer models directly on NPU."
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
 
-                    <Border Grid.Row="1" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="12">
-                        <TextBox x:Name="TxtTranslatedText" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                 FontSize="13" Background="Transparent" Foreground="{DynamicResource TextFillColorPrimaryBrush}" BorderThickness="0"
-                                 Text="Translation will appear here in real time..." />
-                    </Border>
+                <!-- Highlight Card 3 -->
+                <Border Grid.Column="4" Style="{StaticResource FluentGlassCardStyle}" Padding="14,12">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <ui:SymbolIcon Symbol="ShieldCheckmark24" FontSize="16" Foreground="{DynamicResource SurfaceTintBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Isolated Memory Ring" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        </StackPanel>
+                        <TextBlock Text="Zero disk caching of video frames or captured sensitive glyphs. Clears immediately upon pipeline flush."
+                                   FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </Grid>
 
-                    <Grid Grid.Row="2" Margin="0,8,0,0">
-                        <TextBlock x:Name="TxtTranslationStats" Text="100% Local Offline Translation" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    </Grid>
-                </Grid>
-            </ui:Card>
-        </Grid>
-    </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
