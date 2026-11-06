@@ -87,4 +87,48 @@ It supports multiple external 4K monitors and high bandwidth LPDDR5X memory. Bat
         var empty = _historyDb.GetRecentEntries(10);
         Assert.Empty(empty);
     }
+
+    [Fact]
+    public async Task InferenceEngine_AnswersWhatCanYouSeeOnExceptionLog()
+    {
+        var exceptionLog = @"[2026-11-06 16:21:32] [DispatcherUnhandledException] System.NullReferenceException: Object reference not set to an instance of an object.
+   at NPUtil.Modules.UniversalOcr.UI.UniversalOcrMainView.TxtOriginalText_TextChanged(Object sender, TextChangedEventArgs e) in C:\Users\Asus\Downloads\NPUtil\src\NPUtil.Modules.UniversalOcr\UI\UniversalOcrMainView.xaml.cs:line 155
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)";
+
+        var res = await _engine.ExecuteActionAsync(ContextActionType.Custom, exceptionLog, customInstruction: "what can you see");
+
+        Assert.True(res.Success);
+        Assert.Contains("NullReferenceException", res.OutputText);
+        Assert.Contains("UniversalOcrMainView.xaml.cs", res.OutputText);
+        Assert.Contains("TxtOriginalText_TextChanged", res.OutputText);
+        Assert.Contains("155", res.OutputText);
+    }
+
+    [Fact]
+    public async Task InferenceEngine_AnswersHowToFixOnExceptionLog()
+    {
+        var exceptionLog = @"System.NullReferenceException: Object reference not set to an instance of an object.
+   at NPUtil.Modules.UniversalOcr.UI.UniversalOcrMainView.TxtOriginalText_TextChanged(Object sender, TextChangedEventArgs e) in C:\Users\Asus\Downloads\NPUtil\src\NPUtil.Modules.UniversalOcr\UI\UniversalOcrMainView.xaml.cs:line 155";
+
+        var res = await _engine.ExecuteActionAsync(ContextActionType.Custom, exceptionLog, customInstruction: "how to fix this");
+
+        Assert.True(res.Success);
+        Assert.Contains("Resolution & Fix", res.OutputText);
+        Assert.Contains("null-check", res.OutputText);
+    }
+
+    [Fact]
+    public void SettingsManager_PersistsLensHotkey()
+    {
+        var tempFile = Path.Combine(Path.GetTempPath(), $"settings_{Guid.NewGuid():N}.json");
+        var sm = new NPUtil.Core.Settings.SettingsManager(tempFile);
+
+        Assert.Equal("Ctrl+Alt+L", sm.Current.LensHotkey);
+
+        sm.Update(s => s.LensHotkey = "Ctrl+Shift+S");
+        Assert.Equal("Ctrl+Shift+S", sm.Current.LensHotkey);
+
+        var sm2 = new NPUtil.Core.Settings.SettingsManager(tempFile);
+        Assert.Equal("Ctrl+Shift+S", sm2.Current.LensHotkey);
+    }
 }

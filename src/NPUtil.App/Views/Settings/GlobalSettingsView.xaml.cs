@@ -35,6 +35,17 @@ public partial class GlobalSettingsView : UserControl
         ChkMinimizeToTray.IsChecked = current.MinimizeToTray;
         ChkCloseToTray.IsChecked = current.CloseToTray;
         ChkThrottleBattery.IsChecked = current.ThrottleOnBattery;
+
+        // Lens Hotkey
+        var hotkey = current.LensHotkey ?? "Ctrl+Alt+L";
+        CmbLensHotkey.SelectedIndex = hotkey switch
+        {
+            "Ctrl+Alt+O" => 1,
+            "Ctrl+Shift+S" => 2,
+            "Ctrl+Shift+L" => 3,
+            "Alt+Space" => 4,
+            _ => 0
+        };
     }
 
     private void CmbAppTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -75,6 +86,8 @@ public partial class GlobalSettingsView : UserControl
         var enableStartup = ChkStartWithWindows.IsChecked == true;
         StartupHelper.SetStartup(enableStartup);
 
+        var selectedHotkey = (CmbLensHotkey.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Ctrl+Alt+L";
+
         _settingsManager.Update(s =>
         {
             s.Theme = selectedTheme;
@@ -83,6 +96,7 @@ public partial class GlobalSettingsView : UserControl
             s.MinimizeToTray = ChkMinimizeToTray.IsChecked == true;
             s.CloseToTray = ChkCloseToTray.IsChecked == true;
             s.ThrottleOnBattery = ChkThrottleBattery.IsChecked == true;
+            s.LensHotkey = selectedHotkey;
         });
 
         TxtGlobalFeedback.Text = LocalizationManager.Get("SettingsSaved");

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using NPUtil.Core.AI;
 using NPUtil.Core.Logging;
 using NPUtil.Core.OCR;
 using NPUtil.Core.Translation;
@@ -25,15 +26,22 @@ public class UniversalOcrEngine
 {
     private readonly IOcrService _ocrService;
     private readonly ITranslationService _translationService;
+    private readonly IInferenceEngine? _inferenceEngine;
     private readonly ILogger? _logger;
+
+    public IOcrService OcrService => _ocrService;
+    public ITranslationService TranslationService => _translationService;
+    public IInferenceEngine? InferenceEngine => _inferenceEngine;
 
     public UniversalOcrEngine(
         IOcrService ocrService,
         ITranslationService translationService,
+        IInferenceEngine? inferenceEngine = null,
         ILogger? logger = null)
     {
         _ocrService = ocrService;
         _translationService = translationService;
+        _inferenceEngine = inferenceEngine;
         _logger = logger;
     }
 

@@ -84,6 +84,32 @@ public partial class UniversalOcrMainView : UserControl
         }
     }
 
+    private void BtnLaunchLens_Click(object sender, RoutedEventArgs e)
+    {
+        var overlay = new ScreenSnipOverlayWindow();
+        overlay.RegionCapturedWithBounds += (bytes, bounds) =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                var lens = new ScreenLensWindow(
+                    _engine,
+                    bytes,
+                    bounds,
+                    onOpenInFullApp: () => Dispatcher.Invoke(async () =>
+                    {
+                        var parent = Window.GetWindow(this);
+                        parent?.Show();
+                        parent?.Activate();
+                        await ProcessBytesAsync(bytes);
+                    }),
+                    onRetake: () => Dispatcher.Invoke(() => BtnLaunchLens_Click(sender, e))
+                );
+                lens.Show();
+            });
+        };
+        overlay.Show();
+    }
+
     private void BtnSnipScreen_Click(object sender, RoutedEventArgs e)
     {
         var parentWindow = Window.GetWindow(this);

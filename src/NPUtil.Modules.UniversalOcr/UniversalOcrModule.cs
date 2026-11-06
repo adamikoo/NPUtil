@@ -29,10 +29,12 @@ public class UniversalOcrModule : IModule
         var logger = services.GetService(typeof(ILogger)) as ILogger;
         var ocrService = services.GetService(typeof(IOcrService)) as IOcrService ?? new WindowsOcrService(logger);
         var translationService = services.GetService(typeof(ITranslationService)) as ITranslationService ?? new LocalTranslationService(logger);
+        var inferenceEngine = services.GetService(typeof(NPUtil.Core.AI.IInferenceEngine)) as NPUtil.Core.AI.IInferenceEngine;
 
         _engine = new UniversalOcrEngine(
             ocrService,
             translationService,
+            inferenceEngine,
             logger);
 
         return Task.CompletedTask;

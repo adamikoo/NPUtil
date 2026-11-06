@@ -103,6 +103,27 @@
                 </Grid>
             </ui:Card>
 
+            <ui:Card Margin="0,0,0,10" Padding="16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{loc:Loc LensHotkeyLabel}" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="{loc:Loc LensHotkeyDesc}" 
+                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <ComboBox x:Name="CmbLensHotkey" Grid.Column="1" Height="36" Width="220" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="Ctrl + Alt + L (Default)" Tag="Ctrl+Alt+L" VerticalAlignment="Center" />
+                        <ComboBoxItem Content="Ctrl + Alt + O" Tag="Ctrl+Alt+O" VerticalAlignment="Center" />
+                        <ComboBoxItem Content="Ctrl + Shift + S" Tag="Ctrl+Shift+S" VerticalAlignment="Center" />
+                        <ComboBoxItem Content="Ctrl + Shift + L" Tag="Ctrl+Shift+L" VerticalAlignment="Center" />
+                        <ComboBoxItem Content="Alt + Space" Tag="Alt+Space" VerticalAlignment="Center" />
+                    </ComboBox>
+                </Grid>
+            </ui:Card>
+
             <!-- Resource Management -->
             <TextBlock Text="{loc:Loc BatterySection}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,10" />
             <ui:Card Margin="0,0,0,24" Padding="16">

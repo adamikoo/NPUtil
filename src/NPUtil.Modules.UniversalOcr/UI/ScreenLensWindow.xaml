@@ -1,0 +1,116 @@
+<ui:FluentWindow x:Class="NPUtil.Modules.UniversalOcr.UI.ScreenLensWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="NPUtil Lens"
+        Height="580" Width="480"
+        WindowStartupLocation="Manual"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="CanResizeWithGrip"
+        WindowBackdropType="Mica"
+        ExtendsContentIntoTitleBar="True"
+        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <Grid Margin="16,12,16,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 1. Header Bar -->
+        <Grid Grid.Row="0" Margin="0,0,0,10" MouseDown="Header_MouseDown">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <ui:SymbolIcon Symbol="Search24" FontSize="18" Margin="0,0,8,0" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                <TextBlock Text="NPUtil Lens" FontWeight="Bold" FontSize="15" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="10" Padding="8,2" VerticalAlignment="Center">
+                    <TextBlock Text="Qualcomm NPU" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                </Border>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button x:Name="BtnOpenFull" Content="⤢" ToolTip="Open in NPUtil App" Appearance="Secondary" Padding="8,2" FontSize="13" Margin="0,0,4,0" Click="BtnOpenFull_Click" />
+                <ui:Button x:Name="BtnClose" Content="✕" ToolTip="Close (Esc)" Appearance="Secondary" Padding="8,2" FontSize="12" Click="BtnClose_Click" />
+            </StackPanel>
+        </Grid>
+
+        <!-- 2. Snip Preview Card -->
+        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="8" Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" CornerRadius="4" ClipToBounds="True" Background="#11000000" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <Image x:Name="ImgThumbnail" MaxHeight="80" MaxWidth="120" Stretch="Uniform" />
+                </Border>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock x:Name="TxtSnipMeta" Text="Screen Selection (Capturing...)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,2" />
+                    <TextBlock x:Name="TxtOcrStats" Text="Reading text with Windows OCR..." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="8,0,0,0">
+                    <ui:Button x:Name="BtnCopyImage" Content="Copy Img" Appearance="Secondary" FontSize="10" Padding="6,3" Margin="0,0,0,4" Click="BtnCopyImage_Click" />
+                    <ui:Button x:Name="BtnRetakeSnip" Content="Retake" Appearance="Secondary" FontSize="10" Padding="6,3" Click="BtnRetakeSnip_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 3. Prompt Bar (Type to it!) -->
+        <Grid Grid.Row="2" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBox x:Name="TxtPrompt" Grid.Column="0"
+                        PlaceholderText="Ask anything about this selection... (e.g. 'what can you see', 'how to fix')"
+                        Height="36" FontSize="12" Margin="0,0,8,0"
+                        KeyDown="TxtPrompt_KeyDown" />
+            <ui:Button x:Name="BtnSendPrompt" Grid.Column="1" Content="Ask AI" Appearance="Primary" Height="36" Padding="14,0" Click="BtnSendPrompt_Click" />
+        </Grid>
+
+        <!-- 4. Quick Action Lens Chips -->
+        <WrapPanel Grid.Row="3" Margin="0,0,0,10">
+            <ui:Button x:Name="BtnChipWhatSee" Content="🔍 What can you see?" Appearance="Secondary" Margin="0,0,6,6" FontSize="11" Click="Chip_Click" Tag="what can you see" />
+            <ui:Button x:Name="BtnChipExplainFix" Content="💡 Explain &amp; Fix" Appearance="Secondary" Margin="0,0,6,6" FontSize="11" Click="Chip_Click" Tag="explain error and how to fix" />
+            <ui:Button x:Name="BtnChipTranslate" Content="🌐 Translate" Appearance="Secondary" Margin="0,0,6,6" FontSize="11" Click="Chip_Click" Tag="translate" />
+            <ui:Button x:Name="BtnChipTable" Content="📊 Extract Table" Appearance="Secondary" Margin="0,0,6,6" FontSize="11" Click="Chip_Click" Tag="extract table" />
+            <ui:Button x:Name="BtnChipCopyText" Content="📄 Copy Text" Appearance="Secondary" Margin="0,0,6,6" FontSize="11" Click="BtnCopyText_Click" />
+        </WrapPanel>
+
+        <!-- 5. AI Response Area -->
+        <Border Grid.Row="4" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="10">
+            <Grid>
+                <!-- Loading State -->
+                <StackPanel x:Name="PnlLoading" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
+                    <ProgressBar IsIndeterminate="True" Width="140" Height="4" Margin="0,0,0,8" />
+                    <TextBlock x:Name="TxtLoadingStatus" Text="Analyzing with Qualcomm NPU..." FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                </StackPanel>
+
+                <!-- Response Viewer -->
+                <TextBox x:Name="TxtResponse" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                         FontSize="12" Background="Transparent" Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                         BorderThickness="0" FontFamily="Segoe UI, Segoe UI Variable, Cascadia Code"
+                         Text="Recognizing screen content..." />
+            </Grid>
+        </Border>
+
+        <!-- 6. Footer -->
+        <Grid Grid.Row="5" Margin="0,10,0,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="TxtFeedback" Text="" FontSize="11" Foreground="{DynamicResource SystemFillColorSuccessBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button x:Name="BtnCopyResponse" Content="📋 Copy Response" Appearance="Secondary" Padding="10,4" Margin="0,0,6,0" Click="BtnCopyResponse_Click" />
+                <ui:Button x:Name="BtnToggleRawOcr" Content="Raw OCR" Appearance="Secondary" Padding="8,4" Click="BtnToggleRawOcr_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

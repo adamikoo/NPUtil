@@ -54,6 +54,8 @@ public partial class MainWindow : FluentWindow
     private const int HOTKEY_ID_OCR = 9002;
     private const uint MOD_ALT = 0x0001;
     private const uint MOD_CONTROL = 0x0002;
+    private const uint MOD_SHIFT = 0x0004;
+    private const uint MOD_WIN = 0x0008;
     private const uint WM_HOTKEY = 0x0312;
 
     [DllImport("user32.dll")]
@@ -176,13 +178,43 @@ public partial class MainWindow : FluentWindow
 
             // Ctrl+Alt+A (Context Assistant)
             RegisterHotKey(helper.Handle, HOTKEY_ID_ASSISTANT, MOD_CONTROL | MOD_ALT, 0x41);
-            // Ctrl+Alt+O (Universal OCR)
-            RegisterHotKey(helper.Handle, HOTKEY_ID_OCR, MOD_CONTROL | MOD_ALT, 0x4F);
+
+            // Dynamic Lens Hotkey (Default Ctrl+Alt+L or user configured)
+            RegisterLensHotkey(helper.Handle);
+
+            _settingsManager.SettingsChanged += (s, e) => Dispatcher.Invoke(() =>
+            {
+                if (_hwndSource != null)
+                {
+                    RegisterLensHotkey(helper.Handle);
+                }
+            });
         }
         catch (Exception ex)
         {
             _logger.Warning("MainWindow", $"Failed to register global hotkeys: {ex.Message}", ex);
         }
+    }
+
+    private void RegisterLensHotkey(IntPtr hWnd)
+    {
+        UnregisterHotKey(hWnd, HOTKEY_ID_OCR);
+
+        var hotkeyStr = _settingsManager.Current.LensHotkey ?? "Ctrl+Alt+L";
+        uint mod = 0;
+        uint vk = 0x4C; // 'L'
+
+        if (hotkeyStr.Contains("Ctrl")) mod |= MOD_CONTROL;
+        if (hotkeyStr.Contains("Alt")) mod |= MOD_ALT;
+        if (hotkeyStr.Contains("Shift")) mod |= MOD_SHIFT;
+        if (hotkeyStr.Contains("Win")) mod |= MOD_WIN;
+
+        if (hotkeyStr.EndsWith("L", StringComparison.OrdinalIgnoreCase)) vk = 0x4C;
+        else if (hotkeyStr.EndsWith("O", StringComparison.OrdinalIgnoreCase)) vk = 0x4F;
+        else if (hotkeyStr.EndsWith("S", StringComparison.OrdinalIgnoreCase)) vk = 0x53;
+        else if (hotkeyStr.EndsWith("Space", StringComparison.OrdinalIgnoreCase)) vk = 0x20;
+
+        RegisterHotKey(hWnd, HOTKEY_ID_OCR, mod, vk);
     }
 
     private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -208,25 +240,39 @@ public partial class MainWindow : FluentWindow
             else if (id == HOTKEY_ID_OCR)
             {
                 handled = true;
-                Dispatcher.Invoke(() =>
-                {
-                    var overlay = new ScreenSnipOverlayWindow();
-                    overlay.RegionCaptured += async (bytes) =>
+                Dispatcher.Invoke(TriggerLensCapture);
+            }
+        }
+        return IntPtr.Zero;
+    }
+
+    public void TriggerLensCapture()
+    {
+        if (_universalOcrModule?.Engine == null) return;
+
+        var overlay = new ScreenSnipOverlayWindow();
+        overlay.RegionCapturedWithBounds += (bytes, bounds) =>
+        {
+            Dispatcher.Invoke(() =>
+            {
+                var lens = new ScreenLensWindow(
+                    _universalOcrModule.Engine,
+                    bytes,
+                    bounds,
+                    onOpenInFullApp: () => Dispatcher.Invoke(() =>
                     {
                         Show();
                         WindowState = WindowState.Normal;
                         Activate();
                         NavigateToTag("UniversalOcr");
-                        if (_universalOcrView != null)
-                        {
-                            await _universalOcrView.ProcessBytesAsync(bytes);
-                        }
-                    };
-                    overlay.Show();
-                });
-            }
-        }
-        return IntPtr.Zero;
+                        _universalOcrView?.ProcessBytesAsync(bytes);
+                    }),
+                    onRetake: () => Dispatcher.Invoke(TriggerLensCapture)
+                );
+                lens.Show();
+            });
+        };
+        overlay.Show();
     }
 
     private void UpdateStatusBar()

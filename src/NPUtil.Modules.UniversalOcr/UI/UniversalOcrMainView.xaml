@@ -29,14 +29,16 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ui:Button x:Name="BtnSnipScreen" Grid.Column="0" Content="Snip Screen Area" Appearance="Primary" Height="36" Padding="16,0" Click="BtnSnipScreen_Click" Margin="0,0,10,0" />
-                <ui:Button x:Name="BtnLoadImage" Grid.Column="1" Content="Load Image File(s)..." Appearance="Secondary" Height="36" Click="BtnLoadImage_Click" Margin="0,0,16,0" />
+                <ui:Button x:Name="BtnLaunchLens" Grid.Column="0" Content="🔍 Open Screen Lens" Appearance="Primary" Height="36" Padding="14,0" Click="BtnLaunchLens_Click" Margin="0,0,10,0" />
+                <ui:Button x:Name="BtnSnipScreen" Grid.Column="1" Content="Snip Screen Area" Appearance="Secondary" Height="36" Padding="14,0" Click="BtnSnipScreen_Click" Margin="0,0,10,0" />
+                <ui:Button x:Name="BtnLoadImage" Grid.Column="2" Content="Load Image File(s)..." Appearance="Secondary" Height="36" Click="BtnLoadImage_Click" Margin="0,0,16,0" />
 
-                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Translation Direction:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
                     <ComboBox x:Name="CmbTranslationDirection" Height="36" Width="180" SelectedIndex="0" SelectionChanged="CmbTranslationDirection_SelectionChanged">
                         <ComboBoxItem Content="Auto (Detect ↔ Opposite)" Tag="auto" />
@@ -45,7 +47,7 @@
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:Button x:Name="BtnSendToAssistant" Content="Send to Assistant" Appearance="Secondary" Height="36" Click="BtnSendToAssistant_Click" Margin="0,0,8,0" />
                     <ui:Button x:Name="BtnSendToExtractor" Content="Send to Extractor" Appearance="Secondary" Height="36" Click="BtnSendToExtractor_Click" />
                 </StackPanel>

@@ -14,6 +14,7 @@ public partial class ScreenSnipOverlayWindow : Window
     private bool _isSelecting;
 
     public event Action<byte[]>? RegionCaptured;
+    public event Action<byte[], System.Drawing.Rectangle>? RegionCapturedWithBounds;
 
     public ScreenSnipOverlayWindow()
     {
@@ -68,8 +69,10 @@ public partial class ScreenSnipOverlayWindow : Window
 
             if (w > 10 && h > 10)
             {
+                var bounds = new System.Drawing.Rectangle(x, y, w, h);
                 var bytes = CaptureScreenRegion(x, y, w, h);
                 RegionCaptured?.Invoke(bytes);
+                RegionCapturedWithBounds?.Invoke(bytes, bounds);
             }
 
             Close();

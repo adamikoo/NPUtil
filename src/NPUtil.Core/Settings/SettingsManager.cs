@@ -18,6 +18,8 @@ public class GlobalSettings
     public bool MinimizeToTray { get; set; } = true;
     public bool CloseToTray { get; set; } = false;
     public bool ThrottleOnBattery { get; set; } = true;
+    public string LensHotkey { get; set; } = "Ctrl+Alt+L";
+    public string AssistantHotkey { get; set; } = "Ctrl+Alt+A";
     public string DataDirectory { get; set; } = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NPUtil");
 }
