@@ -10,6 +10,7 @@
         Height="760" Width="1160"
         MinHeight="600" MinWidth="850"
         WindowStartupLocation="CenterScreen"
+        ExtendsContentIntoTitleBar="True"
         WindowBackdropType="Mica">
 
     <Grid>
@@ -40,7 +41,7 @@
                 </ui:NavigationView.MenuItems>
 
                 <ui:NavigationView.FooterMenuItems>
-                    <ui:NavigationViewItem Content="System &amp; Diagnostics" Tag="Hardware" Icon="{ui:SymbolIcon Cpu24}" />
+                    <ui:NavigationViewItem Content="System &amp; Diagnostics" Tag="Hardware" Icon="{ui:SymbolIcon DeveloperBoard24}" />
                     <ui:NavigationViewItem Content="Settings" Tag="Settings" Icon="{ui:SymbolIcon Settings24}" />
                 </ui:NavigationView.FooterMenuItems>
             </ui:NavigationView>

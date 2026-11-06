@@ -82,7 +82,7 @@
 
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                            <ui:SymbolIcon Symbol="Cpu24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <ui:SymbolIcon Symbol="DeveloperBoard24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
                             <TextBlock Text="Aktivní zprostředkovatel inference:" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
                         </StackPanel>
                         <TextBlock x:Name="TxtAiBackend" Text="Qualcomm Hexagon NPU (QNN HTP)" FontSize="13" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="26,0,0,4" />
