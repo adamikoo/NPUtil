@@ -1,5 +1,6 @@
 using System.Windows;
-using NPUtil.App.Theme;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 using NPUtil.App.Views.FileOrganizer;
 using NPUtil.App.Views.Hardware;
 using NPUtil.App.Views.Settings;
@@ -12,7 +13,7 @@ using NPUtil.Modules.FileOrganizer;
 
 namespace NPUtil.App;
 
-public partial class MainWindow : Window
+public partial class MainWindow : FluentWindow
 {
     private readonly AppLogger _logger = new();
     private readonly HardwareService _hardwareService = new();
@@ -24,13 +25,16 @@ public partial class MainWindow : Window
     private FileOrganizerMainView? _fileOrganizerView;
     private HardwareView? _hardwareView;
     private GlobalSettingsView? _globalSettingsView;
+    private TrayIconHelper? _trayHelper;
 
     public MainWindow()
     {
         InitializeComponent();
 
         AppLogger.Initialize();
-        ThemeManager.ApplyTheme(_settingsManager.Current.Theme);
+
+        // Apply theme and watch Windows system theme changes automatically
+        SystemThemeWatcher.Watch(this);
 
         Loaded += MainWindow_Loaded;
         Closing += MainWindow_Closing;
@@ -58,10 +62,20 @@ public partial class MainWindow : Window
         // 3. Start Downloads monitoring if configured
         _fileOrganizerModule.Engine?.StartMonitoring();
 
-        // 4. Set Initial View
-        MainContentHost.Content = _fileOrganizerView;
+        // 4. Initialize System Tray Integration
+        _trayHelper = new TrayIconHelper(this, _logger);
+        _trayHelper.Initialize();
+        _trayHelper.TrayDoubleClicked += () => Dispatcher.Invoke(() =>
+        {
+            Show();
+            WindowState = WindowState.Normal;
+            Activate();
+        });
 
-        // 5. Update Status Bar
+        // 5. Set Initial View
+        RootFrame.Navigate(_fileOrganizerView);
+
+        // 6. Update Status Bar
         UpdateStatusBar();
 
         if (_fileOrganizerModule.Engine != null)
@@ -81,27 +95,33 @@ public partial class MainWindow : Window
             StatusMonitoring.Text = _fileOrganizerModule.Engine.IsMonitoring
                 ? $"Monitoring: Active ({folder})"
                 : "Monitoring: Paused";
+
+            _trayHelper?.UpdateTooltip($"NPUtil — File Organizer ({(_fileOrganizerModule.Engine.IsMonitoring ? "Active" : "Paused")})");
         }
 
         StatusPower.Text = diag.IsOnBattery ? $"Battery: {diag.BatteryPercent}%" : "AC Power";
     }
 
-    private void Nav_Checked(object sender, RoutedEventArgs e)
+    private void RootNavigation_SelectionChanged(NavigationView sender, RoutedEventArgs args)
     {
         if (!IsLoaded) return;
 
-        if (sender == NavFileOrganizer && _fileOrganizerView != null)
+        if (sender.SelectedItem is NavigationViewItem item)
         {
-            MainContentHost.Content = _fileOrganizerView;
-        }
-        else if (sender == NavHardware && _hardwareView != null)
-        {
-            _hardwareView.RefreshDiagnostics();
-            MainContentHost.Content = _hardwareView;
-        }
-        else if (sender == NavGlobalSettings && _globalSettingsView != null)
-        {
-            MainContentHost.Content = _globalSettingsView;
+            var tag = item.Tag?.ToString();
+            if (tag == "FileOrganizer" && _fileOrganizerView != null)
+            {
+                RootFrame.Navigate(_fileOrganizerView);
+            }
+            else if (tag == "Hardware" && _hardwareView != null)
+            {
+                _hardwareView.RefreshDiagnostics();
+                RootFrame.Navigate(_hardwareView);
+            }
+            else if (tag == "Settings" && _globalSettingsView != null)
+            {
+                RootFrame.Navigate(_globalSettingsView);
+            }
         }
     }
 
@@ -114,6 +134,7 @@ public partial class MainWindow : Window
             return;
         }
 
+        _trayHelper?.Dispose();
         _fileOrganizerModule?.ShutdownAsync().Wait(1000);
     }
 

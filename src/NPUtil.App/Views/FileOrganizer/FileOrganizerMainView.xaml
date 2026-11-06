@@ -3,31 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="950">
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Top Segmented Tab Strip -->
-        <Border Grid.Row="0" Background="{DynamicResource SurfaceBackgroundBrush}" 
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="16,0">
-            <StackPanel Orientation="Horizontal">
-                <RadioButton x:Name="TabOverview" Content="Overview" Style="{StaticResource SegmentRadioButtonStyle}"
-                             IsChecked="True" Checked="Tab_Checked" />
-                <RadioButton x:Name="TabReviewQueue" Content="Review Queue" Style="{StaticResource SegmentRadioButtonStyle}"
-                             Checked="Tab_Checked" />
-                <RadioButton x:Name="TabExplorer" Content="Folder Explorer" Style="{StaticResource SegmentRadioButtonStyle}"
-                             Checked="Tab_Checked" />
-                <RadioButton x:Name="TabSearch" Content="Search" Style="{StaticResource SegmentRadioButtonStyle}"
-                             Checked="Tab_Checked" />
-                <RadioButton x:Name="TabActivity" Content="Activity History" Style="{StaticResource SegmentRadioButtonStyle}"
-                             Checked="Tab_Checked" />
-                <RadioButton x:Name="TabSettings" Content="Module Settings" Style="{StaticResource SegmentRadioButtonStyle}"
-                             Checked="Tab_Checked" />
-            </StackPanel>
+        <!-- Top Navigation View (Fluent Top Segment) -->
+        <Border Grid.Row="0" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
+            <ui:NavigationView x:Name="TopNav"
+                               PaneDisplayMode="Top"
+                               IsBackButtonVisible="Collapsed"
+                               IsPaneToggleVisible="False"
+                               SelectionChanged="TopNav_SelectionChanged">
+                <ui:NavigationView.MenuItems>
+                    <ui:NavigationViewItem Content="Přehled" Tag="Overview" Icon="{ui:SymbolIcon Home24}" />
+                    <ui:NavigationViewItem x:Name="NavReviewItem" Content="Fronta k revizi" Tag="Review" Icon="{ui:SymbolIcon TaskListSquareAdd24}" />
+                    <ui:NavigationViewItem Content="Kategorie a složky" Tag="Explorer" Icon="{ui:SymbolIcon Folder24}" />
+                    <ui:NavigationViewItem Content="Vyhledávání" Tag="Search" Icon="{ui:SymbolIcon Search24}" />
+                    <ui:NavigationViewItem Content="Historie a Undo" Tag="Activity" Icon="{ui:SymbolIcon History24}" />
+                    <ui:NavigationViewItem Content="Předvolby modulu" Tag="Settings" Icon="{ui:SymbolIcon Settings24}" />
+                </ui:NavigationView.MenuItems>
+            </ui:NavigationView>
         </Border>
 
         <!-- Content Area -->

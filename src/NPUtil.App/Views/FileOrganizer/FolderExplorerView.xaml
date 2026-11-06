@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="900">
-    <Grid Margin="24,16,24,24">
+             d:DesignHeight="700" d:DesignWidth="950">
+    <Grid Margin="32,24,32,32">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -13,22 +14,21 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Folder Taxonomy &amp; Categories" Style="{StaticResource PageTitleStyle}" />
-            <TextBlock Text="Customize your folder hierarchy, semantic category descriptions, and keywords."
-                       Style="{StaticResource PageSubtitleStyle}" />
+            <TextBlock Text="Kategorie a složky" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Upravujte hierarchii složek, sémantické popisy pro AI model a přiřazená klíčová slova."
+                       FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
         </StackPanel>
 
-        <!-- Split Layout: Categories List / Details -->
+        <!-- Split Grid: Category List + Editor -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="320" />
-                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="340" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- Left: Categories List -->
-            <Border Grid.Column="0" Background="{DynamicResource SurfaceBackgroundBrush}" 
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="12">
+            <ui:Card Grid.Column="0" Padding="12">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -40,50 +40,49 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,4,0,4">
-                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
-                                    <TextBlock Text="{Binding RelativePath}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="13" />
+                                    <TextBlock Text="{Binding RelativePath}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <Button Grid.Row="1" x:Name="BtnNewCategory" Content="+ Add New Category" 
-                            Click="BtnNewCategory_Click" Margin="0,8,0,0" />
+                    <ui:Button Grid.Row="1" x:Name="BtnNewCategory" Content="+ Přidat novou kategorii" 
+                               Appearance="Secondary" Click="BtnNewCategory_Click" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
                 </Grid>
-            </Border>
+            </ui:Card>
 
-            <!-- Right: Category Editor -->
-            <Border Grid.Column="2" Background="{DynamicResource SurfaceBackgroundBrush}" 
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="20">
+            <!-- Right: Category Details Editor -->
+            <ui:Card Grid.Column="2" Padding="24">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel x:Name="PanelEditor">
-                        <TextBlock Text="Category Details &amp; AI Prompt Context" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,12" />
+                        <TextBlock Text="Nastavení vybrané kategorie" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,14" />
 
-                        <TextBlock Text="Category Name" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
-                        <TextBox x:Name="TxtCategoryName" Margin="0,0,0,12" />
+                        <TextBlock Text="Název kategorie" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <ui:TextBox x:Name="TxtCategoryName" Margin="0,0,0,12" />
 
-                        <TextBlock Text="Relative Folder Path (e.g. Education\Languages\English)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
-                        <TextBox x:Name="TxtRelativePath" Margin="0,0,0,12" />
+                        <TextBlock Text="Relativní cesta podsložky (např. Education\Languages\English)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <ui:TextBox x:Name="TxtRelativePath" Margin="0,0,0,12" />
 
-                        <TextBlock Text="Semantic Description (Used by AI Embedding Classifier)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
-                        <TextBox x:Name="TxtDescription" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,12" />
+                        <TextBlock Text="Sémantický kontext pro AI (Popis účelu a obsahu kategorie)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <ui:TextBox x:Name="TxtDescription" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,12" />
 
-                        <TextBlock Text="Keywords (Comma separated)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
-                        <TextBox x:Name="TxtKeywords" Margin="0,0,0,12" />
+                        <TextBlock Text="Klíčová slova (oddělená čárkou)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <ui:TextBox x:Name="TxtKeywords" Margin="0,0,0,12" />
 
-                        <TextBlock Text="Preferred File Extensions (e.g. .pdf, .docx)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
-                        <TextBox x:Name="TxtExtensions" Margin="0,0,0,12" />
+                        <TextBlock Text="Přípony souborů (např. .pdf, .docx)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                        <ui:TextBox x:Name="TxtExtensions" Margin="0,0,0,14" />
 
-                        <CheckBox x:Name="ChkExcluded" Content="Exclude this folder from automatic organization" Margin="0,4,0,16" />
+                        <CheckBox x:Name="ChkExcluded" Content="Vyloučit tuto složku z automatického přesunu" Margin="0,0,0,20" />
 
                         <StackPanel Orientation="Horizontal">
-                            <Button x:Name="BtnSaveChanges" Content="Save Changes" Style="{StaticResource AccentButtonStyle}" Click="BtnSaveChanges_Click" Margin="0,0,8,0" />
-                            <Button x:Name="BtnOpenFolder" Content="Open Folder in Explorer" Click="BtnOpenFolder_Click" Margin="0,0,8,0" />
-                            <Button x:Name="BtnDeleteCategory" Content="Delete Category" Click="BtnDeleteCategory_Click" />
+                            <ui:Button x:Name="BtnSaveChanges" Content="Uložit změny" Appearance="Primary" Click="BtnSaveChanges_Click" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnOpenFolder" Content="Otevřít v Průzkumníku" Appearance="Secondary" Click="BtnOpenFolder_Click" Margin="0,0,8,0" />
+                            <ui:Button x:Name="BtnDeleteCategory" Content="Odstranit kategorii" Appearance="Danger" Click="BtnDeleteCategory_Click" />
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
-            </Border>
+            </ui:Card>
         </Grid>
     </Grid>
 </UserControl>

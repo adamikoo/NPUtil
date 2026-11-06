@@ -36,9 +36,10 @@ public partial class OverviewView : UserControl
     {
         if (_module.Engine == null) return;
 
-        TxtWatchedFolder.Text = _module.Engine.WatchedFolder;
-        TxtMonitoringStatus.Text = _module.Engine.IsMonitoring ? "Status: Active Monitoring" : "Status: Paused";
-        BtnToggleMonitoring.Content = _module.Engine.IsMonitoring ? "Pause Monitoring" : "Resume Monitoring";
+        BarMonitoring.Message = $"Sledovaný adresář: {_module.Engine.WatchedFolder}";
+        BarMonitoring.Severity = _module.Engine.IsMonitoring ? Wpf.Ui.Controls.InfoBarSeverity.Success : Wpf.Ui.Controls.InfoBarSeverity.Warning;
+        BarMonitoring.Title = _module.Engine.IsMonitoring ? "Sledování složky aktivní" : "Sledování složky pozastaveno";
+        BtnToggleMonitoring.Content = _module.Engine.IsMonitoring ? "Pozastavit" : "Obnovit";
 
         var (totalMoved, active, undone) = _module.Engine.GetOperationCounts();
         TxtOrganizedCount.Text = active.ToString();

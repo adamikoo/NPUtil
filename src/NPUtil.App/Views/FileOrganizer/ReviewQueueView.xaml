@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="900">
-    <Grid Margin="24,16,24,24">
+             d:DesignHeight="700" d:DesignWidth="950">
+    <Grid Margin="32,24,32,32">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -14,16 +15,14 @@
         </Grid.RowDefinitions>
 
         <!-- Page Header -->
-        <TextBlock Grid.Row="0" Text="Review Queue" Style="{StaticResource PageTitleStyle}" />
-        <TextBlock Grid.Row="0" Text="Verify and approve destination recommendations before files are organized."
-                   Style="{StaticResource PageSubtitleStyle}" Margin="0,28,0,16" />
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Fronta k revizi" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Zkontrolujte a schvalte navržená zařazení před provedením bezpečného přesunu."
+                       FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
+        </StackPanel>
 
         <!-- Actions Toolbar -->
-        <Border Grid.Row="1" Background="{DynamicResource SurfaceBackgroundBrush}" 
-                BorderBrush="{DynamicResource BorderBrush}" 
-                BorderThickness="1" 
-                Padding="12,8" 
-                Margin="0,0,0,12">
+        <ui:Card Grid.Row="1" Padding="14,10" Margin="0,0,0,14">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -31,64 +30,63 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock x:Name="TxtPendingCount" Text="0 items awaiting review" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,16,0" />
+                    <ui:SymbolIcon Symbol="TaskListSquareAdd24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtPendingCount" Text="0 souborů čeká na schválení" FontWeight="SemiBold" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button x:Name="BtnRefresh" Content="Refresh Queue" Click="BtnRefresh_Click" Margin="0,0,8,0" />
-                    <Button x:Name="BtnApproveAll" Content="Approve All Pending" Style="{StaticResource AccentButtonStyle}" Click="BtnApproveAll_Click" />
+                    <ui:Button x:Name="BtnRefresh" Content="Obnovit frontu" Click="BtnRefresh_Click" Margin="0,0,8,0" />
+                    <ui:Button x:Name="BtnApproveAll" Content="Schválit vše ve frontě" Appearance="Primary" Click="BtnApproveAll_Click" />
                 </StackPanel>
             </Grid>
+        </ui:Card>
+
+        <!-- DataGrid of Review Items -->
+        <Border Grid.Row="2" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4">
+            <DataGrid x:Name="GridReviewQueue" SelectionChanged="GridReviewQueue_SelectionChanged" AutoGenerateColumns="False" BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Název souboru" Binding="{Binding FileName}" Width="220" />
+                    <DataGridTextColumn Header="Typ" Binding="{Binding Extension}" Width="65" />
+                    <DataGridTextColumn Header="Navržená kategorie" Binding="{Binding SuggestedCategory}" Width="240" />
+                    <DataGridTextColumn Header="Jistota" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
+                    <DataGridTextColumn Header="Vysvětlení / Klíčová slova" Binding="{Binding Explanation}" Width="*" />
+                    <DataGridTemplateColumn Header="Akce" Width="170">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:Button Content="Schválit" Appearance="Primary" Click="BtnApproveRow_Click" Margin="0,0,6,0" Padding="10,2" />
+                                    <ui:Button Content="Odmítnout" Appearance="Secondary" Click="BtnRejectRow_Click" Padding="10,2" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Border>
 
-        <!-- Main DataGrid -->
-        <DataGrid Grid.Row="2" x:Name="GridReviewQueue" SelectionChanged="GridReviewQueue_SelectionChanged" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="File Name" Binding="{Binding FileName}" Width="200" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Extension}" Width="65" />
-                <DataGridTextColumn Header="Suggested Category" Binding="{Binding SuggestedCategory}" Width="220" />
-                <DataGridTextColumn Header="Confidence" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="95" />
-                <DataGridTextColumn Header="Explanation" Binding="{Binding Explanation}" Width="*" />
-                <DataGridTemplateColumn Header="Action" Width="160">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Content="Approve" Click="BtnApproveRow_Click" Margin="0,0,6,0" Padding="8,2" />
-                                <Button Content="Reject" Click="BtnRejectRow_Click" Padding="8,2" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <!-- Item Details and Category Change Panel -->
-        <Border Grid.Row="3" Background="{DynamicResource SurfaceBackgroundBrush}" 
-                BorderBrush="{DynamicResource BorderBrush}" 
-                BorderThickness="1" 
-                Padding="16,12" 
-                Margin="0,12,0,0">
+        <!-- Inspector Panel for Selected Item -->
+        <ui:Card Grid.Row="3" Margin="0,14,0,0" Padding="16,12">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="340" />
+                    <ColumnDefinition Width="360" />
                 </Grid.ColumnDefinitions>
 
-                <!-- Left: Selected Item Details & Alternatives -->
-                <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                    <TextBlock Text="Selected Item Details" FontWeight="SemiBold" FontSize="13" />
-                    <TextBlock x:Name="TxtSelectedExplanation" Text="Select an item above to inspect classification reasoning and alternative categories." 
-                               TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,4,0,4" />
-                    
-                    <StackPanel x:Name="PanelAlternatives" Visibility="Collapsed" Margin="0,4,0,0">
-                        <TextBlock Text="Alternative Destinations:" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4" />
+                <!-- Left: Explanation & Alternative Categories -->
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Detail vybraného souboru" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,4" />
+                    <TextBlock x:Name="TxtSelectedExplanation" Text="Vyberte soubor v tabulce pro zobrazení podrobností o sémantické analýze a alternativách." 
+                               TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" Margin="0,0,0,8" />
+
+                    <StackPanel x:Name="PanelAlternatives" Visibility="Collapsed">
+                        <TextBlock Text="Alternativní kategorie:" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4" />
                         <ItemsControl x:Name="ListAlternatives">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
-                                        <TextBlock Text="{Binding RelativePath}" FontWeight="SemiBold" Width="200" />
-                                        <TextBlock Text="{Binding Confidence, StringFormat={}(Confidence: {0:P0})}" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,8,0" />
-                                        <Button Content="Choose This" Click="BtnChooseAlternative_Click" Padding="6,1" FontSize="11" />
+                                        <TextBlock Text="{Binding RelativePath}" FontWeight="SemiBold" Width="210" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Confidence, StringFormat={}(Jistota: {0:P0})}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                        <ui:Button Content="Zvolit tuto" Click="BtnChooseAlternative_Click" Padding="8,1" FontSize="11" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -98,18 +96,18 @@
 
                 <!-- Right: Custom Destination Override -->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="Change Destination Category" FontWeight="SemiBold" Margin="0,0,0,4" />
+                    <TextBlock Text="Změnit cílovou kategorii:" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <ComboBox x:Name="CmbAllCategories" Grid.Column="0" Margin="0,0,8,0" Height="28" />
-                        <Button x:Name="BtnApplyCustomCategory" Grid.Column="1" Content="Apply &amp; Move" Click="BtnApplyCustomCategory_Click" />
+                        <ComboBox x:Name="CmbAllCategories" Grid.Column="0" Margin="0,0,8,0" Height="30" />
+                        <ui:Button x:Name="BtnApplyCustomCategory" Grid.Column="1" Content="Změnit a přesunout" Appearance="Primary" Click="BtnApplyCustomCategory_Click" />
                     </Grid>
                 </StackPanel>
             </Grid>
-        </Border>
+        </ui:Card>
 
     </Grid>
 </UserControl>

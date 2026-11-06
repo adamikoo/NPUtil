@@ -307,6 +307,12 @@ public class TaxonomyManager
                 priority: 12),
 
             // Work
+            new(@"Work\Newsletters", "Newsletters & Bulletins",
+                "Zpravodaje, věstníky, bulletiny, periodika, tiskové zprávy, firemní a obecní zpravodaj, newsletters",
+                keywords: ["zpravodaj", "vestnik", "věstník", "bulletin", "newsletter", "oběžník", "ročník", "vydání"],
+                extensions: [".pdf", ".docx"],
+                priority: 16),
+
             new(@"Work\Documents", "Work Documents",
                 "Work reports, memos, business presentations, meeting minutes, contracts, pracovní dokumenty, smlouvy, zápisy",
                 keywords: ["work", "business", "contract", "meeting", "report", "smlouva", "prace", "zapis"],
@@ -318,6 +324,19 @@ public class TaxonomyManager
                 keywords: ["work", "client", "deliverable", "project", "firemni", "zakazka"],
                 extensions: [".pdf", ".docx", ".xlsx", ".pptx", ".zip"],
                 priority: 10),
+
+            // Personal
+            new(@"Personal\Health & Medical", "Health & Medical",
+                "Lékařské zprávy, recepty, vyšetření, očkování, zdravotní dokumentace, medical reports",
+                keywords: ["lékař", "lekar", "zdravotni", "recept", "vysetreni", "pacient", "hospital"],
+                extensions: [".pdf", ".docx", ".jpg"],
+                priority: 12),
+
+            new(@"Personal\Travel & Tickets", "Travel & Tickets",
+                "Letenky, jízdenky, rezervace ubytování, hotel, boarding pass, vstupenky",
+                keywords: ["letenka", "jizdenka", "boarding pass", "flight", "hotel", "rezervace", "booking"],
+                extensions: [".pdf", ".pkpass"],
+                priority: 12),
 
             // Archives
             new(@"Archives", "Compressed Archives",

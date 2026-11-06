@@ -13,6 +13,7 @@ public class HybridClassifier
     private readonly RuleClassifier _ruleClassifier;
     private readonly UserCorrectionMemory _userMemory;
     private readonly TaxonomyManager _taxonomyManager;
+    private readonly DynamicCategoryGenerator _dynamicGenerator;
     private readonly ILogger _logger;
 
     public HybridClassifier(
@@ -28,6 +29,7 @@ public class HybridClassifier
         _ruleClassifier = ruleClassifier;
         _userMemory = userMemory;
         _taxonomyManager = taxonomyManager;
+        _dynamicGenerator = new DynamicCategoryGenerator(taxonomyManager, logger);
         _logger = logger;
     }
 
@@ -121,6 +123,31 @@ public class HybridClassifier
 
         var ordered = scoredList.OrderByDescending(s => s.CalibratedConfidence).ToList();
         var top = ordered.First();
+
+        // Dynamic Categorization: If not sure or cannot cleanly match an existing category (confidence < 0.58)
+        if (top.CalibratedConfidence < 0.58 || top.Category.RelativePath == "To Review")
+        {
+            var dynamicCategory = _dynamicGenerator.GenerateCategoryFor(metadata);
+            _logger.Info("HybridClassifier", $"Low confidence on existing categories ({top.CalibratedConfidence:P0}). Dynamically created category: {dynamicCategory.RelativePath}");
+
+            var altDestinations = ordered.Take(2).Select(s => new DestinationSuggestion(
+                RelativePath: s.Category.RelativePath,
+                Confidence: Math.Round(s.CalibratedConfidence, 2),
+                RawSimilarity: Math.Round(s.RawSimilarity, 2),
+                Reason: $"Původní nižší shoda ({s.CalibratedConfidence:P0})",
+                MatchedKeywords: s.MatchedKeywords
+            )).ToList();
+
+            return new ClassificationResult(
+                TargetRelativePath: dynamicCategory.RelativePath,
+                Confidence: 0.88,
+                RawSimilarityScore: 0.88,
+                Explanation: $"Byla dynamicky vytvořena nová kategorie '{dynamicCategory.Name}' pro téma tohoto souboru (žádná z existujících kategorií neměla dostatečnou jistotu shody).",
+                ExtractedKeywords: metadata.Keywords,
+                AlternativeDestinations: altDestinations,
+                ClassifierSource: "DynamicCategory"
+            );
+        }
 
         var alternatives = ordered.Skip(1).Take(2).Select(s => new DestinationSuggestion(
             RelativePath: s.Category.RelativePath,

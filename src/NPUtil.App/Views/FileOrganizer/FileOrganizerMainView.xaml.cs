@@ -1,10 +1,11 @@
 using System.Windows;
 using System.Windows.Controls;
+using Wpf.Ui.Controls;
 using NPUtil.Modules.FileOrganizer;
 
 namespace NPUtil.App.Views.FileOrganizer;
 
-public partial class FileOrganizerMainView : UserControl
+public partial class FileOrganizerMainView : System.Windows.Controls.UserControl
 {
     private readonly FileOrganizerModule _module;
 
@@ -34,45 +35,54 @@ public partial class FileOrganizerMainView : UserControl
             _module.Engine.ReviewQueueChanged += (s, e) => Dispatcher.Invoke(UpdateTabBadge);
             UpdateTabBadge();
         }
+
+        Loaded += (s, e) =>
+        {
+            if (TopNav.MenuItems.Count > 0 && TopNav.MenuItems[0] is NavigationViewItem firstItem)
+            {
+                firstItem.IsActive = true;
+            }
+        };
     }
 
     private void UpdateTabBadge()
     {
         if (_module.Engine == null) return;
         var count = _module.Engine.GetReviewQueue().Count;
-        TabReviewQueue.Content = count > 0 ? $"Review Queue ({count})" : "Review Queue";
+        NavReviewItem.Content = count > 0 ? $"Fronta k revizi ({count})" : "Fronta k revizi";
     }
 
-    private void Tab_Checked(object sender, RoutedEventArgs e)
+    private void TopNav_SelectionChanged(NavigationView sender, RoutedEventArgs args)
     {
         if (!IsLoaded) return;
 
-        if (sender == TabOverview)
+        if (sender.SelectedItem is NavigationViewItem item)
         {
-            _overviewView.RefreshStatus();
-            ContentArea.Content = _overviewView;
-        }
-        else if (sender == TabReviewQueue)
-        {
-            _reviewQueueView.RefreshQueue();
-            ContentArea.Content = _reviewQueueView;
-        }
-        else if (sender == TabExplorer)
-        {
-            ContentArea.Content = _folderExplorerView;
-        }
-        else if (sender == TabSearch)
-        {
-            ContentArea.Content = _searchView;
-        }
-        else if (sender == TabActivity)
-        {
-            _activityView.RefreshHistory();
-            ContentArea.Content = _activityView;
-        }
-        else if (sender == TabSettings)
-        {
-            ContentArea.Content = _settingsView;
+            var tag = item.Tag?.ToString();
+            switch (tag)
+            {
+                case "Overview":
+                    _overviewView.RefreshStatus();
+                    ContentArea.Content = _overviewView;
+                    break;
+                case "Review":
+                    _reviewQueueView.RefreshQueue();
+                    ContentArea.Content = _reviewQueueView;
+                    break;
+                case "Explorer":
+                    ContentArea.Content = _folderExplorerView;
+                    break;
+                case "Search":
+                    ContentArea.Content = _searchView;
+                    break;
+                case "Activity":
+                    _activityView.RefreshHistory();
+                    ContentArea.Content = _activityView;
+                    break;
+                case "Settings":
+                    ContentArea.Content = _settingsView;
+                    break;
+            }
         }
     }
 }

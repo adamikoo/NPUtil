@@ -3,62 +3,63 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="850">
+             d:DesignHeight="750" d:DesignWidth="850">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="24,16,24,24" MaxWidth="720" HorizontalAlignment="Left">
+        <StackPanel Margin="32,24,32,32" MaxWidth="760" HorizontalAlignment="Left">
             
             <!-- Page Header -->
-            <TextBlock Text="File Organizer Settings" Style="{StaticResource PageTitleStyle}" />
-            <TextBlock Text="Configure directory monitoring, classification automation levels, and hardware execution."
-                       Style="{StaticResource PageSubtitleStyle}" />
+            <TextBlock Text="Předvolby modulu File Organizer" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Konfigurace parametrů sledování, úrovně automatizace a hardwarové akcelerace."
+                       FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,24" />
 
-            <!-- Watched Directory -->
-            <TextBlock Text="Directory Monitoring" Style="{StaticResource SectionHeaderStyle}" />
-            <Border Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="16,14" Margin="0,0,0,16">
+            <!-- Directory Monitoring Section -->
+            <TextBlock Text="Sledovaný adresář" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <ui:Card Margin="0,0,0,20" Padding="16">
                 <StackPanel>
-                    <TextBlock Text="Watched Downloads Folder" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                    <TextBlock Text="Cesta ke složce Stažené soubory" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6" />
                     <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="TxtWatchedPath" Grid.Column="0" Margin="0,0,8,0" Height="28" />
-                        <Button x:Name="BtnBrowseFolder" Grid.Column="1" Content="Browse..." Click="BtnBrowseFolder_Click" Width="80" />
+                        <ui:TextBox x:Name="TxtWatchedPath" Grid.Column="0" Margin="0,0,8,0" Height="32" />
+                        <ui:Button x:Name="BtnBrowseFolder" Grid.Column="1" Content="Procházet..." Appearance="Secondary" Click="BtnBrowseFolder_Click" Width="90" Height="32" />
                     </Grid>
-                    <TextBlock Text="NPUtil automatically resolves your official Windows known Downloads folder path."
-                               FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                    <TextBlock Text="NPUtil automaticky zjišťuje skutečné systémové umístění složky Downloads přes Windows Known Folders API."
+                               FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
-            </Border>
+            </ui:Card>
 
-            <!-- Organization Automation Mode -->
-            <TextBlock Text="Automation Mode" Style="{StaticResource SectionHeaderStyle}" />
-            <Border Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="16,14" Margin="0,0,0,16">
+            <!-- Automation Mode Section -->
+            <TextBlock Text="Úroveň automatizace" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <ui:Card Margin="0,0,0,20" Padding="16">
                 <StackPanel>
                     <RadioButton x:Name="RadioReviewEverything" GroupName="OrgMode" IsChecked="True">
                         <StackPanel Margin="6,0,0,0">
-                            <TextBlock Text="Review Everything (Default &amp; Recommended)" FontWeight="SemiBold" />
-                            <TextBlock Text="Every file proposal is placed into the Review Queue for explicit one-click approval." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            <TextBlock Text="Revize všeho (Doporučeno)" FontWeight="SemiBold" />
+                            <TextBlock Text="Každý navržený přesun se zařadí do Fronty k revizi a čeká na vaše potvrzení." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                     </RadioButton>
 
-                    <RadioButton x:Name="RadioIntelligentAuto" GroupName="OrgMode" Margin="0,8,0,0">
+                    <RadioButton x:Name="RadioIntelligentAuto" GroupName="OrgMode" Margin="0,10,0,0">
                         <StackPanel Margin="6,0,0,0">
-                            <TextBlock Text="Intelligent Automatic" FontWeight="SemiBold" />
-                            <TextBlock Text="High-confidence classifications are organized automatically; ambiguous files are queued for review." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            <TextBlock Text="Inteligentní automatika" FontWeight="SemiBold" />
+                            <TextBlock Text="Jednoznačné soubory s vysokou jistotou přesune automaticky, sporné případy zařadí do fronty." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                     </RadioButton>
 
-                    <RadioButton x:Name="RadioFullyAutomatic" GroupName="OrgMode" Margin="0,8,0,0">
+                    <RadioButton x:Name="RadioFullyAutomatic" GroupName="OrgMode" Margin="0,10,0,0">
                         <StackPanel Margin="6,0,0,0">
-                            <TextBlock Text="Fully Automatic" FontWeight="SemiBold" />
-                            <TextBlock Text="Organize all downloads automatically using the highest matching category score." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                            <TextBlock Text="Plně automatický" FontWeight="SemiBold" />
+                            <TextBlock Text="Organizovat všechny soubory ihned po dokončení stahování podle nejvyšší shody." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                     </RadioButton>
 
-                    <Separator Background="{DynamicResource SubtleBorderBrush}" Margin="0,14,0,12" />
+                    <Separator Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="0,16,0,14" />
 
-                    <TextBlock Text="High-Confidence Threshold for Intelligent Mode:" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
+                    <TextBlock Text="Prah jistoty pro automatické zařazení:" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -66,33 +67,33 @@
                         </Grid.ColumnDefinitions>
                         <Slider x:Name="SliderThreshold" Grid.Column="0" Minimum="50" Maximum="95" Value="75"
                                 TickFrequency="5" IsSnapToTickEnabled="True" ValueChanged="SliderThreshold_ValueChanged" VerticalAlignment="Center" />
-                        <TextBlock x:Name="TxtThresholdValue" Grid.Column="1" Text="75%" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <TextBlock x:Name="TxtThresholdValue" Grid.Column="1" Text="75 %" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" />
                     </Grid>
                 </StackPanel>
-            </Border>
+            </ui:Card>
 
-            <!-- Hardware & Power -->
-            <TextBlock Text="Hardware &amp; Energy" Style="{StaticResource SectionHeaderStyle}" />
-            <Border Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="16,14" Margin="0,0,0,16">
+            <!-- Hardware & Performance Section -->
+            <TextBlock Text="Hardware a správa napájení" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <ui:Card Margin="0,0,0,24" Padding="16">
                 <StackPanel>
-                    <TextBlock Text="AI Hardware Acceleration Backend" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,4" />
-                    <ComboBox x:Name="CmbHardwareBackend" Height="28" Margin="0,0,0,10">
-                        <ComboBoxItem Content="Auto-detect (Qualcomm Hexagon NPU if available, else CPU)" IsSelected="True" />
-                        <ComboBoxItem Content="Force Qualcomm Hexagon NPU (QNN HTP)" />
-                        <ComboBoxItem Content="Force CPU (ARM64 Vectorized / NEON)" />
+                    <TextBlock Text="Zprostředkovatel AI akcelerace" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6" />
+                    <ComboBox x:Name="CmbHardwareBackend" Height="30" Margin="0,0,0,14">
+                        <ComboBoxItem Content="Automaticky (Qualcomm Hexagon NPU pokud je k dispozici, jinak CPU)" IsSelected="True" />
+                        <ComboBoxItem Content="Vynutit Qualcomm Hexagon NPU (QNN HTP)" />
+                        <ComboBoxItem Content="Vynutit CPU (ARM64 Vectorized / NEON)" />
                     </ComboBox>
 
-                    <CheckBox x:Name="ChkThrottleBattery" Content="Throttle background scanning and heavy inference when running on battery" IsChecked="True" Margin="0,4,0,4" />
-                    <CheckBox x:Name="ChkIgnoreIncomplete" Content="Ignore browser partial downloads (.crdownload, .part, .tmp)" IsChecked="True" Margin="0,4,0,4" />
-                    <CheckBox x:Name="ChkIgnoreHidden" Content="Ignore hidden and system files" IsChecked="True" Margin="0,4,0,0" />
+                    <CheckBox x:Name="ChkThrottleBattery" Content="Omezit úlohy a pozastavit skenování při chodu na baterii" IsChecked="True" Margin="0,0,0,8" />
+                    <CheckBox x:Name="ChkIgnoreIncomplete" Content="Ignorovat nedokončená stahování prohlížeče (.crdownload, .part, .tmp)" IsChecked="True" Margin="0,0,0,8" />
+                    <CheckBox x:Name="ChkIgnoreHidden" Content="Ignorovat skryté a systémové soubory" IsChecked="True" />
                 </StackPanel>
-            </Border>
+            </ui:Card>
 
-            <!-- Save Button -->
-            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                <Button x:Name="BtnSaveSettings" Content="Save Settings" Style="{StaticResource AccentButtonStyle}"
-                        Click="BtnSaveSettings_Click" Padding="16,6" Margin="0,0,12,0" />
-                <TextBlock x:Name="TxtSaveFeedback" Text="" VerticalAlignment="Center" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" />
+            <!-- Save Action Button -->
+            <StackPanel Orientation="Horizontal">
+                <ui:Button x:Name="BtnSaveSettings" Content="Uložit nastavení" Appearance="Primary"
+                           Click="BtnSaveSettings_Click" Padding="20,6" Margin="0,0,12,0" />
+                <TextBlock x:Name="TxtSaveFeedback" Text="" VerticalAlignment="Center" Foreground="{DynamicResource SystemFillColorSuccessBrush}" FontWeight="SemiBold" />
             </StackPanel>
 
         </StackPanel>

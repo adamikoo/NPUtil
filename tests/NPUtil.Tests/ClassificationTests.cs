@@ -60,6 +60,34 @@ public class ClassificationTests : IDisposable
     }
 
     [Fact]
+    public async Task ClassifyAsync_ZpravodajDocument_ClassifiesIntoWorkNewsletters_NotFinance()
+    {
+        var file = SandboxHelper.CreateTextFile(_sandboxDir, "Zpravodaj_leden_2026.pdf",
+            "Městský zpravodaj číslo 1/2026. Informace pro občany a zaměstnance, zprávy z jednání zastupitelstva a kulturní přehled.");
+
+        var meta = await _extractor.ExtractAsync(file);
+        var result = await _classifier.ClassifyAsync(meta);
+
+        Assert.Equal(@"Work\Newsletters", result.TargetRelativePath);
+        Assert.DoesNotContain("Finance", result.TargetRelativePath, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Invoices", result.TargetRelativePath, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ClassifyAsync_AmbiguousFile_DynamicallyCreatesNewCategory()
+    {
+        var file = SandboxHelper.CreateTextFile(_sandboxDir, "astronomy_telescope_observations.txt",
+            "Astronomical observations of nebula stars galaxies redshift astrophysicist celestial catalog.");
+
+        var meta = await _extractor.ExtractAsync(file);
+        var result = await _classifier.ClassifyAsync(meta);
+
+        Assert.Equal("DynamicCategory", result.ClassifierSource);
+        Assert.False(string.IsNullOrWhiteSpace(result.TargetRelativePath));
+        Assert.Contains("dynamicky vytvořena", result.Explanation, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task ClassifyAsync_LearnsFromUserCorrection()
     {
         _userMemory.RecordCorrection(".specialdoc", @"Work\Projects");

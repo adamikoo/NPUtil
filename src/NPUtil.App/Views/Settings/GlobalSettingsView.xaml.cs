@@ -28,7 +28,7 @@ public partial class GlobalSettingsView : UserControl
             _ => 0
         };
 
-        ChkStartWithWindows.IsChecked = current.StartWithWindows;
+        ChkStartWithWindows.IsChecked = StartupHelper.IsStartupEnabled();
         ChkMinimizeToTray.IsChecked = current.MinimizeToTray;
         ChkCloseToTray.IsChecked = current.CloseToTray;
         ChkThrottleBattery.IsChecked = current.ThrottleOnBattery;
@@ -57,10 +57,13 @@ public partial class GlobalSettingsView : UserControl
             _ => AppTheme.System
         };
 
+        var enableStartup = ChkStartWithWindows.IsChecked == true;
+        StartupHelper.SetStartup(enableStartup);
+
         _settingsManager.Update(s =>
         {
             s.Theme = selectedTheme;
-            s.StartWithWindows = ChkStartWithWindows.IsChecked == true;
+            s.StartWithWindows = enableStartup;
             s.MinimizeToTray = ChkMinimizeToTray.IsChecked == true;
             s.CloseToTray = ChkCloseToTray.IsChecked == true;
             s.ThrottleOnBattery = ChkThrottleBattery.IsChecked == true;

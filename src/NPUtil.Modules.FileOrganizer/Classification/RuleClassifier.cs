@@ -7,7 +7,8 @@ namespace NPUtil.Modules.FileOrganizer.Classification;
 public class RuleClassifier
 {
     private static readonly Regex YearRegex = new(@"\b(202[0-9])\b", RegexOptions.Compiled);
-    private static readonly Regex InvoiceRegex = new(@"(faktura|faktury|daňový\s+doklad|vyúčtování|invoice|bill|billing|doklad\s+č|zálohová\s+faktura)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex InvoiceRegex = new(@"\b(faktura|faktury|daňový\s+doklad|faktura\s+č|zálohová\s+faktura|dobropis|vyúčtování\s+(služeb|energie|nákladů)|tax\s+invoice|commercial\s+invoice|proforma\s+invoice)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex NewsletterRegex = new(@"\b(zpravodaj|zpravodajství|věstník|bulletin|newsletter|oběžník|číslo\s+\d+/\d+|ročník\s+\d+|vydání\s+\d+)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     private static readonly Regex Mt5Regex = new(@"(mt5|metatrader|expert\s+advisor|mql5|ea\s+strategy|backtest)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     private static readonly Regex CambridgeRegex = new(@"(cambridge|c1\s+advanced|cae|ielts|toefl|english\s+grammar|oxford)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     private static readonly Regex CarRegex = new(@"(ferrari|porsche|bmw|audi|mercedes|lamborghini|automobile|supercar|auto\b|vozidlo)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -37,8 +38,28 @@ public class RuleClassifier
             }
         }
 
-        // 2. Invoices & Billing
-        if (InvoiceRegex.IsMatch(text) && (ext is ".pdf" or ".xml" or ".docx" or ".xlsx"))
+        // 2. Work Newsletters, Gazettes & Bulletins (Zpravodaj)
+        if (NewsletterRegex.IsMatch(text) && (ext is ".pdf" or ".docx" or ".epub"))
+        {
+            var cat = categories.FirstOrDefault(c => c.RelativePath.Equals(@"Work\Newsletters", StringComparison.OrdinalIgnoreCase))
+                   ?? categories.FirstOrDefault(c => c.RelativePath.Equals(@"Work\Documents", StringComparison.OrdinalIgnoreCase));
+
+            if (cat != null)
+            {
+                return new ClassificationResult(
+                    TargetRelativePath: cat.RelativePath,
+                    Confidence: 0.95,
+                    RawSimilarityScore: 0.95,
+                    Explanation: "Rozpoznán pracovní nebo obecní zpravodaj, bulletin či periodikum.",
+                    ExtractedKeywords: ["zpravodaj", "bulletin", "newsletter"],
+                    AlternativeDestinations: Array.Empty<DestinationSuggestion>(),
+                    ClassifierSource: "Rule"
+                );
+            }
+        }
+
+        // 3. Invoices & Billing (Strict: must not be a newsletter or gazette!)
+        if (InvoiceRegex.IsMatch(text) && !NewsletterRegex.IsMatch(text) && (ext is ".pdf" or ".xml" or ".docx" or ".xlsx"))
         {
             var yearMatch = YearRegex.Match(text);
             var year = yearMatch.Success ? yearMatch.Value : currentYear;

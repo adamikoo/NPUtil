@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="900">
-    <Grid Margin="24,16,24,24">
+             d:DesignHeight="700" d:DesignWidth="950">
+    <Grid Margin="32,24,32,32">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -14,14 +15,13 @@
 
         <!-- Page Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Activity &amp; Reversible History" Style="{StaticResource PageTitleStyle}" />
-            <TextBlock Text="Persistent SQLite audit trail of all organize operations with single-click and batch undo."
-                       Style="{StaticResource PageSubtitleStyle}" />
+            <TextBlock Text="Historie operací a Undo" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Kompletní persistentní auditní stopa všech provedených přesunů s možností okamžitého vrácení."
+                       FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16" />
         </StackPanel>
 
-        <!-- Toolbar -->
-        <Border Grid.Row="1" Background="{DynamicResource SurfaceBackgroundBrush}" 
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="12,8" Margin="0,0,0,12">
+        <!-- Toolbar Card -->
+        <ui:Card Grid.Row="1" Padding="14,10" Margin="0,0,0,14">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -29,67 +29,70 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock x:Name="TxtHistorySummary" Text="Total operations: 0" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,16,0" />
+                    <ui:SymbolIcon Symbol="History24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtHistorySummary" Text="Celkem operací: 0" FontWeight="SemiBold" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button x:Name="BtnUndoBatch" Content="Undo Selected Batch" Click="BtnUndoBatch_Click" Margin="0,0,8,0" />
-                    <Button x:Name="BtnRefresh" Content="Refresh Log" Click="BtnRefresh_Click" />
+                    <ui:Button x:Name="BtnUndoBatch" Content="Vrátit vybranou dávku (Undo Batch)" Appearance="Secondary" Click="BtnUndoBatch_Click" Margin="0,0,8,0" />
+                    <ui:Button x:Name="BtnRefresh" Content="Obnovit" Appearance="Secondary" Click="BtnRefresh_Click" />
                 </StackPanel>
             </Grid>
-        </Border>
+        </ui:Card>
 
-        <!-- DataGrid of Operations -->
-        <DataGrid Grid.Row="2" x:Name="GridOperations" AutoGenerateColumns="False" SelectionChanged="GridOperations_SelectionChanged">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="140" />
-                <DataGridTextColumn Header="File Name" Binding="{Binding FileName}" Width="180" />
-                <DataGridTextColumn Header="Destination" Binding="{Binding Category}" Width="180" />
-                <DataGridTextColumn Header="Confidence" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
-                <DataGridTextColumn Header="Batch ID" Binding="{Binding BatchId}" Width="140" />
-                <DataGridTemplateColumn Header="Status" Width="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock VerticalAlignment="Center">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="Active" />
-                                        <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
-                                        <Setter Property="FontWeight" Value="SemiBold" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsUndone}" Value="True">
-                                                <Setter Property="Text" Value="Undone" />
-                                                <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}" />
-                                                <Setter Property="FontWeight" Value="Normal" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Action" Width="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="Undo Move" Click="BtnUndoRow_Click" Padding="6,2" FontSize="11">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                        <Setter Property="IsEnabled" Value="True" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsUndone}" Value="True">
-                                                <Setter Property="IsEnabled" Value="False" />
-                                                <Setter Property="Content" Value="Restored" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <!-- Operations DataGrid -->
+        <Border Grid.Row="2" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4">
+            <DataGrid x:Name="GridOperations" AutoGenerateColumns="False" SelectionChanged="GridOperations_SelectionChanged" BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Čas" Binding="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="145" />
+                    <DataGridTextColumn Header="Název souboru" Binding="{Binding FileName}" Width="200" />
+                    <DataGridTextColumn Header="Cílová kategorie" Binding="{Binding Category}" Width="200" />
+                    <DataGridTextColumn Header="Jistota" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
+                    <DataGridTextColumn Header="Dávka ID" Binding="{Binding BatchId}" Width="150" />
+                    <DataGridTemplateColumn Header="Stav" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="Aktivní" />
+                                            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsUndone}" Value="True">
+                                                    <Setter Property="Text" Value="Vráceno" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
+                                                    <Setter Property="FontWeight" Value="Normal" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Akce" Width="110">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ui:Button Content="Vrátit přesun" Appearance="Secondary" Click="BtnUndoRow_Click" Padding="8,2" FontSize="11">
+                                    <ui:Button.Style>
+                                        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsUndone}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False" />
+                                                    <Setter Property="Content" Value="Obnoveno" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ui:Button.Style>
+                                </ui:Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
 
     </Grid>
 </UserControl>

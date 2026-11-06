@@ -3,44 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="700" d:DesignWidth="850">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="24,16,24,24">
+        <StackPanel Margin="32,24,32,32">
             
-            <!-- Page Header -->
-            <TextBlock Text="File Organizer Overview" Style="{StaticResource PageTitleStyle}" />
-            <TextBlock Text="Continuously monitors your Downloads folder and organizes files using local multilingual AI."
-                       Style="{StaticResource PageSubtitleStyle}" />
+            <!-- Authentic Windows 11 Page Header -->
+            <TextBlock Text="File Organizer" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <TextBlock Text="Průběžně monitoruje složku Stažené soubory a automaticky navrhuje sémantické zařazení do kategorií."
+                       FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,20" />
 
-            <!-- Monitoring Status Bar -->
-            <Border Background="{DynamicResource SurfaceBackgroundBrush}" 
-                    BorderBrush="{DynamicResource BorderBrush}" 
-                    BorderThickness="1" 
-                    Padding="16,12" 
-                    Margin="0,0,0,16">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+            <!-- Windows 11 InfoBar for Active Monitoring -->
+            <ui:InfoBar x:Name="BarMonitoring"
+                        IsOpen="True"
+                        IsClosable="False"
+                        Severity="Informational"
+                        Title="Sledování složky aktivní"
+                        Message="Sleduje se systémová složka: C:\Users\...\Downloads"
+                        Margin="0,0,0,12" />
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Watched Directory" FontWeight="SemiBold" FontSize="13" />
-                        <TextBlock x:Name="TxtWatchedFolder" Text="C:\Users\...\Downloads" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
-                        <TextBlock x:Name="TxtMonitoringStatus" Text="Status: Active" FontSize="12" Margin="0,4,0,0" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" />
-                    </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <ui:Button x:Name="BtnToggleMonitoring" Content="Pozastavit" Click="BtnToggleMonitoring_Click" Margin="0,0,8,0" />
+                <ui:Button x:Name="BtnScanNow" Content="Spustit skenování" Appearance="Primary" Click="BtnScanNow_Click" />
+            </StackPanel>
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button x:Name="BtnToggleMonitoring" Content="Pause Monitoring" Click="BtnToggleMonitoring_Click" Margin="0,0,8,0" />
-                        <Button x:Name="BtnScanNow" Content="Scan Now" Style="{StaticResource AccentButtonStyle}" Click="BtnScanNow_Click" />
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <!-- Metrics Summary Grid -->
-            <TextBlock Text="Organization Metrics" Style="{StaticResource SectionHeaderStyle}" />
-            <Grid Margin="0,0,0,16">
+            <!-- Metrics Summary Section (Windows 11 Settings Style Cards) -->
+            <TextBlock Text="Přehled stavu" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <Grid Margin="0,0,0,24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -48,42 +38,38 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="14,12" Margin="0,0,8,0">
+                <ui:Card Grid.Column="0" Margin="0,0,8,0" Padding="14,12">
                     <StackPanel>
-                        <TextBlock Text="INDEXED FILES" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
-                        <TextBlock x:Name="TxtIndexedCount" Text="0" FontSize="22" FontWeight="Bold" Margin="0,4,0,0" />
+                        <TextBlock Text="INDEXOVANÉ SOUBORY" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="TxtIndexedCount" Text="0" FontSize="24" FontWeight="Bold" Margin="0,6,0,0" />
                     </StackPanel>
-                </Border>
+                </ui:Card>
 
-                <Border Grid.Column="1" Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="14,12" Margin="0,0,8,0">
+                <ui:Card Grid.Column="1" Margin="0,0,8,0" Padding="14,12">
                     <StackPanel>
-                        <TextBlock Text="ORGANIZED FILES" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
-                        <TextBlock x:Name="TxtOrganizedCount" Text="0" FontSize="22" FontWeight="Bold" Margin="0,4,0,0" Foreground="{DynamicResource SuccessBrush}" />
+                        <TextBlock Text="ORGANIZOVANÉ SOUBORY" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="TxtOrganizedCount" Text="0" FontSize="24" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
                     </StackPanel>
-                </Border>
+                </ui:Card>
 
-                <Border Grid.Column="2" Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="14,12" Margin="0,0,8,0">
+                <ui:Card Grid.Column="2" Margin="0,0,8,0" Padding="14,12">
                     <StackPanel>
-                        <TextBlock Text="PENDING REVIEW" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
-                        <TextBlock x:Name="TxtReviewCount" Text="0" FontSize="22" FontWeight="Bold" Margin="0,4,0,0" Foreground="{DynamicResource WarningBrush}" />
+                        <TextBlock Text="ČEKÁ NA SCHVÁLENÍ" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="TxtReviewCount" Text="0" FontSize="24" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource SystemFillColorCautionBrush}" />
                     </StackPanel>
-                </Border>
+                </ui:Card>
 
-                <Border Grid.Column="3" Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="14,12">
+                <ui:Card Grid.Column="3" Padding="14,12">
                     <StackPanel>
-                        <TextBlock Text="UNDONE OPERATIONS" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
-                        <TextBlock x:Name="TxtUndoneCount" Text="0" FontSize="22" FontWeight="Bold" Margin="0,4,0,0" Foreground="{DynamicResource TextSecondaryBrush}" />
+                        <TextBlock Text="VRÁCENÉ PŘESUNY (UNDO)" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock x:Name="TxtUndoneCount" Text="0" FontSize="24" FontWeight="Bold" Margin="0,6,0,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
-                </Border>
+                </ui:Card>
             </Grid>
 
-            <!-- AI Model & Hardware Status -->
-            <TextBlock Text="AI &amp; Hardware Acceleration" Style="{StaticResource SectionHeaderStyle}" />
-            <Border Background="{DynamicResource SurfaceBackgroundBrush}" 
-                    BorderBrush="{DynamicResource BorderBrush}" 
-                    BorderThickness="1" 
-                    Padding="16,14" 
-                    Margin="0,0,0,16">
+            <!-- AI Engine Card -->
+            <TextBlock Text="Hardwarová akcelerace a AI model" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <ui:Card Margin="0,0,0,24" Padding="16">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -95,34 +81,38 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Row="0" Grid.Column="0">
-                        <TextBlock Text="Active AI Execution Provider" FontWeight="SemiBold" />
-                        <TextBlock x:Name="TxtAiBackend" Text="Qualcomm Hexagon NPU (QNN HTP)" FontSize="13" Margin="0,3,0,0" />
-                        <TextBlock x:Name="TxtModelStatus" Text="Model: Paraphrase Multilingual MiniLM L12 v2 (Quantized ONNX)" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <ui:SymbolIcon Symbol="Cpu24" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Aktivní zprostředkovatel inference:" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock x:Name="TxtAiBackend" Text="Qualcomm Hexagon NPU (QNN HTP)" FontSize="13" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="26,0,0,4" />
+                        <TextBlock x:Name="TxtModelStatus" Text="Model: Paraphrase Multilingual MiniLM L12 v2 (Quantized ONNX)" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="26,0,0,0" />
                     </StackPanel>
 
                     <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-                        <Button x:Name="BtnDownloadModel" Content="Download Neural Model (~112 MB)" Click="BtnDownloadModel_Click" />
+                        <ui:Button x:Name="BtnDownloadModel" Content="Stáhnout neuronový model (~112 MB)" Appearance="Secondary" Click="BtnDownloadModel_Click" />
                     </StackPanel>
 
-                    <!-- Download Progress Bar -->
-                    <StackPanel x:Name="PanelDownloadProgress" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,10,0,0" Visibility="Collapsed">
+                    <StackPanel x:Name="PanelDownloadProgress" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,14,0,0" Visibility="Collapsed">
                         <ProgressBar x:Name="ProgressDownload" Height="6" Minimum="0" Maximum="100" />
-                        <TextBlock x:Name="TxtDownloadProgress" Text="Downloading..." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,4,0,0" />
+                        <TextBlock x:Name="TxtDownloadProgress" Text="Stahování..." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0" />
                     </StackPanel>
                 </Grid>
-            </Border>
+            </ui:Card>
 
-            <!-- Recent Organization Activity -->
-            <TextBlock Text="Recent Organization Activity" Style="{StaticResource SectionHeaderStyle}" />
-            <DataGrid x:Name="GridRecentActivity" MinHeight="140" MaxHeight="220" AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Time" Binding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" Width="90" />
-                    <DataGridTextColumn Header="File Name" Binding="{Binding FileName}" Width="200" />
-                    <DataGridTextColumn Header="Destination Category" Binding="{Binding Category}" Width="220" />
-                    <DataGridTextColumn Header="Confidence" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="90" />
-                    <DataGridTextColumn Header="Explanation" Binding="{Binding Explanation}" Width="*" />
-                </DataGrid.Columns>
-            </DataGrid>
+            <!-- Recent Activity Table -->
+            <TextBlock Text="Poslední operace organizace" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" />
+            <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4">
+                <DataGrid x:Name="GridRecentActivity" MinHeight="140" MaxHeight="240" AutoGenerateColumns="False" BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Čas" Binding="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" Width="90" />
+                        <DataGridTextColumn Header="Název souboru" Binding="{Binding FileName}" Width="200" />
+                        <DataGridTextColumn Header="Cílová kategorie" Binding="{Binding Category}" Width="220" />
+                        <DataGridTextColumn Header="Jistota" Binding="{Binding Confidence, StringFormat={}{0:P0}}" Width="85" />
+                        <DataGridTextColumn Header="Důvod zařazení" Binding="{Binding Explanation}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
 
         </StackPanel>
     </ScrollViewer>
